@@ -3,6 +3,12 @@ import Link from 'next/link';
 import { GitHubLogo, LinkedInLogo, PakloLogo, TwitterLogo } from '@/components/logos';
 import { ThemeToggle } from '@/components/theme';
 import { Button } from '@/components/ui/button';
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from '@/components/ui/navigation-menu';
 import { Separator } from '@/components/ui/separator';
 import { socials } from '@/site-config';
 import { type HeaderLink, MobileMenuSheet } from './layout.client';
@@ -33,17 +39,26 @@ function Header() {
               <PakloLogo className='size-6' />
               Paklo
             </Link>
-            <div className='hidden items-center gap-6 md:flex'>
-              {links.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className='text-muted-foreground text-sm transition-colors hover:text-foreground'
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
+            <NavigationMenu className='hidden md:flex' viewport={false}>
+              <NavigationMenuList className='gap-6'>
+                {links.map((link) => (
+                  <NavigationMenuItem key={link.name}>
+                    <NavigationMenuLink
+                      asChild
+                      // these styles are so that it looks like before instead of a button but perhaps we should remove them
+                      className='hover:bg-inherit p-0'
+                    >
+                      <Link
+                        href={link.href}
+                        className='text-muted-foreground text-sm transition-colors hover:text-foreground'
+                      >
+                        {link.name}
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
           </div>
           <MobileMenuSheet links={links} />
           <div className='hidden items-center gap-4 md:flex'>

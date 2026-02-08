@@ -6,6 +6,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
 
 export type HeaderLink = { name: string; href: Route | Route<'/docs'> };
 
@@ -31,7 +32,8 @@ export function MobileMenuSheet({ links }: { links: HeaderLink[] }) {
               {link.name}
             </Link>
           ))}
-          <div className='flex flex-col gap-3 border-border border-t pt-6'>
+          <Separator />
+          <div className='flex flex-col gap-3'>
             <Link href='/login' onClick={() => setOpen(false)}>
               <Button variant='ghost' size='sm' className='w-full justify-start'>
                 Log in
