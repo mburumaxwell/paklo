@@ -8,6 +8,7 @@ overrides:
   '@prisma/dev>hono': '>=4.11.8'
   '@workflow/web>next': '>=16.1.6'
   '@workflow/core>devalue': '>=5.6.2'
+  '@workflow/world-local>undici': ~6.23.0
 
 importers:
 
@@ -9367,8 +9368,8 @@ packages:
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
-  undici@6.22.0:
-    resolution: {integrity: sha512-hU/10obOIu62MGYjdskASR3CUAiYaFTtC9Pa6vHyf//mAipSvSQg6od2CnJswq7fvzNS3zJhxoRkgNVaHurWKw==}
+  undici@6.23.0:
+    resolution: {integrity: sha512-VfQPToRA5FZs/qJxLIinmU59u0r7LXqoJkCzinq3ckNJp3vKEh7jTWN589YQ5+aoAC/TGRLyJLCPKcLQbM8r9g==}
     engines: {node: '>=18.17'}
 
   unicode-emoji-modifier-base@1.0.0:
@@ -14606,7 +14607,7 @@ snapshots:
       '@workflow/world': 4.1.0-beta.2(zod@4.1.11)
       async-sema: 3.1.1
       ulid: 3.0.1
-      undici: 6.22.0
+      undici: 6.23.0
       zod: 4.1.11
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
@@ -20192,7 +20193,7 @@ snapshots:
 
   undici-types@7.16.0: {}
 
-  undici@6.22.0: {}
+  undici@6.23.0: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 
