@@ -52,7 +52,8 @@
       "@workflow/web>next": ">=16.1.6",
       "@workflow/core>devalue": ">=5.6.2",
       "@workflow/world-local>undici": "~6.23.0",
-      "lodash": "~4.17.23"
+      "lodash": "~4.17.23",
+      "lodash-es": "~4.17.23"
     }
   }
 }
