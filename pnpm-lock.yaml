@@ -144,8 +144,8 @@ importers:
         specifier: 1.6.1
         version: 1.6.1(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       '@vercel/functions':
-        specifier: 3.4.0
-        version: 3.4.0(@aws-sdk/credential-provider-web-identity@3.609.0(@aws-sdk/client-sts@3.978.0))
+        specifier: 3.4.1
+        version: 3.4.1(@aws-sdk/credential-provider-web-identity@3.609.0(@aws-sdk/client-sts@3.978.0))
       '@vercel/oidc':
         specifier: 3.1.0
         version: 3.1.0
@@ -4085,8 +4085,8 @@ packages:
       next:
         optional: true
 
-  '@vercel/functions@3.4.0':
-    resolution: {integrity: sha512-lKWDWEhFcpt/zL3ueWqII8W5BY73MC5WUuZyudditbbya6mP8jCLQEuXBxJetpEKgnEn+5xCyK962rw4v1RSVA==}
+  '@vercel/functions@3.4.1':
+    resolution: {integrity: sha512-+wqs1fscC1l2NZYL8Ahxe/vba4YzcuhxTV99Kf8sNwNeATaxQ9rbR6BILksoGDmm99YiD0wc0hBJcYxVNwiNaw==}
     engines: {node: '>= 20'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
@@ -13688,7 +13688,7 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       next: 16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
 
-  '@vercel/functions@3.4.0(@aws-sdk/credential-provider-web-identity@3.609.0(@aws-sdk/client-sts@3.978.0))':
+  '@vercel/functions@3.4.1(@aws-sdk/credential-provider-web-identity@3.609.0(@aws-sdk/client-sts@3.978.0))':
     dependencies:
       '@vercel/oidc': 3.1.0
     optionalDependencies:
@@ -13845,7 +13845,7 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.31
       '@standard-schema/spec': 1.0.0
       '@types/ms': 2.1.0
-      '@vercel/functions': 3.4.0(@aws-sdk/credential-provider-web-identity@3.609.0(@aws-sdk/client-sts@3.978.0))
+      '@vercel/functions': 3.4.1(@aws-sdk/credential-provider-web-identity@3.609.0(@aws-sdk/client-sts@3.978.0))
       '@workflow/errors': 4.0.1-beta.13
       '@workflow/serde': 4.0.1-beta.1
       '@workflow/utils': 4.0.1-beta.10
