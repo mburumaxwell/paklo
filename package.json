@@ -45,5 +45,10 @@
   "engines": {
     "node": ">=24.x"
   },
-  "packageManager": "pnpm@10.27.0"
+  "packageManager": "pnpm@10.27.0",
+  "pnpm": {
+    "overrides": {
+      "@prisma/dev>hono": ">=4.11.8"
+    }
+  }
 }
