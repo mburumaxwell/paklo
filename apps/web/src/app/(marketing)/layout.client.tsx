@@ -5,8 +5,8 @@ import type { Route } from 'next';
 import Link from 'next/link';
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 export type HeaderLink = { name: string; href: Route | Route<'/docs'> };
 

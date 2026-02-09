@@ -14,9 +14,7 @@ import { z } from 'zod';
 export const legal = defineCollections({
   type: 'doc',
   dir: 'content/legal',
-  postprocess: {
-    includeProcessedMarkdown: true,
-  },
+  postprocess: { includeProcessedMarkdown: true },
   schema: frontmatterSchema.extend({
     published: z.coerce.date(),
   }),
