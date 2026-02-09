@@ -1,5 +1,19 @@
 # @paklo/runner
 
+## 0.11.0
+
+### Minor Changes
+
+- [`e7f4e1b`](https://github.com/mburumaxwell/paklo/commit/e7f4e1b1d70e17088441ed9c9f3689baed05ecb9) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Update reference to Dependabot proxy similar to [dependabot-cli#538](https://redirect.github.com/dependabot/cli/issues/538) and [dependabot-action#1610](https://github.com/github/dependabot-action/pull/1610)
+
+### Patch Changes
+
+- [#2453](https://github.com/mburumaxwell/paklo/pull/2453) [`3660ce6`](https://github.com/mburumaxwell/paklo/commit/3660ce6b2d023cd8a6936ba41f28817b48d096e5) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated Docker container manifest for Bump the dependabot-core-images group across 1 directory with 29 updates
+
+- [#2497](https://github.com/mburumaxwell/paklo/pull/2497) [`4b4d6e8`](https://github.com/mburumaxwell/paklo/commit/4b4d6e86e6e97ade624b4ccc636dddf4587ad9b7) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 29 updates
+
+- [#2515](https://github.com/mburumaxwell/paklo/pull/2515) [`d669060`](https://github.com/mburumaxwell/paklo/commit/d669060c931f3c99492683f07a974a2ea03406b9) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 30 updates
+
 ## 0.10.0
 
 ### Minor Changes
