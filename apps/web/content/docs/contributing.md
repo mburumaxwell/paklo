@@ -15,7 +15,7 @@ description: Guidelines for developing and submitting changes.
 
 ## Development Setup
 
-- Install [Node.js](https://nodejs.org) 22 or later
+- Install [Node.js](https://nodejs.org) 24 or later
 - Install [pnpm](https://pnpm.io)
 - Install [Docker](https://www.docker.com) (for CLI and extension development)
 

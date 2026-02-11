@@ -9,7 +9,7 @@ The Paklo CLI is a powerful command-line tool for running Dependabot updates aga
 
 **Requirements:**
 
-- Node.js 22 or later
+- Node.js 24 or later
 - Docker (Docker Desktop on macOS/Windows, Docker Engine on Linux)
 
 ### Global Installation
