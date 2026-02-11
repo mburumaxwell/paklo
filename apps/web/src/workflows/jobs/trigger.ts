@@ -467,7 +467,7 @@ export async function createAndStartJobResources({
           volumeMounts: [
             { volumeName: SECRET_NAME_PROXY_CONFIG, mountPath: `/${CONFIG_FILE_NAME}`, subPath: CONFIG_FILE_NAME },
           ],
-          command: ['sh', '-c', '/usr/sbin/update-ca-certificates && /update-job-proxy'],
+          command: ['sh', '-c', '/usr/sbin/update-ca-certificates && /dependabot-proxy'],
         },
         {
           name: 'updater',
