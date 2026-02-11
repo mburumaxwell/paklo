@@ -64,9 +64,11 @@ export const auth = betterAuth({
       },
       async sendDeleteAccountVerification({ user, url }, request) {
         logger.debug(`Sending account deletion verification to ${user.email} url: ${url}`);
-        await sendUserDeleteVerificationEmail({ recipient: user.email, url });
+        // not awaiting, backgroundTask will handle waiting
+        void sendUserDeleteVerificationEmail({ recipient: user.email, url });
       },
     },
+    changeEmail: { enabled: false },
   },
   plugins: [
     admin({ adminUserIds }),
@@ -93,7 +95,8 @@ export const auth = betterAuth({
         const acceptUrl = `${config.siteUrl}/invite/accept?id=${data.id}`;
         const declineUrl = `${config.siteUrl}/invite/decline?id=${data.id}`;
         logger.debug(`Sending invitation to ${data.invitation.email} url: ${acceptUrl}`);
-        await sendOrganizationInviteEmail({
+        // not awaiting, backgroundTask will handle waiting
+        void sendOrganizationInviteEmail({
           organization: data.organization.name,
           recipient: data.invitation.email,
           inviter: data.inviter.user.name,
@@ -106,7 +109,8 @@ export const auth = betterAuth({
         async afterRejectInvitation({ invitation, user, organization }) {
           // notify inviter of rejection
           logger.debug(`Sending inviter declined notice for ${invitation.email} to ${user.email}`);
-          await sendOrganizationInviteDeclinedEmail({
+          // not awaiting, backgroundTask will handle waiting
+          void sendOrganizationInviteDeclinedEmail({
             organization: organization.name,
             invitee: invitation.email,
             recipient: user.email,
@@ -119,7 +123,8 @@ export const auth = betterAuth({
       expiresIn: 5 * 60, // 5 minutes
       async sendMagicLink({ email, url }, ctx) {
         logger.debug(`Sending magic link to ${email} url: ${url}`);
-        await sendMagicLinkEmail({ recipient: email, url });
+        // not awaiting, backgroundTask will handle waiting
+        void sendMagicLinkEmail({ recipient: email, url });
       },
     }),
     lastLoginMethod(),

@@ -1,6 +1,7 @@
 'use client';
 
 import { Mail } from 'lucide-react';
+import type { Route } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -13,7 +14,7 @@ import { magicLinkLogin } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 
 interface SignupFormProps extends React.ComponentProps<'div'> {
-  redirectTo?: string;
+  redirectTo: Route;
 }
 
 export function SignupForm({ className, redirectTo, ...props }: SignupFormProps) {

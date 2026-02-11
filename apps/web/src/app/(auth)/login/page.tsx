@@ -1,4 +1,7 @@
-import type { Metadata } from 'next';
+import type { Metadata, Route } from 'next';
+import { headers as requestHeaders } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { auth } from '@/lib/auth';
 import { LoginForm } from './form';
 
 export const metadata: Metadata = {
@@ -8,8 +11,15 @@ export const metadata: Metadata = {
 };
 
 export default async function LoginPage(props: PageProps<'/login'>) {
-  const { redirectTo: rawRedirectTo } = await props.searchParams;
-  const redirectTo = Array.isArray(rawRedirectTo) ? rawRedirectTo[0] : rawRedirectTo;
+  // if already logged in, redirect to relevant page
+  const headers = await requestHeaders();
+  const session = await auth.api.getSession({ headers });
+  if (session) return redirect('/dashboard');
+
+  const searchParams = (await props.searchParams) as {
+    redirectTo?: Route;
+  };
+  const { redirectTo = '/dashboard' } = searchParams;
 
   return <LoginForm redirectTo={redirectTo} />;
 }

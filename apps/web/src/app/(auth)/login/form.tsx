@@ -16,7 +16,7 @@ import { authClient, magicLinkLogin } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 
 interface LoginFormProps extends React.ComponentProps<'div'> {
-  redirectTo?: string;
+  redirectTo: Route;
 }
 
 export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
@@ -27,9 +27,6 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
-
-  // the URL to navigate to after successful login
-  const postLoginUrl = (redirectTo || '/dashboard') as Route;
 
   useEffect(() => setIsMounted(true), []);
 
@@ -58,7 +55,7 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
         fetchOptions: {
           signal: abortController.signal,
           onSuccess(context) {
-            window.location.href = postLoginUrl;
+            window.location.href = redirectTo;
           },
           onError(context) {
             console.error('❌ [PASSKEY] Autofill sign-in error:', context.error);
@@ -70,7 +67,7 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
         console.log('🔍 [DEBUG] Autofill passkey silent error:', error);
       });
     return () => abortController.abort();
-  }, [isMounted, postLoginUrl]);
+  }, [isMounted, redirectTo]);
 
   async function handlePasskeyLogin() {
     setIsLoading(true);
@@ -92,7 +89,7 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
     }
 
     // Redirect to dashboard or specified redirect URL after successful login
-    router.push(postLoginUrl);
+    router.push(redirectTo);
   }
 
   async function handleMagicLinkLogin(e: React.FormEvent) {
