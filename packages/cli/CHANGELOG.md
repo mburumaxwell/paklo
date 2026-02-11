@@ -1,5 +1,12 @@
 # paklo
 
+## 0.18.2
+
+### Patch Changes
+
+- Updated dependencies [[`c02b98c`](https://github.com/mburumaxwell/paklo/commit/c02b98c7e15465e15e36a7c8f3ec09cb586b4626), [`7c4a398`](https://github.com/mburumaxwell/paklo/commit/7c4a3983b2dee16918f345c0a62142a3eb0a511e)]:
+  - @paklo/runner@0.11.1
+
 ## 0.18.1
 
 ### Patch Changes
