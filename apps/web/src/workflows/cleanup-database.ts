@@ -66,6 +66,15 @@ async function deleteExpiredRecords() {
     where: { expiresAt: { lt: now } },
   });
   logger.info(`Expired verifications cleanup completed: deleted ${result.count} expired verifications`);
+
+  /**
+   * Delete sessions that have expired
+   * A session is considered expired if its `expiresAt` date is earlier than the current date.
+   */
+  result = await prisma.session.deleteMany({
+    where: { expiresAt: { lt: now } },
+  });
+  logger.info(`Expired sessions cleanup completed: deleted ${result.count} expired sessions`);
 }
 
 /** Deletes old records (deletable) from the database. */
