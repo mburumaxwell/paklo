@@ -232,12 +232,12 @@
     }
   ],
   "execution": {
-    "Node20_1": {
+    "Node24": {
       "target": "dist/main/index.js"
     }
   },
   "postjobexecution": {
-    "Node20_1": {
+    "Node24": {
       "target": "dist/cleanup/index.js"
     }
   }

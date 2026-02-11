@@ -24,7 +24,7 @@
   "groups": [],
   "inputs": [],
   "execution": {
-    "Node20_1": {
+    "Node24": {
       "target": "dist/main/index.js"
     }
   }

@@ -39,8 +39,26 @@ steps:
 The task requires:
 
 - [Docker](https://docs.docker.com/engine/install/) with Linux containers
+- [Node.js](https://nodejs.org/en) 24 or higher
 
 Microsoft-hosted agents like [`ubuntu-latest`](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md) include all requirements.
+
+:::info
+For **private or self-hosted agents**, ensure Node.js 24 is available. You can use the [`UseNode@1`](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/use-node-v1) task to install the required Node.js version:
+
+```yaml
+pool:
+  name: 'MyPrivateAgentPool'
+
+steps:
+  - task: UseNode@1
+    displayName: 'Install Node.js 24'
+    inputs:
+      version: '24.x'
+  
+  - task: dependabot@2
+```
+:::
 
 ### Configuration File
 
