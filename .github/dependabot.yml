@@ -57,43 +57,36 @@ updates:
     open-pull-requests-limit: 20
     groups:
       azure: { patterns: ['@azure/*'] }
-      better-auth: { patterns: ['better-auth', '@better-auth/*'] }
-      dockerode: { patterns: ['@types/dockerode', 'dockerode'] }
       fumadocs: { patterns: ['fumadocs-*', '@fumadocs/*'] }
-      hono: { patterns: ['@hono/*', 'hono'] }
-      js-yaml: { patterns: ['@types/js-yaml', 'js-yaml'] }
       next-and-react:
         patterns:
-          - '@next/*'
           - '@types/react'
           - '@types/react-dom'
           - 'next'
           - 'react'
           - 'react-dom'
-          - 'react-router-dom'
-      node-forge: { patterns: ['@types/node-forge', 'node-forge'] }
       opentelemetry: { patterns: ['@opentelemetry/*'] }
-      pino: { patterns: ['pino', 'pino-*'] }
-      prisma: { patterns: ['prisma*', '@prisma/*'] }
-      react-email: { patterns: ['@react-email/*', 'react-email'] }
-      stripe: { patterns: ['stripe*', '@stripe/*'] }
-      validator: { patterns: ['@types/validator', 'validator'] }
-      vercel:
-        patterns: ['@vercel/*', 'vercel']
-        exclude-patterns: ['@vercel/ncc']
-      tailwind:
-        patterns:
-          - 'tailwindcss'
-          - 'tailwind-merge'
-          - '@tailwindcss/*'
-      tar-stream: { patterns: ['@types/tar-stream', 'tar-stream'] }
-      vite-and-vitest: { patterns: ['vite', 'vite-*', '@vitejs/*', 'vitest'] }
+      prisma: { patterns: ['@prisma/*', 'prisma'] }
+      stripe: { patterns: ['@stripe/*', 'stripe'] }
+      all-npm-minor-updates:
+        patterns: ['*']
+        exclude-patterns:
+          - '@azure/*'
+          - 'fumadocs-*'
+          - '@fumadocs/*'
+          - '@types/react'
+          - '@types/react-dom'
+          - 'next'
+          - 'react'
+          - 'react-dom'
+          - '@opentelemetry/*'
+          - '@prisma/*'
+          - 'prisma'
+          - '@stripe/*'
+          - 'stripe'
+        update-types:
+          - minor
+          - patch
     ignore:
-      - dependency-name: '@types/node'
-        update-types: [version-update:semver-patch] # too many changes
-      - dependency-name: '@biomejs/biome'
-        update-types: [version-update:semver-patch] # too many changes
       - dependency-name: recharts
         update-types: [version-update:semver-major] # shadcn still doesn't support (https://github.com/shadcn-ui/ui/issues/7669)
-      - dependency-name: 'vite*'
-        update-types: [version-update:semver-patch] # too many changes
