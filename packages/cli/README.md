@@ -9,7 +9,7 @@ npm install -g @paklo/cli
 paklo --help
 ```
 
-**Requirements:** Node.js 22+ and Docker
+**Requirements:** Node.js 24+ and Docker
 
 ## Documentation
 
