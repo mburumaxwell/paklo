@@ -1,5 +1,13 @@
 # @paklo/runner
 
+## 0.11.1
+
+### Patch Changes
+
+- [#2520](https://github.com/mburumaxwell/paklo/pull/2520) [`c02b98c`](https://github.com/mburumaxwell/paklo/commit/c02b98c7e15465e15e36a7c8f3ec09cb586b4626) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 30 updates
+
+- [#2522](https://github.com/mburumaxwell/paklo/pull/2522) [`7c4a398`](https://github.com/mburumaxwell/paklo/commit/7c4a3983b2dee16918f345c0a62142a3eb0a511e) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Update proxy command to use `dependabot-proxy`
+
 ## 0.11.0
 
 ### Minor Changes
