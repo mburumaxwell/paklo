@@ -52,7 +52,7 @@
         "out/**",
         // fumadocs static site generation output
         ".source/**",
-        // generated files from other tools like prisma, hypertune, etc.
+        // generated files from other tools like prisma, etc.
         ".generated/**"
       ]
     }
