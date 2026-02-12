@@ -120,7 +120,17 @@ resource idlerApp 'Microsoft.App/containerApps@2025-07-01' = {
   properties: {
     managedEnvironmentId: appEnvironment.id
     workloadProfileName: 'Consumption'
-    configuration: { maxInactiveRevisions: 1 }
+    configuration: {
+      maxInactiveRevisions: 1
+      // without this, scale to zero doesn't work
+      ingress: {
+        external: false
+        targetPort: 80
+        exposedPort: 0
+        transport: 'Auto'
+        traffic: [{ weight: 100, latestRevision: true }]
+      }
+    }
     template: {
       containers: [
         {
@@ -130,7 +140,14 @@ resource idlerApp 'Microsoft.App/containerApps@2025-07-01' = {
           resources: { cpu: json('0.25'), memory: '0.5Gi' }
         }
       ]
-      scale: { minReplicas: 0, maxReplicas: 1, cooldownPeriod: 300, pollingInterval: 30 }
+      scale: {
+        minReplicas: 0
+        maxReplicas: 1
+        cooldownPeriod: 300
+        pollingInterval: 30
+        // without this, scale to zero doesn't work
+        rules: [{ name: 'http', http: { metadata: { concurrentRequests: '10000' } } }]
+      }
     }
   }
 }
