@@ -18,11 +18,13 @@
     "DeploymentGroup"
   ],
   "minimumAgentVersion": "3.232.1",
-  "demands": ["docker"],
+  "demands": [
+    "docker"
+  ],
   "version": {
     "Major": 2,
-    "Minor": 64,
-    "Patch": 4
+    "Minor": 65,
+    "Patch": 0
   },
   "instanceNameFormat": "Dependabot update",
   "groups": [
