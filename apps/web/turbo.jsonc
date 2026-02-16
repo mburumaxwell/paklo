@@ -24,6 +24,8 @@
         "DEPLOY_GIT_COMMIT_REF",
         "DEPLOY_GIT_COMMIT_SHA",
         "EXPERIMENTATION_CONFIG_ITEM_KEY",
+        "FLAGS",
+        "FLAGS_SECRET",
         "MONGO_URL",
         "PORT",
         "RESEND_API_KEY",
