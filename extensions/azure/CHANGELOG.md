@@ -1,5 +1,20 @@
 # extension-azure-devops
 
+## 2.65.0
+
+### Minor Changes
+
+- [#2526](https://github.com/mburumaxwell/paklo/pull/2526) [`b1edcc9`](https://github.com/mburumaxwell/paklo/commit/b1edcc90f57d8d938719584cb9f8108522edce21) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Update Azure DevOps extension tasks to require Node.js 24
+
+- [`0fd20d5`](https://github.com/mburumaxwell/paklo/commit/0fd20d5f1f257541450d26b8f27125bec13139b4) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Update Azure DevOps extension tasks to work with Node.js version 20.1 and 24
+
+- [#2524](https://github.com/mburumaxwell/paklo/pull/2524) [`c80067b`](https://github.com/mburumaxwell/paklo/commit/c80067b17714cda0526e8c4f01350b350ecfd671) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Add docker to task demands
+
+### Patch Changes
+
+- Updated dependencies [[`2c2bc29`](https://github.com/mburumaxwell/paklo/commit/2c2bc29b4b184b9d6ff951659e02563c61826959)]:
+  - @paklo/runner@0.11.2
+
 ## 2.64.4
 
 ### Patch Changes
