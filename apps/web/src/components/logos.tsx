@@ -121,11 +121,3 @@ export function PakloIcon({ fill = 'currentColor', ...props }: IconProps) {
     </svg>
   );
 }
-
-export function PakloIconOpenGraph(props: React.ComponentPropsWithoutRef<typeof OpenGraphImageWrapper>) {
-  return (
-    <OpenGraphImageWrapper className='rounded-md bg-blue-600 p-2' {...props}>
-      <PakloIcon width={24} height={24} />
-    </OpenGraphImageWrapper>
-  );
-}
