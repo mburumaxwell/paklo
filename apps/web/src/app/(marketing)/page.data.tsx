@@ -1,8 +1,8 @@
 import { Globe, Layers, Lock, Shield, Users, Zap } from 'lucide-react';
+import { numify } from 'numify';
 import type { Icon } from '@/components/icons';
 import { INCLUDED_USAGE_MINUTES, PRICE_AMOUNT_MONTHLY_MANAGEMENT, PRICE_AMOUNT_PER_MINUTE_USAGE } from '@/lib/billing';
 import { formatMoney } from '@/lib/money';
-import { numify } from 'numify';
 
 // Static values - Update these manually from Azure Marketplace stats and database metrics
 // See apps/web/src/actions/stats.ts for how to get these metrics from the database and marketplace. Last updated: Feb 20, 2026

@@ -1,5 +1,4 @@
 import type { IconProps } from '@/components/icons';
-import { OpenGraphImageWrapper } from './og-image';
 
 export function AppleLogo(props: IconProps) {
   return (
