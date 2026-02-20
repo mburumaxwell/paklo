@@ -1,5 +1,5 @@
 import { DocsLayout, RootProvider } from '@/components/docs';
-import { PakloLogo } from '@/components/logos';
+import { PakloIcon } from '@/components/logos';
 import { docs } from '@/lib/fumadocs';
 import { config } from '@/site-config';
 
@@ -14,7 +14,7 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
           nav={{
             title: (
               <div className='flex gap-2 align-middle'>
-                <PakloLogo className='size-5' />
+                <PakloIcon className='size-5' />
                 <span>{config.docs.title}</span>
               </div>
             ),

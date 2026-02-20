@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { LastUsedIndicator } from '@/components/last-used-indicator';
-import { AppleLogo, GoogleLogo, PakloLogo } from '@/components/logos';
+import { AppleLogo, GoogleLogo, PakloIcon } from '@/components/logos';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -122,7 +122,7 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
         <div className='flex flex-col items-center gap-2 text-center'>
           <Link href='/' className='flex flex-col items-center gap-2 font-medium'>
             <div className='flex size-8 items-center justify-center rounded-md'>
-              <PakloLogo className='size-6' />
+              <PakloIcon className='size-6' />
             </div>
             <span className='sr-only'>Paklo</span>
           </Link>

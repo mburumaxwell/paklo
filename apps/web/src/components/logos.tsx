@@ -1,4 +1,5 @@
 import type { IconProps } from '@/components/icons';
+import { OpenGraphImageWrapper } from './og-image';
 
 export function AppleLogo(props: IconProps) {
   return (
@@ -98,7 +99,7 @@ export function LinkedInLogo(props: IconProps) {
   );
 }
 
-export function PakloLogo({ fill = 'currentColor', ...props }: IconProps) {
+export function PakloIcon({ fill = 'currentColor', ...props }: IconProps) {
   return (
     <svg viewBox='0 0 500 500' aria-label='Logo' aria-hidden='true' {...props}>
       <g
@@ -118,5 +119,13 @@ export function PakloLogo({ fill = 'currentColor', ...props }: IconProps) {
         <path d='M487 1862 c-55 -16 -57 -17 -52 -44 17 -76 145 -360 195 -433 17 -24 30 -46 30 -49 0 -3 28 -45 61 -93 151 -216 328 -392 536 -534 90 -61 268 -169 278 -169 3 0 28 -11 57 -24 266 -121 500 -179 776 -192 l132 -7 0 65 0 65 -112 6 c-170 9 -291 31 -493 87 -75 20 -202 73 -316 130 -452 227 -794 603 -979 1076 -22 57 -40 110 -40 118 0 19 2 19 -73 -2z' />
       </g>
     </svg>
+  );
+}
+
+export function PakloIconOpenGraph(props: React.ComponentPropsWithoutRef<typeof OpenGraphImageWrapper>) {
+  return (
+    <OpenGraphImageWrapper className='rounded-md bg-blue-600 p-2' {...props}>
+      <PakloIcon width={24} height={24} />
+    </OpenGraphImageWrapper>
   );
 }

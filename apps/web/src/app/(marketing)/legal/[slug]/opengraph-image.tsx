@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
-import { generateOpenGraphImage } from '@/components/og-image';
+import { ImageResponse } from 'next/og';
+import { OpenGraphImageDocs } from '@/components/og-image';
 import { legal } from '@/lib/fumadocs';
-import { config } from '@/site-config';
 
 export const contentType = 'image/png';
 export const size = { width: 1200, height: 630 };
@@ -11,12 +11,7 @@ export default async function Image(props: PageProps<'/legal/[slug]'>) {
   const doc = legal.getPage([slug]);
   if (!doc) return notFound();
 
-  return generateOpenGraphImage({
-    title: doc.data.title,
-    description: doc.data.description,
-    site: config.title,
-    size: { width: 1200, height: 630 },
-  });
+  return new ImageResponse(<OpenGraphImageDocs doc={doc} />, { ...size });
 }
 
 export function generateStaticParams() {

@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { PakloLogo } from '@/components/logos';
+import { PakloIcon } from '@/components/logos';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -18,7 +18,7 @@ export function NoOrganizationsView() {
     <Card className='w-full max-w-md'>
       <CardHeader className='pb-4 text-center'>
         <div className='mx-auto mb-4 flex size-12 items-center justify-center rounded-full'>
-          <PakloLogo className='size-6' />
+          <PakloIcon className='size-6' />
         </div>
         <CardTitle className='text-2xl'>Welcome to your dashboard</CardTitle>
         <CardDescription className='text-base'>Get started by creating your first organization</CardDescription>
@@ -56,7 +56,7 @@ export function SelectOrganizationView({ organizations }: { organizations: Organ
     <Card className='w-full max-w-md'>
       <CardHeader className='text-center'>
         <div className='mx-auto mb-4 flex size-12 items-center justify-center rounded-full'>
-          <PakloLogo className='size-6' />
+          <PakloIcon className='size-6' />
         </div>
         <CardTitle className='text-xl'>Choose your organization</CardTitle>
         <CardDescription className='text-sm'>Select which organization you'd like to work with</CardDescription>

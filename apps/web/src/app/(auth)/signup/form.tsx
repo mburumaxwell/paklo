@@ -5,7 +5,7 @@ import type { Route } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { PakloLogo } from '@/components/logos';
+import { PakloIcon } from '@/components/logos';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -53,7 +53,7 @@ export function SignupForm({ className, redirectTo, ...props }: SignupFormProps)
         <div className='flex flex-col items-center gap-2 text-center'>
           <Link href='/' className='flex flex-col items-center gap-2 font-medium'>
             <div className='flex size-8 items-center justify-center rounded-md'>
-              <PakloLogo className='size-6' />
+              <PakloIcon className='size-6' />
             </div>
             <span className='sr-only'>Paklo</span>
           </Link>

@@ -1,6 +1,6 @@
 import type { Route } from 'next';
 import Link from 'next/link';
-import { GitHubLogo, LinkedInLogo, PakloLogo, TwitterLogo } from '@/components/logos';
+import { GitHubLogo, LinkedInLogo, PakloIcon, TwitterLogo } from '@/components/logos';
 import { ThemeToggle } from '@/components/theme';
 import { Button } from '@/components/ui/button';
 import {
@@ -36,7 +36,7 @@ function Header() {
         <div className='flex h-16 items-center justify-between'>
           <div className='flex items-center gap-8'>
             <Link href='/' className='flex gap-2 align-middle font-semibold text-xl'>
-              <PakloLogo className='size-6' />
+              <PakloIcon className='size-6' />
               Paklo
             </Link>
             <NavigationMenu className='hidden md:flex' viewport={false}>
@@ -121,7 +121,7 @@ async function Footer() {
         <div className='mb-4 grid md:grid-cols-3 md:gap-8'>
           <div className='order-last flex flex-col items-start space-y-4 md:order-first'>
             <Link href='/' className='invisible flex gap-2 align-middle md:visible'>
-              <PakloLogo className='size-6' />
+              <PakloIcon className='size-6' />
               Paklo
             </Link>
             <div className='flex flex-row'>
