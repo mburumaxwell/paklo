@@ -2,6 +2,20 @@ import { Globe, Layers, Lock, Shield, Users, Zap } from 'lucide-react';
 import type { Icon } from '@/components/icons';
 import { INCLUDED_USAGE_MINUTES, PRICE_AMOUNT_MONTHLY_MANAGEMENT, PRICE_AMOUNT_PER_MINUTE_USAGE } from '@/lib/billing';
 import { formatMoney } from '@/lib/money';
+import { numify } from 'numify';
+
+// Static values - Update these manually from Azure Marketplace stats and database metrics
+// See apps/web/src/actions/stats.ts for how to get these metrics from the database and marketplace. Last updated: Feb 20, 2026
+// Last updated: Feb 20, 2026
+export const INSTALLATIONS = 4_500; // Rounded from Azure DevOps Marketplace install count
+export const TOTAL_JOBS_90D = 576_000; // Total jobs in last 90 days from usage_telemetry
+export const TOTAL_DURATION_90D = 52_260_000; // Total duration in seconds in last 90 days
+
+export const stats = [
+  { name: 'Installations', value: numify(INSTALLATIONS) },
+  { name: 'Total run time (90d)', value: numify(Math.round(TOTAL_DURATION_90D / 60)), unit: 'mins' },
+  { name: 'Number of jobs (90d)', value: numify(TOTAL_JOBS_90D) },
+];
 
 export type FeatureEntry = { title: string; description: string; icon: Icon };
 export const features: FeatureEntry[] = [
@@ -37,6 +51,7 @@ export const features: FeatureEntry[] = [
     icon: Globe,
   },
 ];
+
 export const pricing = {
   free: {
     features: [

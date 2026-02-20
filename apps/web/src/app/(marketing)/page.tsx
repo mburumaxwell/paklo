@@ -1,21 +1,15 @@
 import { ArrowRight, Check, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { numify } from 'numify';
-import * as React from 'react';
-import { getHomePageStats, getInstallations } from '@/actions/stats';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item';
-import { Skeleton } from '@/components/ui/skeleton';
 import { extensions } from '@/site-config';
-import { faqs, features, pricing } from './page.data';
+import { faqs, features, INSTALLATIONS, pricing, stats } from './page.data';
 
-export default async function HomePage() {
-  const truncate = (num: number, places: number) => Math.floor(num / 10 ** places) * 10 ** places;
-  const installations = truncate(await getInstallations(extensions.azure.id), 2); // 4458 -> 4400
-
+export default function HomePage() {
   return (
     <>
       {/* Hero */}
@@ -25,7 +19,7 @@ export default async function HomePage() {
           <div className='mx-auto max-w-4xl text-center'>
             <div className='mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-primary text-sm'>
               <Shield className='size-4' />
-              Trusted by {numify(installations)}+ engineering teams
+              Trusted by {numify(INSTALLATIONS)}+ engineering teams
             </div>
             <h1 className='mb-6 text-balance font-bold text-4xl lg:text-6xl'>
               Secure your dependencies, <span className='text-primary'>ship with confidence</span>
@@ -85,9 +79,17 @@ export default async function HomePage() {
 
       <section className='py-12 lg:py-20'>
         <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-          <React.Suspense fallback={<StatsSectionSkeleton />}>
-            <StatsSection installations={installations} />
-          </React.Suspense>
+          <div className='grid grid-cols-1 gap-8 md:grid-cols-3'>
+            {stats.map((stat) => (
+              <div key={stat.name} className='text-center'>
+                <p className='mb-2'>
+                  <span className='font-semibold text-3xl tracking-tight'>{stat.value}</span>
+                  {stat.unit ? <span className='ml-2 text-sm'>{stat.unit}</span> : null}
+                </p>
+                <p className='text-lg text-muted-foreground'>{stat.name}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -206,43 +208,5 @@ export default async function HomePage() {
         </div>
       </section>
     </>
-  );
-}
-
-async function StatsSection({ installations }: { installations: number }) {
-  const runs = await getHomePageStats('90d');
-  const stats = [
-    { name: 'Installations', value: numify(installations) },
-    { name: 'Total run time (90d)', value: numify(Math.round(runs.duration / 60)), unit: 'mins' },
-    { name: 'Number of jobs (90d)', value: numify(runs.count) },
-  ];
-
-  return (
-    <div className='grid grid-cols-1 gap-8 md:grid-cols-3'>
-      {stats.map((stat) => (
-        <div key={stat.name} className='text-center'>
-          <p className='mb-2'>
-            <span className='font-semibold text-3xl tracking-tight'>{stat.value}</span>
-            {stat.unit ? <span className='ml-2 text-sm'>{stat.unit}</span> : null}
-          </p>
-          <p className='text-lg text-muted-foreground'>{stat.name}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-async function StatsSectionSkeleton() {
-  return (
-    <div className='grid grid-cols-1 gap-8 md:grid-cols-3'>
-      {[1, 2, 3].map((stat) => (
-        <div key={stat} className='text-center'>
-          {/* <div className='mb-2 h-8 w-24 mx-auto bg-muted animate-pulse rounded' /> */}
-          <Skeleton className='mx-auto mb-2 h-8 w-24' />
-          {/* <div className='h-5 w-32 mx-auto bg-muted animate-pulse rounded' /> */}
-          <Skeleton className='mx-auto h-5 w-32' />
-        </div>
-      ))}
-    </div>
   );
 }
