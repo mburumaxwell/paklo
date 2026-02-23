@@ -119,8 +119,8 @@ importers:
         specifier: 0.1.0
         version: 0.1.0
       '@stripe/stripe-js':
-        specifier: 8.7.0
-        version: 8.7.0
+        specifier: 8.8.0
+        version: 8.8.0
       '@vercel/analytics':
         specifier: 1.6.1
         version: 1.6.1(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
@@ -3870,8 +3870,8 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@stripe/stripe-js@8.7.0':
-    resolution: {integrity: sha512-tNUerSstwNC1KuHgX4CASGO0Md3CB26IJzSXmVlSuFvhsBP4ZaEPpY4jxWOn9tfdDscuVT4Kqb8cZ2o9nLCgRQ==}
+  '@stripe/stripe-js@8.8.0':
+    resolution: {integrity: sha512-NNYuyW8qmLjyHnpyFgs/23wUrjB8k0xN9YIZFOMLewCa/pIkIji9e9aY/EgdNryEDDRptc6TcPIHRvG1R0ClFw==}
     engines: {node: '>=12.16'}
 
   '@swc/cli@0.8.0':
@@ -13859,7 +13859,7 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@stripe/stripe-js@8.7.0': {}
+  '@stripe/stripe-js@8.8.0': {}
 
   '@swc/cli@0.8.0(@swc/core@1.15.3)(chokidar@5.0.0)':
     dependencies:
