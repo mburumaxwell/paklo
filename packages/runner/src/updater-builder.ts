@@ -60,6 +60,14 @@ export class UpdaterBuilder {
       envVars.push(`DEPENDABOT_UPDATER_SHA=${updaterSha}`);
     }
 
+    // Pass through OPENSSL_FORCE_FIPS_MODE from the host if set.
+    // The container does not have the OpenSSL FIPS provider installed, so OpenSSL fails while running update-ca-certificates on FIPS-enabled self-hosted runners.
+    // Setting OPENSSL_FORCE_FIPS_MODE=0 on the host works around this by explicitly preventing OpenSSL from using FIPS.
+    // We only propagate the env variable when it is explicitly set so as not to alter default behavior.
+    if (process.env.OPENSSL_FORCE_FIPS_MODE !== undefined) {
+      envVars.push(`OPENSSL_FORCE_FIPS_MODE=${process.env.OPENSSL_FORCE_FIPS_MODE}`);
+    }
+
     const container = await this.docker.createContainer({
       Image: this.updaterImage,
       name: containerName,

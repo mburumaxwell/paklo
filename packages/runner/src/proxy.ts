@@ -211,6 +211,13 @@ export class ProxyBuilder {
         `DEPENDABOT_API_URL=${dependabotApiUrl}`,
         `ACTIONS_ID_TOKEN_REQUEST_TOKEN=${process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN || ''}`,
         `ACTIONS_ID_TOKEN_REQUEST_URL=${process.env.ACTIONS_ID_TOKEN_REQUEST_URL || ''}`,
+        // Pass through OPENSSL_FORCE_FIPS_MODE from the host if set.
+        // The container does not have the OpenSSL FIPS provider installed, so OpenSSL fails while running update-ca-certificates on FIPS-enabled self-hosted runners.
+        // Setting OPENSSL_FORCE_FIPS_MODE=0 on the host works around this by explicitly preventing OpenSSL from using FIPS.
+        // We only propagate the env variable when it is explicitly set so as not to alter default behavior.
+        ...(process.env.OPENSSL_FORCE_FIPS_MODE !== undefined
+          ? [`OPENSSL_FORCE_FIPS_MODE=${process.env.OPENSSL_FORCE_FIPS_MODE}`]
+          : []),
       ],
       Entrypoint: ['sh', '-c', '/usr/sbin/update-ca-certificates && /dependabot-proxy'],
 
