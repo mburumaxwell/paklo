@@ -72,9 +72,9 @@ export function OpenGraphImageMarketing({ style, className, tw, ...props }: Open
 
       <div tw='w-1 h-88 bg-[#2E6417] opacity-30' />
 
-      <div tw='flex flex-col justify-center'>
+      <div tw='flex flex-col justify-center max-w-xl'>
         <p tw='text-5xl font-bold tracking-tight'>{title}</p>
-        <p tw='text-3xl text-gray-400 max-w-xl leading-snug mt-4'>{description}</p>
+        <p tw='text-3xl text-gray-400 leading-snug mt-4'>{description}</p>
         <p tw='text-xl text-gray-400 mt-4'>{config.domain}</p>
       </div>
     </div>
