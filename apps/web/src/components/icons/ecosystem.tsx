@@ -63,6 +63,7 @@ export function EcosystemIcon({ ecosystem, ...props }: { ecosystem: string | Pac
       return <JuliaOriginal {...props} />;
     case 'bazel':
       return <BazelOriginal {...props} />;
+    // case 'pre-commit':
     // case 'opentofu':
     // case 'docker-compose':
     case 'dotnet-sdk':

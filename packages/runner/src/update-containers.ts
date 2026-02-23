@@ -53,6 +53,7 @@ const manifest = {
   julia: getImageName('Dockerfile.julia'),
   bazel: getImageName('Dockerfile.bazel'),
   opentofu: getImageName('Dockerfile.opentofu'),
+  pre_commit: getImageName('Dockerfile.pre-commit'),
 };
 
 fs.writeFile(

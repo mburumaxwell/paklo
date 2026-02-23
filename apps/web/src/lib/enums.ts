@@ -76,6 +76,7 @@ const packageManagerLabelMap: Record<DependabotPackageManager, string> = {
   julia: 'Julia',
   bazel: 'Bazel',
   opentofu: 'OpenTofu',
+  pre_commit: 'Pre-commit',
 };
 export const packageManagerOptions: { value: DependabotPackageManager; label: string }[] = Object.entries(
   packageManagerLabelMap,

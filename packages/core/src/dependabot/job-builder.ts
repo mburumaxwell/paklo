@@ -240,6 +240,8 @@ export function mapPackageEcosystemToPackageManager(ecosystem: PackageEcosystem)
       return 'hex';
     case 'npm':
       return 'npm_and_yarn';
+    case 'pre-commit':
+      return 'pre_commit';
     // Additional aliases, sometimes used for convenience
     case 'pipenv':
       return 'pip';

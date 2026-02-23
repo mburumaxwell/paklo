@@ -157,6 +157,7 @@ export const DependabotPackageManagerSchema = z.enum([
   'julia',
   'bazel',
   'opentofu',
+  'pre_commit',
 ]);
 export type DependabotPackageManager = z.infer<typeof DependabotPackageManagerSchema>;
 

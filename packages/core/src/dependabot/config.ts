@@ -182,6 +182,7 @@ export const PackageEcosystemSchema = z.enum([
   'pip',
   'pip-compile', // alias mapped to 'pip'
   'pipenv', // alias mapped to 'pip'
+  'pre-commit',
   'pnpm', // alias mapped to 'npm'
   'poetry', // alias mapped to 'pip'
   'pub',
@@ -261,7 +262,7 @@ export const DependabotMultiEcosystemGroupSchema = z.object({
 export type DependabotMultiEcosystemGroup = z.infer<typeof DependabotMultiEcosystemGroupSchema>;
 
 /* Ecosystems that are currently in beta */
-export const BETA_ECOSYSTEMS: PackageEcosystem[] = [];
+export const BETA_ECOSYSTEMS: PackageEcosystem[] = ['pre-commit'];
 
 /**
  * Represents the dependabot.yaml configuration file options.
