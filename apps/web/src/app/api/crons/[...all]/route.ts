@@ -2,11 +2,10 @@ import { toNextJsHandler } from '@paklo/core/hono';
 import { Hono } from 'hono';
 import { bearerAuth } from 'hono/bearer-auth';
 import { start } from 'workflow/api';
-import { requestTriggerUpdateJobs } from '@/actions/repositories/trigger';
-import { requestSync } from '@/actions/sync';
 import { getNextRunDate } from '@/lib/cron';
 import { MIN_AUTO_SYNC_INTERVAL_PROJECT } from '@/lib/organizations';
 import { prisma } from '@/lib/prisma';
+import { startSync, startTriggerUpdateJobs } from '@/workflows';
 import { cleanupDatabase } from '@/workflows/cleanup-database';
 import { scanVulnerabilities } from '@/workflows/scan-vulnerabilities';
 
@@ -37,7 +36,7 @@ app.get('/trigger-sync-projects', async (context) => {
 
   // trigger sync for each project
   for (const project of projectsToSync) {
-    await requestSync({
+    await startSync({
       organizationId: project.organizationId,
       projectId: project.id,
       scope: 'all',
@@ -82,7 +81,7 @@ app.get('/trigger-update-jobs', async (context) => {
     const organization = organizationMap.get(project.organizationId)!;
 
     // trigger update jobs
-    await requestTriggerUpdateJobs({
+    await startTriggerUpdateJobs({
       organizationId: organization.id,
       projectId: project.id,
       repositoryId: repository.id,

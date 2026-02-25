@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { storeFeedback } from '@/actions/feedback';
 import {
   cancelSubscription,
   createStripeBillingPortalSession,
@@ -44,7 +45,7 @@ export function ManageSection({ organization, projects }: { organization: Simple
 
   async function handleSetupBilling() {
     setIsHandlingSetup(true);
-    const { url, error } = await createStripeCheckoutSession({ organizationId: organization.id });
+    const { data, error } = await createStripeCheckoutSession({ organizationId: organization.id });
     setIsHandlingSetup(false);
     if (error) {
       toast.error('Error creating checkout session', { description: error.message });
@@ -58,12 +59,12 @@ export function ManageSection({ organization, projects }: { organization: Simple
     }
 
     toast.success('Redirecting to Stripe Checkout', { description: 'You will be redirected shortly.' });
-    window.location.href = url!;
+    window.location.href = data.url;
   }
 
   async function handleManageBilling() {
     setIsHandlingManage(true);
-    const { url, error } = await createStripeBillingPortalSession({ organizationId: organization.id });
+    const { data, error } = await createStripeBillingPortalSession({ organizationId: organization.id });
     setIsHandlingManage(false);
     if (error) {
       toast.error('Error creating billing portal session', { description: error.message });
@@ -71,12 +72,24 @@ export function ManageSection({ organization, projects }: { organization: Simple
     }
 
     toast.success('Redirecting to Stripe Billing Portal', { description: 'You will be redirected shortly.' });
-    window.location.href = url!;
+    window.location.href = data.url;
   }
 
   async function handleCancelBilling() {
     setIsHandlingCancel(true);
-    const { success, error } = await cancelSubscription({ organizationId: organization.id, feedback: cancelFeedback });
+
+    // collect feedback if provided
+    if (cancelFeedback) {
+      await storeFeedback({
+        type: 'billing.cancel',
+        message: cancelFeedback,
+        metadata: { organizationId: organization.id },
+      });
+    }
+
+    const { data: success, error } = await cancelSubscription({
+      organizationId: organization.id,
+    });
     setIsHandlingCancel(false);
     setCancelFeedback('');
     if (!success || error) {
@@ -230,7 +243,7 @@ export function RegionSection({ organization: initialOrganization }: { organizat
 
   async function handleSaveRegion() {
     setIsSavingRegion(true);
-    const { success, error } = await updateOrganizationRegion({
+    const { data: success, error } = await updateOrganizationRegion({
       organizationId: organization.id,
       region: selectedRegion,
     });

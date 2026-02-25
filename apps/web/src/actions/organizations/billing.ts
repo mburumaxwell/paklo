@@ -1,19 +1,21 @@
 'use server';
 
-import { storeFeedback } from '@/actions/feedback';
+import { z } from 'zod';
 import { getPrices, PRICE_LOOKUP_KEY_MANAGEMENT, PRICE_LOOKUP_KEY_USAGE, stripe } from '@/lib/billing';
 import { environment } from '@/lib/environment';
-import { logger } from '@/lib/logger';
 import { prisma } from '@/lib/prisma';
+import { createServerAction, ServerActionValidationError } from '@/lib/server-action';
 import { config } from '@/site-config';
 
-export async function createStripeCheckoutSession({
-  organizationId,
-}: {
-  organizationId: string;
-}): Promise<{ url?: string; error?: { message: string } }> {
-  const { siteUrl: baseUrl } = config;
-  try {
+const BillingActionInputSchema = z.object({
+  organizationId: z.string(),
+});
+
+export const createStripeCheckoutSession = createServerAction({
+  input: BillingActionInputSchema,
+  auth: true,
+  handler: async ({ input: { organizationId } }): Promise<{ url: string }> => {
+    const { siteUrl: baseUrl } = config;
     const organization = await prisma.organization.findUniqueOrThrow({
       where: { id: organizationId },
     });
@@ -61,25 +63,20 @@ export async function createStripeCheckoutSession({
     );
 
     return { url: session.url! };
-  } catch (error) {
-    logger.error(error);
-    return { error: { message: (error as Error).message } };
-  }
-}
+  },
+});
 
-export async function createStripeBillingPortalSession({
-  organizationId,
-}: {
-  organizationId: string;
-}): Promise<{ url?: string; error?: { message: string } }> {
-  const { siteUrl: baseUrl } = config;
-  try {
+export const createStripeBillingPortalSession = createServerAction({
+  input: BillingActionInputSchema,
+  auth: true,
+  handler: async ({ input: { organizationId } }): Promise<{ url: string }> => {
+    const { siteUrl: baseUrl } = config;
     const organization = await prisma.organization.findUniqueOrThrow({
       where: { id: organizationId },
     });
 
     if (!organization.customerId || !organization.subscriptionId) {
-      throw new Error('Organization does not have an active subscription');
+      throw new ServerActionValidationError('Organization does not have an active subscription');
     }
 
     const session = await stripe.billingPortal.sessions.create(
@@ -97,27 +94,20 @@ export async function createStripeBillingPortalSession({
     );
 
     return { url: session.url! };
-  } catch (error) {
-    logger.error(error);
-    return { error: { message: (error as Error).message } };
-  }
-}
+  },
+});
 
-export async function cancelSubscription({
-  organizationId,
-  feedback,
-}: {
-  organizationId: string;
-  feedback?: string;
-}): Promise<{ success: boolean; error?: { message: string } }> {
-  try {
+export const cancelSubscription = createServerAction({
+  input: BillingActionInputSchema,
+  auth: true,
+  handler: async ({ input: { organizationId } }): Promise<boolean> => {
     const organization = await prisma.organization.findUniqueOrThrow({
       where: { id: organizationId },
     });
 
     // ensure subscription exists
     if (!organization.subscriptionId) {
-      throw new Error('Organization does not have an active subscription');
+      throw new ServerActionValidationError('Organization does not have an active subscription');
     }
 
     // ensure there are no projects connected
@@ -125,7 +115,7 @@ export async function cancelSubscription({
       where: { organizationId: organization.id },
     });
     if (projectCount > 0) {
-      throw new Error('Please disconnect all projects before cancelling the subscription');
+      throw new ServerActionValidationError('Please disconnect all projects before cancelling the subscription');
     }
 
     // cancel the subscription immediately
@@ -145,17 +135,6 @@ export async function cancelSubscription({
 
     // when the webhook event is received, the organization will be updated
 
-    // collect the feedback, if provided
-    if (feedback) {
-      await storeFeedback({
-        type: 'billing.cancel',
-        message: feedback,
-        metadata: { organizationId },
-      });
-    }
-
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: { message: (error as Error).message } };
-  }
-}
+    return true;
+  },
+});

@@ -18,8 +18,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { UAParser } from 'ua-parser-js';
-import { leaveOrganization } from '@/actions/organizations';
-import { deleteUser } from '@/actions/user';
+import { storeFeedback } from '@/actions/feedback';
 import { TimeAgo } from '@/components/time-ago';
 import {
   AlertDialog,
@@ -431,14 +430,22 @@ export function OrganizationsSection({ organizations: initialOrganizations }: { 
     if (!orgToLeave) return;
 
     setIsLeavingOrg(true);
-    const { error } = await leaveOrganization({ organizationId: orgToLeave.id, feedback: leaveFeedback });
+
+    // collect feedback if provided
+    if (leaveFeedback) {
+      await storeFeedback({
+        type: 'organization.leave',
+        message: leaveFeedback,
+        metadata: { organizationId: orgToLeave.id },
+      });
+    }
+
+    const { error } = await authClient.organization.leave({ organizationId: orgToLeave.id });
     setIsLeavingOrg(false);
     setOrgToLeave(null);
     setLeaveFeedback('');
     if (error) {
-      toast.error('Failed to leave organization', {
-        description: error.message,
-      });
+      toast.error('Failed to leave organization', { description: error.message });
       return;
     }
 
@@ -573,7 +580,7 @@ export function OrganizationsSection({ organizations: initialOrganizations }: { 
   );
 }
 
-export function DangerSection({ hasOrganizations }: { hasOrganizations: boolean }) {
+export function DangerSection({ userId, hasOrganizations }: { userId: string; hasOrganizations: boolean }) {
   const [deleteFeedback, setDeleteFeedback] = useState('');
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -581,12 +588,23 @@ export function DangerSection({ hasOrganizations }: { hasOrganizations: boolean 
   async function handleDeleteAccount() {
     setIsDeletingAccount(true);
 
+    // collect feedback if provided
+    if (deleteFeedback) {
+      await storeFeedback({
+        // use the user ID to avoid duplicates because delete requires email confirmation (i.e. 2 step)
+        deduplicationId: `delete_${userId}`,
+        type: 'user.delete',
+        message: deleteFeedback,
+        metadata: { userId },
+      });
+    }
+
     // this will trigger the delete account flow (sends a verification email, with a link)
-    const { success, error } = await deleteUser({ feedback: deleteFeedback });
+    const { data, error } = await authClient.deleteUser({ callbackURL: '/login' });
     setIsDeletingAccount(false);
     setShowDeleteDialog(false);
     setDeleteFeedback('');
-    if (error || !success) {
+    if (error || !data?.success) {
       toast.error('Failed to initiate account deletion.', {
         description: error?.message || 'Unknown error',
       });

@@ -1,5 +1,3 @@
-'use server';
-
 import { cacheLife } from 'next/cache';
 import { getDateFromTimeRange, type TimeRange } from '@/lib/aggregation';
 import { logger } from '@/lib/logger';

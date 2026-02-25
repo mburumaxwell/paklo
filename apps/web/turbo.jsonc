@@ -26,6 +26,8 @@
         "EXPERIMENTATION_CONFIG_ITEM_KEY",
         "FLAGS",
         "FLAGS_SECRET",
+        "KV_REST_API_URL",
+        "KV_REST_API_TOKEN",
         "MONGO_URL",
         "PORT",
         "RESEND_API_KEY",

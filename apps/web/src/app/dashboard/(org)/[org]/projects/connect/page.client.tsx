@@ -5,13 +5,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { type AvailableProject, connectProjects } from '@/actions/projects';
+import { connectProjects } from '@/actions/projects';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import type { AvailableProject } from '@/integrations';
 import { getOrganizationTypeInfo } from '@/lib/organizations';
 import type { Organization } from '@/lib/prisma';
 
@@ -46,7 +47,7 @@ export function ConnectProjectsView({ organization, projects }: ProjectViewProps
     const selected = Array.from(selectedProjects).map((id) => projects.find((p) => p.providerId === id)!);
 
     setConnecting(true);
-    const { count, error } = await connectProjects({ organizationId: organization.id, projects: selected });
+    const { data: count, error } = await connectProjects({ organizationId: organization.id, projects: selected });
     setConnecting(false);
     if (error) {
       toast.error('Failed to connect projects', {

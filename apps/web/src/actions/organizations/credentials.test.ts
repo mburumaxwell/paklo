@@ -4,15 +4,16 @@ import { validateGitHubToken } from './credentials';
 describe('validateGitHubToken', () => {
   it('returns invalid for empty token', async () => {
     const result = await validateGitHubToken({ token: '' });
-    expect(result.valid).toBe(false);
-    expect(result.message).toBe('Token is required');
+    expect(result.data).toBeUndefined();
+    expect(result.error).toBeDefined();
+    expect(result.error?.message).toBe('Token is required');
   });
 
   describe('real API', async () => {
     it('returns invalid for malformed token', async () => {
       const result = await validateGitHubToken({ token: 'malformed_token' });
-      expect(result.valid).toBe(false);
-      expect(result.message).toBe('Invalid token. Please check your GitHub personal access token.');
+      expect(result.data).toBeUndefined();
+      expect(result.error?.message).toBe('Invalid token. Please check your GitHub personal access token.');
     }, 2000);
 
     it('works with a real token', async () => {
@@ -24,8 +25,8 @@ describe('validateGitHubToken', () => {
       }
 
       const result = await validateGitHubToken({ token });
-      expect(result.valid).toBe(true);
-      expect(result.message).toBeUndefined();
+      expect(result.data).toBe(true);
+      expect(result.error).toBeUndefined();
     }, 2000);
   });
 });

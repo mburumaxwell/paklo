@@ -16,7 +16,7 @@ import {
 } from '@paklo/core/dependabot';
 import { toNextJsHandler } from '@paklo/core/hono';
 import { resumeHook } from 'workflow/api';
-import { createAzdoClient } from '@/actions/organizations';
+import { createAzdoClient } from '@/integrations';
 import { author } from '@/lib/author';
 import { logger } from '@/lib/logger';
 import { getMongoCollection } from '@/lib/mongodb';

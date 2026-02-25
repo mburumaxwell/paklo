@@ -13,13 +13,12 @@ import {
 import { CONFIG_FILE_PATHS_AZURE } from '@paklo/core/dependabot';
 import { Hono } from 'hono';
 import { bearerAuth } from 'hono/bearer-auth';
-import { createAzdoClient } from '@/actions/organizations';
-import { requestTriggerUpdateJobs } from '@/actions/repositories';
-import { requestSync } from '@/actions/sync';
+import { createAzdoClient } from '@/integrations';
 import { author } from '@/lib/author';
 import { logger } from '@/lib/logger';
 import { type Organization, type Project, prisma, type Repository } from '@/lib/prisma';
 import { HEADER_NAME_ORGANIZATION, HEADER_NAME_PROJECT } from '@/lib/webhooks';
+import { startSync, startTriggerUpdateJobs } from '@/workflows';
 
 // https://hono.dev/docs/api/context#contextvariablemap
 declare module 'hono' {
@@ -155,7 +154,7 @@ async function handleRepoCreatedEvent(options: HandlerOptions<AzdoEventRepositor
 
   // we need to do sync for that repository so that it is created
   // sometimes is is created as a clone from another Git URL
-  await requestSync({
+  await startSync({
     organizationId: organization.id,
     projectId: project.id,
     repositoryId: undefined, // does not exist yet
@@ -200,7 +199,7 @@ async function handleRepoStatusChangedEvent(options: HandlerOptions<AzdoEventRep
   // at this point not disabled
 
   // we need to do sync for that repository so that it is created
-  await requestSync({
+  await startSync({
     organizationId: organization.id,
     projectId: project.id,
     repositoryId: undefined, // does not exist yet
@@ -260,7 +259,7 @@ async function handleCodePushEvent(options: HandlerOptions<AzdoEventCodePushReso
 
   // trigger sync for the repository
   logger.debug(`Triggering sync for repository ${remoteUrl} due to push event`);
-  await requestSync({
+  await startSync({
     organizationId: organization.id,
     projectId: project.id,
     repositoryId: repository?.id,
@@ -347,7 +346,7 @@ async function handlePrMergeEvent(options: HandlerOptions<AzdoEventPullRequestRe
 
     // request trigger update job to handle merge conflicts for this PR
     logger.trace(`PR ${prId} in ${adoRepository.remoteUrl} has merge conflicts, handling them`);
-    await requestTriggerUpdateJobs({
+    await startTriggerUpdateJobs({
       organizationId: organization.id,
       projectId: project.id,
       repositoryId: repository!.id,
@@ -396,7 +395,7 @@ async function handleCommentEvent(options: HandlerOptions<AzdoEventPullRequestCo
 
   if (command === 'recreate') {
     logger.debug(`Recreating PR ${prId} in ${adoRepository.remoteUrl} as per comment command`);
-    await requestTriggerUpdateJobs({
+    await startTriggerUpdateJobs({
       organizationId: options.organization.id,
       projectId: options.project.id,
       repositoryId: repository!.id,
@@ -421,7 +420,7 @@ async function handleCommentEvent(options: HandlerOptions<AzdoEventPullRequestCo
 
     // request trigger update job to handle the rebase for this PR
     logger.trace(`PR ${prId} in ${adoRepository.remoteUrl} is being rebased as per comment command`);
-    await requestTriggerUpdateJobs({
+    await startTriggerUpdateJobs({
       organizationId: options.organization.id,
       projectId: options.project.id,
       repositoryId: repository!.id,

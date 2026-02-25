@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { listAvailableProjects } from '@/actions/projects';
+import { listAvailableProjects } from '@/integrations';
 import { prisma } from '@/lib/prisma';
 import { ConnectProjectsView } from './page.client';
 

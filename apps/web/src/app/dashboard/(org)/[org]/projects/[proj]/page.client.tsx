@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { disconnectProject } from '@/actions/projects';
-import { requestSync } from '@/actions/sync';
+import { requestSync } from '@/actions/workflows';
 import { SynchronizationStatusBadge } from '@/components/icons';
 import { TimeAgo } from '@/components/time-ago';
 import { Button } from '@/components/ui/button';
@@ -57,33 +57,36 @@ export function RepositoriesView({
 
   async function handleSync(project: SimpleProject) {
     setIsRequestingSync(true);
-    try {
-      const updatedProject = await requestSync({
-        organizationId: project.organizationId,
-        projectId: project.id,
-        scope: 'project',
-        trigger: triggerUpdateJobs,
+    const { data: updatedProject, error } = await requestSync({
+      organizationId: project.organizationId,
+      projectId: project.id,
+      scope: 'project',
+      trigger: triggerUpdateJobs,
+    });
+    setShowSyncDialog(false);
+    setIsRequestingSync(false);
+    if (error) {
+      toast.error('Failed to start synchronization', {
+        description: error.message,
       });
-      setProject(updatedProject);
-      setShowSyncDialog(false);
-    } finally {
-      setIsRequestingSync(false);
+      return;
     }
+    setProject(updatedProject);
   }
 
   async function handleDisconnect(project: SimpleProject) {
-    try {
-      await disconnectProject({ organizationId: project.organizationId, projectId: project.id });
-
-      toast.success('Disconnected', {
-        description: `Successfully disconnected project "${project.name}"`,
-      });
-      router.push(`/dashboard/${organization.slug}/projects`);
-    } catch (error) {
+    const { error } = await disconnectProject({ organizationId: project.organizationId, projectId: project.id });
+    if (error) {
       toast.error('Failed to disconnect project', {
-        description: (error as Error).message,
+        description: error.message,
       });
+      return;
     }
+
+    toast.success('Disconnected', {
+      description: `Successfully disconnected project "${project.name}"`,
+    });
+    router.push(`/dashboard/${organization.slug}/projects`);
   }
 
   return (

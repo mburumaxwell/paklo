@@ -1,11 +1,11 @@
 import { type DependabotConfig, makeDirectoryKey, parseDependabotConfig } from '@paklo/core/dependabot';
-import { requestTriggerUpdateJobs } from '@/actions/repositories/trigger';
 import { generateCron } from '@/lib/cron';
 import { environment } from '@/lib/environment';
 import { PakloId } from '@/lib/ids';
 import { logger } from '@/lib/logger';
 import { getMongoCollection } from '@/lib/mongodb';
 import { type Organization, type OrganizationCredential, type Project, prisma, type Repository } from '@/lib/prisma';
+import { startTriggerUpdateJobs } from '@/workflows';
 import { type ISyncProvider, type SynchronizerConfigurationItem, toSynchronizerProject } from './provider';
 
 export type SyncResult = { count: number; deleted: number; updated: number };
@@ -342,7 +342,7 @@ export class Synchronizer {
 
     // trigger update jobs for the whole repository, if requested
     if (trigger) {
-      await requestTriggerUpdateJobs({
+      await startTriggerUpdateJobs({
         organizationId: organization.id,
         projectId: project.id,
         repositoryId: repository.id,

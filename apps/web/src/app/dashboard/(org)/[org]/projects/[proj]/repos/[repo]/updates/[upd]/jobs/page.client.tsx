@@ -4,7 +4,8 @@ import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import { requestTriggerUpdateJobs } from '@/actions/repositories';
+import { toast } from 'sonner';
+import { requestTriggerUpdateJobs } from '@/actions/workflows';
 import { EcosystemIcon, UpdateJobStatusIcon } from '@/components/icons';
 import { TimeAgo } from '@/components/time-ago';
 import { Button } from '@/components/ui/button';
@@ -82,13 +83,17 @@ export function UpdateJobsView({
   const router = useRouter();
 
   async function handleCheckForUpdates() {
-    await requestTriggerUpdateJobs({
+    const { error } = await requestTriggerUpdateJobs({
       organizationId: project.organizationId,
       projectId: project.id,
       repositoryId: repository.id,
       repositoryUpdateId: update.id,
       trigger: 'manual',
     });
+    if (error) {
+      toast.error('Failed to trigger update jobs', { description: error.message });
+      return;
+    }
 
     // redirect back to the repository page
     router.push(

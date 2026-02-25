@@ -21,10 +21,6 @@ export function ProjectsView({
 }) {
   const router = useRouter();
 
-  async function handleConnectProjects() {
-    router.push(`/dashboard/${organization.slug}/projects/connect`);
-  }
-
   return (
     <>
       {projects.length === 0 ? (
@@ -41,7 +37,9 @@ export function ProjectsView({
             </EmptyHeader>
             <EmptyContent>
               <div className='flex gap-2'>
-                <Button onClick={handleConnectProjects}>Connect Projects</Button>
+                <Button onClick={() => router.push(`/dashboard/${organization.slug}/projects/connect`)}>
+                  Connect Projects
+                </Button>
               </div>
             </EmptyContent>
           </Empty>
@@ -55,7 +53,10 @@ export function ProjectsView({
                 Manage and monitor your connected projects. Keep track of synchronization status and recent activity.
               </p>
             </div>
-            <Button onClick={handleConnectProjects} className='mt-4 md:w-full lg:mt-0 lg:w-auto lg:justify-self-end'>
+            <Button
+              onClick={() => router.push(`/dashboard/${organization.slug}/projects/connect`)}
+              className='mt-4 md:w-full lg:mt-0 lg:w-auto lg:justify-self-end'
+            >
               Connect Projects
             </Button>
           </div>

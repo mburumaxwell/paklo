@@ -355,7 +355,7 @@ export function DangerSection({ organizationId }: { organizationId: string }) {
 
   async function handleDeleteOrganization() {
     setIsDeletingOrg(true);
-    const { success, error } = await deleteOrganization({ organizationId });
+    const { data: success, error } = await deleteOrganization({ organizationId });
     setIsDeletingOrg(false);
     if (!success) {
       toast.error('Error deleting organization', { description: error?.message });

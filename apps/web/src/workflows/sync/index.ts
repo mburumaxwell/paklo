@@ -1,16 +1,18 @@
 import { FatalError } from 'workflow';
+import { z } from 'zod';
 import { type Organization, type Project, prisma, type Repository } from '@/lib/prisma';
 import { createSyncProvider } from './provider';
 import { Synchronizer, type SyncResult, type SyncSingleResult } from './synchronizer';
 
-export type SyncWorkflowOptions = {
-  organizationId: string;
-  projectId: string;
-  scope: 'project' | 'repository' | 'all';
-  repositoryId?: string;
-  repositoryProviderId?: string;
-  trigger?: boolean;
-};
+export const SyncWorkflowOptionsSchema = z.object({
+  organizationId: z.string(),
+  projectId: z.string(),
+  scope: z.enum(['project', 'repository', 'all']),
+  repositoryId: z.string().optional(),
+  repositoryProviderId: z.string().optional(),
+  trigger: z.boolean().optional(),
+});
+export type SyncWorkflowOptions = z.infer<typeof SyncWorkflowOptionsSchema>;
 
 export type SyncWorkflowResult = SyncResult | SyncSingleResult;
 

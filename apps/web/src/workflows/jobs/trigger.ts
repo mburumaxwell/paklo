@@ -1,6 +1,5 @@
 import {
   DEFAULT_EXPERIMENTS,
-  type DependabotCommand,
   type DependabotConfig,
   type DependabotExistingGroupPr,
   type DependabotExistingPr,
@@ -29,7 +28,7 @@ import {
 import { filesize } from 'filesize';
 import { createHook, FatalError, getWorkflowMetadata, sleep, type WorkflowMetadata } from 'workflow';
 import { z } from 'zod';
-import { getGithubToken, getSecretValue } from '@/actions/organizations';
+import { getGithubToken, getSecretValue } from '@/integrations';
 import {
   AzureRestError,
   BLOB_CONTAINER_NAME_CONSOLE_LOGS,
@@ -40,7 +39,6 @@ import {
   resourceGroupNameJobs,
 } from '@/lib/azure';
 import { METER_EVENT_NAME_USAGE, stripe } from '@/lib/billing';
-import type { UpdateJobTrigger } from '@/lib/enums';
 import { environment } from '@/lib/environment';
 import { enableDependabotConnectivityCheck } from '@/lib/flags';
 import { SequenceNumber } from '@/lib/ids';
@@ -49,33 +47,7 @@ import { prisma, type UpdateJob } from '@/lib/prisma';
 import { type RegionCode, toAzureLocation } from '@/lib/regions';
 import { streamToString } from '@/lib/utils';
 import { config } from '@/site-config';
-
-export type TriggerUpdateJobsWorkflowOptions = {
-  organizationId: string;
-  projectId: string;
-  repositoryId: string;
-  trigger: UpdateJobTrigger;
-  command?: DependabotCommand;
-} & (
-  | {
-      /**
-       * Optional identifiers of the repository updates.
-       * When `undefined` or an empty array all updates in the repository are scheduled to run.
-       */
-      repositoryUpdateIds?: string[];
-    }
-  | {
-      /** Identifier of a specific repository update. */
-      repositoryUpdateId: string;
-    }
-  | {
-      /** Identifier of a specific repository update for the pull request to update. */
-      repositoryUpdateId: string;
-
-      /** Identifier of the specific pull request to update. */
-      repositoryPullRequestId: string;
-    }
-);
+import type { TriggerUpdateJobsWorkflowOptions } from './types';
 
 /** Result of hook waiting for job completion */
 export type UpdateJobHookResult = {

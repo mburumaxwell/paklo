@@ -35,7 +35,9 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   // can't simplify this function any further due to server/client boundaries
   async function handleFeedback(feedback: SubmitFeedback) {
     'use server';
-    return await storeFeedback({ type: 'docs.review', ...feedback });
+    const { data, error } = await storeFeedback({ type: 'docs.review', ...feedback });
+    if (error) return {}; // discard feedback errors
+    return data;
   }
 
   return (

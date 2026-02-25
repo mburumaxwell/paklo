@@ -89,13 +89,13 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
     const name = secretName.toUpperCase();
 
     // Validate secret name
-    const { valid, error } = await validateSecretName({
+    const { data: valid, error } = await validateSecretName({
       organizationId: organization.id,
       name,
       id: editingSecret?.id,
     });
     if (!valid) {
-      setNameError(error || 'Invalid secret name');
+      setNameError(error?.message || 'Invalid secret name');
       return;
     }
 
@@ -107,22 +107,32 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
     setIsSubmitting(true);
 
     if (editingSecret) {
-      const secret = await updateSecret({
+      const { data: secret, error } = await updateSecret({
         organizationId: organization.id,
         id: editingSecret.id,
         value: secretValue.trim(),
         description: secretDescription?.trim() || undefined,
       });
+      if (error) {
+        toast.error(`Failed to update secret "${editingSecret.name}": ${error.message}`);
+        setIsSubmitting(false);
+        return;
+      }
       setSecrets((prev) => prev.map((s) => (s.id === editingSecret.id ? { ...s, ...secret } : s)));
       toast.success('Secret updated successfully');
     } else {
-      const secret = await createSecret({
+      const { data: secret, error } = await createSecret({
         organizationId: organization.id,
         region: organization.region,
         name: name,
         value: secretValue,
         description: secretDescription?.trim() || undefined,
       });
+      if (error) {
+        toast.error(`Failed to create secret "${name}": ${error.message}`);
+        setIsSubmitting(false);
+        return;
+      }
       setSecrets((prev) => [...prev, secret]);
       toast.success('Secret added successfully');
     }
@@ -134,7 +144,11 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
   }
 
   async function handleDeleteSecret(secret: OrganizationSecretSafe) {
-    await deleteSecret({ organizationId: organization.id, id: secret.id });
+    const { error } = await deleteSecret({ organizationId: organization.id, id: secret.id });
+    if (error) {
+      toast.error(`Failed to delete secret "${secret.name}": ${error.message}`);
+      return;
+    }
 
     setSecrets((prev) => prev.filter((s) => s.id !== secret.id));
     toast.success(`Secret "${secret.name}" deleted successfully`);
@@ -143,8 +157,8 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
   function validateNameInput(name: string) {
     setSecretName(name);
     if (name.trim()) {
-      const { valid, error } = validateSecretNameFormat(name);
-      setNameError(valid ? '' : error || 'Unknown secret validation error');
+      const { data: valid, error } = validateSecretNameFormat(name);
+      setNameError(valid ? '' : error?.message || 'Unknown secret validation error');
     } else {
       setNameError('');
     }

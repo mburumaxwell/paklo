@@ -2,11 +2,12 @@
 
 import { extractOrganizationUrl } from '@paklo/core/azure';
 import { Keygen } from '@paklo/core/keygen';
-import { headers as requestHeaders } from 'next/headers';
+import { z } from 'zod';
 import { auth, type Organization } from '@/lib/auth';
-import type { OrganizationType } from '@/lib/enums';
+import { type OrganizationType, OrganizationTypeSchema } from '@/lib/enums';
 import { prisma } from '@/lib/prisma';
-import type { RegionCode } from '@/lib/regions';
+import { type RegionCode, RegionCodeSchema } from '@/lib/regions';
+import { createServerAction } from '@/lib/server-action';
 
 export type OrganizationCreateOptions = {
   name: string;
@@ -17,37 +18,45 @@ export type OrganizationCreateOptions = {
   region: RegionCode;
 };
 
-export async function createOrganizationWithCredential(
-  options: OrganizationCreateOptions,
-): Promise<{ data: Organization; error?: undefined } | { data?: undefined; error: { message: string } }> {
-  const { name, slug, type, url, token, region } = options;
-  const headers = await requestHeaders();
-  const organization = await auth.api.createOrganization({
-    headers,
-    body: {
-      name,
-      slug,
-      type,
-      url,
-      region,
-      ...getProviderStuff(options),
-    },
-  });
+export const createOrganizationWithCredential = createServerAction({
+  input: z.object({
+    name: z.string().min(2).max(100),
+    slug: z.string().min(2).max(100),
+    type: OrganizationTypeSchema,
+    url: z.url(),
+    token: z.string().min(32).max(128),
+    region: RegionCodeSchema,
+  }),
+  auth: true,
+  handler: async ({ context: { headers }, input }): Promise<Organization> => {
+    const { name, slug, type, url, token, region } = input;
+    const organization = await auth.api.createOrganization({
+      headers,
+      body: {
+        name,
+        slug,
+        type,
+        url,
+        region,
+        ...getProviderStuff(input),
+      },
+    });
 
-  if (!organization) {
-    return { error: { message: 'Failed to create organization' } };
-  }
+    if (!organization) {
+      throw new Error('Failed to create organization');
+    }
 
-  // generate webhook token
-  const webhooksToken = Keygen.generate({ length: 32, encoding: 'base62' });
+    // generate webhook token
+    const webhooksToken = Keygen.generate({ length: 32, encoding: 'base62' });
 
-  // create organization credential
-  await prisma.organizationCredential.create({
-    data: { id: organization.id, token, webhooksToken },
-  });
+    // create organization credential
+    await prisma.organizationCredential.create({
+      data: { id: organization.id, token, webhooksToken },
+    });
 
-  return { data: organization };
-}
+    return organization;
+  },
+});
 
 type GetProviderStuffResult = Pick<Organization, 'providerHostname' | 'providerApiEndpoint'>;
 function getProviderStuff({ type, url: organizationUrl }: OrganizationCreateOptions): GetProviderStuffResult {

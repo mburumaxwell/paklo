@@ -162,10 +162,10 @@ export function CreateOrganizationPage() {
     }
 
     // validate credentials
-    const { valid, message } = await validateOrganizationCredentials(data);
+    const { data: valid, error } = await validateOrganizationCredentials(data);
     if (!valid) {
       setCredentialsVerifying(false);
-      setCredentialsError(message || 'Failed to verify credentials');
+      setCredentialsError(error?.message || 'Failed to verify credentials');
       return;
     }
 

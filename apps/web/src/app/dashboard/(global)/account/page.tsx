@@ -27,7 +27,7 @@ export default async function AccountPage() {
       <PasskeysSection passkeys={passkeys} />
       <SessionsSection activeSessionId={session.session.id} sessions={sessions} />
       <OrganizationsSection organizations={organizations} />
-      <DangerSection hasOrganizations={organizations.length > 0} />
+      <DangerSection userId={session.user.id} hasOrganizations={organizations.length > 0} />
     </div>
   );
 }

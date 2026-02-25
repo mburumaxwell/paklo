@@ -49,6 +49,8 @@
     "@sapphire/snowflake": "3.5.5",
     "@spdx/tools": "0.1.0",
     "@stripe/stripe-js": "8.8.0",
+    "@upstash/ratelimit": "2.0.8",
+    "@upstash/redis": "1.36.2",
     "@vercel/analytics": "1.6.1",
     "@vercel/flags-core": "1.0.1",
     "@vercel/functions": "3.4.2",

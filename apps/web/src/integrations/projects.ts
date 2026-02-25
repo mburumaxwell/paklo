@@ -1,21 +1,21 @@
-'use server';
-
-import { createAzdoClient } from '@/actions/organizations';
+import { z } from 'zod';
 import type { OrganizationType } from '@/lib/enums';
 import { prisma } from '@/lib/prisma';
+import { createAzdoClient } from './client';
 
-export type AvailableProject = {
-  name: string;
-  providerId: string;
-  description?: string;
-  url: string;
+export const AvailableProjectSchema = z.object({
+  name: z.string(),
+  providerId: z.string(),
+  description: z.string().optional(),
+  url: z.string(),
   /**
    * The link that never changes even if the name changes (only for some providers).
    * This tends to be the API url for the project.
    */
-  permalink: string;
-  connected: boolean;
-};
+  permalink: z.string(),
+  connected: z.boolean(),
+});
+export type AvailableProject = z.infer<typeof AvailableProjectSchema>;
 
 type ListAvailableProjectsOptions = {
   id: string;

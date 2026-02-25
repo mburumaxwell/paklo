@@ -5,7 +5,7 @@ import { INCLUDED_USAGE_MINUTES, PRICE_AMOUNT_MONTHLY_MANAGEMENT, PRICE_AMOUNT_P
 import { formatMoney } from '@/lib/money';
 
 // Static values - Update these manually from Azure Marketplace stats and database metrics
-// See apps/web/src/actions/stats.ts for how to get these metrics from the database and marketplace. Last updated: Feb 20, 2026
+// See apps/web/src/data/stats.ts for how to get these metrics from the database and marketplace. Last updated: Feb 20, 2026
 // Last updated: Feb 20, 2026
 export const INSTALLATIONS = 4_500; // Rounded from Azure DevOps Marketplace install count
 export const TOTAL_JOBS_90D = 576_000; // Total jobs in last 90 days from usage_telemetry

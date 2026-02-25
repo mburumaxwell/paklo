@@ -34,7 +34,7 @@ export function PrimaryIntegrationSection({ organization }: { organization: Orga
     setIsValidating(true);
 
     // validate credentials
-    const { valid, message } = await validateOrganizationCredentials({
+    const { data: valid, error: validateError } = await validateOrganizationCredentials({
       type: organization.type,
       url: organization.url,
       token,
@@ -43,7 +43,7 @@ export function PrimaryIntegrationSection({ organization }: { organization: Orga
     if (!valid) {
       setIsValidating(false);
       toast.error('Failed to verify organization credentials', {
-        description: message || 'Please check your token and try again.',
+        description: validateError?.message || 'Please check your token and try again.',
       });
       return;
     }
@@ -52,12 +52,12 @@ export function PrimaryIntegrationSection({ organization }: { organization: Orga
 
     // update token in database
     setIsSaving(true);
-    const { success, error } = await updateOrganizationToken({ id: organization.id, token });
+    const { data: success, error: updateError } = await updateOrganizationToken({ id: organization.id, token });
     setIsSaving(false);
     if (!success) {
       setIsSaving(false);
       toast.error('Failed to save organization token', {
-        description: error?.message || 'Please try again later.',
+        description: updateError?.message || 'Please try again later.',
       });
       return;
     }
@@ -176,11 +176,11 @@ export function GitHubSection({
     setIsValidating(true);
 
     // validate token
-    const { valid, message } = await validateGitHubToken({ token });
+    const { data: valid, error: validateError } = await validateGitHubToken({ token });
     if (!valid) {
       setIsValidating(false);
       toast.error('Failed to verify GitHub token', {
-        description: message || 'Please check your token and try again.',
+        description: validateError?.message || 'Please check your token and try again.',
       });
       return;
     }
@@ -189,12 +189,12 @@ export function GitHubSection({
 
     // update token in database
     setIsSaving(true);
-    const { success, error } = await updateGithubToken({ id: organizationId, token });
+    const { data: success, error: updateError } = await updateGithubToken({ id: organizationId, token });
     setIsSaving(false);
     if (!success) {
       setIsSaving(false);
       toast.error('Failed to save GitHub token', {
-        description: error?.message || 'Please try again later.',
+        description: updateError?.message || 'Please try again later.',
       });
       return;
     }
