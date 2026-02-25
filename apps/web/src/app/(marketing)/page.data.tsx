@@ -74,6 +74,7 @@ export const pricing = {
       'SBOM Export',
       'Weekly vulnerabilities email',
       'Team collaboration',
+      'Support ongoing development',
     ],
   },
 };
@@ -109,5 +110,10 @@ export const faqs: FaqEntry[] = [
     question: 'Do you offer refunds?',
     answer:
       'No. You can cancel at any time and your subscription remains active until the end of the current billing period. After cancellation, Paklo will stop running new jobs once the subscription term ends.',
+  },
+  {
+    question: 'How does the paid version support the project?',
+    answer:
+      'The paid managed service directly supports the ongoing development and maintenance of Paklo. Your subscription helps fund infrastructure costs, feature development, security updates, and community support. For those unable to use GitHub Sponsors, subscribing to the managed service is an excellent way to support the project while getting a fully managed solution with zero infrastructure overhead.',
   },
 ];

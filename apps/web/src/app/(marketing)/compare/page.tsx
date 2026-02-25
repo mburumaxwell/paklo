@@ -110,7 +110,8 @@ export default function ComparePage() {
             <ItemContent>
               <ItemTitle className='text-lg'>
                 If you want Dependabot-style PRs in Azure DevOps without running infra, or paying per-user pricing,
-                Paklo Managed is the fastest path.
+                Paklo Managed is the fastest path. Your subscription also supports the ongoing development and
+                maintenance of this open-source project—a great alternative to GitHub Sponsors.
               </ItemTitle>
             </ItemContent>
           </Item>

@@ -110,7 +110,10 @@ export function ManageSection({ organization, projects }: { organization: Simple
       </ItemMedia>
       <ItemContent>
         <ItemTitle>Billing information</ItemTitle>
-        <ItemDescription>We use Stripe for secure payment processing and billing management.</ItemDescription>
+        <ItemDescription>
+          We use Stripe for secure payment processing and billing management. Your subscription supports the ongoing
+          development of Paklo.
+        </ItemDescription>
       </ItemContent>
       <ItemActions>
         {hasBilling ? (

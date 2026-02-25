@@ -12,6 +12,7 @@ The Paklo hosted service provides a fully managed solution for running Dependabo
 - **Enterprise Features** - Organization-wide secrets and centralized management
 - **Always Up-to-Date** - Latest Dependabot features and security updates applied automatically
 - **Cost Effective** - No pipeline minutes consumed, predictable pricing
+- **Support the Project** - Your subscription supports ongoing development and maintenance (great alternative if GitHub Sponsors isn't available)
 
 ## Getting Started
 

@@ -2,7 +2,7 @@ import type { Metadata, Route } from 'next';
 import { headers as requestHeaders } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
-import { LoginForm } from './form';
+import { LoginForm } from './page.client';
 
 export const metadata: Metadata = {
   title: 'Login',
