@@ -63,7 +63,7 @@
   "homepage": "https://github.com/mburumaxwell/paklo#readme",
   "dependencies": {
     "@hono/zod-validator": "0.7.6",
-    "hono": "4.12.3",
+    "hono": "4.12.2",
     "js-yaml": "4.1.1",
     "ky": "1.14.3",
     "octokit": "5.0.5",
@@ -74,7 +74,7 @@
   },
   "devDependencies": {
     "@types/js-yaml": "4.0.9",
-    "@types/node": "25.3.3",
+    "@types/node": "25.3.0",
     "@types/semver": "7.7.1",
     "tsdown": "0.20.3"
   },
