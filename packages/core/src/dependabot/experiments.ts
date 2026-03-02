@@ -11,21 +11,13 @@ export const DEFAULT_EXPERIMENTS: DependabotExperiments = {
   'enable-corepack-for-npm-and-yarn': true,
   'enable-private-registry-for-corepack': true,
   'enable-shared-helpers-command-timeout': true,
-  'enable-dependabot-setting-up-cronjob': true,
-  'enable-engine-version-detection': true,
   'avoid-duplicate-updates-package-json': true,
   'allow-refresh-for-existing-pr-dependencies': true,
   'allow-refresh-group-with-all-dependencies': true,
   'enable-enhanced-error-details-for-updater': true,
   'gradle-lockfile-updater': true,
-  'gradle-wrapper-updater': true,
   'enable-exclude-paths-subdirectory-manifest-files': true,
   'group-membership-enforcement': true,
-  'deprecate-close-command': true,
-  'deprecate-reopen-command': true,
-  'deprecate-merge-command': true,
-  'deprecate-cancel-merge-command': true,
-  'deprecate-squash-merge-command': true,
 };
 
 /**
