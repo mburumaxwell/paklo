@@ -84,7 +84,7 @@ jobs:
         working-directory: extensions/azure
 
       - name: Upload Artifact (extensions-azure)
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           path: ${{ github.workspace }}/out/*
           name: extensions-azure
