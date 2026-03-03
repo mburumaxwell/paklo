@@ -1,5 +1,11 @@
 # @paklo/core
 
+## 0.14.1
+
+### Patch Changes
+
+- [`37391ba`](https://github.com/mburumaxwell/paklo/commit/37391badfe38f536a1f7a782f83acbc826ad49a4) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Update default experiments as of 02 March 2026
+
 ## 0.14.0
 
 ### Minor Changes
