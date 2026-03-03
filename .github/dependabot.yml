@@ -57,7 +57,7 @@ updates:
     open-pull-requests-limit: 20
     groups:
       azure: { patterns: ['@azure/*'] }
-      better-auth: { patterns: ['better-auth', '@better-auth/*'] }
+      better-auth: { patterns: ['auth', 'better-auth', '@better-auth/*'] }
       fumadocs: { patterns: ['fumadocs-*', '@fumadocs/*'] }
       next-and-react:
         patterns:
@@ -73,6 +73,7 @@ updates:
         patterns: ['*']
         exclude-patterns:
           - '@azure/*'
+          - 'auth'
           - 'better-auth'
           - '@better-auth/*'
           - '@biomejs/biome'
