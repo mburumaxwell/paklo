@@ -80,6 +80,7 @@ updates:
           - '@fumadocs/*'
           - '@types/react'
           - '@types/react-dom'
+          - 'mermaid'
           - 'next'
           - 'react'
           - 'react-dom'
