@@ -48,7 +48,7 @@
     "@react-email/render": "2.0.4",
     "@sapphire/snowflake": "3.5.5",
     "@spdx/tools": "0.1.0",
-    "@stripe/stripe-js": "8.8.0",
+    "@stripe/stripe-js": "8.9.0",
     "@upstash/ratelimit": "2.0.8",
     "@upstash/redis": "1.36.3",
     "@vercel/analytics": "1.6.1",
