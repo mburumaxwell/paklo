@@ -38,7 +38,7 @@
   "dependencies": {
     "@paklo/core": "workspace:*",
     "@paklo/runner": "workspace:*",
-    "azure-pipelines-task-lib": "5.2.6",
+    "azure-pipelines-task-lib": "5.2.7",
     "semver": "7.7.4"
   },
   "devDependencies": {
