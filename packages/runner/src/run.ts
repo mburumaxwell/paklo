@@ -71,6 +71,7 @@ export async function runJob(options: RunJobOptions): Promise<RunJobResult> {
       }
     };
 
+    // TODO: adapt to changes in https://github.com/github/dependabot-action/pull/1603
     const credentials = (await apiClient.getCredentials()) || [];
 
     const updater = new Updater(updaterImage, PROXY_IMAGE_NAME, params, job, credentials, debug);
