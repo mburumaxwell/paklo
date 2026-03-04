@@ -87,17 +87,19 @@ export function getPullRequestDescription({
 
   /* The securityVulnerabilities list contains all CVE's that were found in the run. We only want to mention those related to this PR's package. */
   let cvesForPackage: SecurityVulnerability[] = [];
-  if(securityVulnerabilities){
-    cvesForPackage = securityVulnerabilities.filter(sv => dependencies.some(d => d.name == sv.package.name));
+  if (securityVulnerabilities) {
+    cvesForPackage = securityVulnerabilities.filter((sv) => dependencies.some((d) => d.name === sv.package.name));
   }
 
   // If security vulnerabilities are available, add CVE information to the header
   if (cvesForPackage.length > 0) {
-    header+=`## CVE information \n\n`;
-    header+=`${cvesForPackage.map(cve => {
-      return securityVulnerabilitiesToMarkdown(cve);
-    }).join('')}\n\n`
-  }else{
+    header += `## CVE information \n\n`;
+    header += `${cvesForPackage
+      .map((cve) => {
+        return securityVulnerabilitiesToMarkdown(cve);
+      })
+      .join('')}\n\n`;
+  } else {
     // header+= `## No security vulnerabilities found \n\n`;
   }
 
@@ -122,23 +124,24 @@ export function getPullRequestDescription({
 }
 
 export function securityVulnerabilitiesToMarkdown(cve: SecurityVulnerability): string {
-  if(cve.advisory.identifiers.length == 0){
+  if (cve.advisory.identifiers.length === 0) {
     return '';
   }
   // Display package name and version.
-  let ret = `- ${cve.package.name} ${cve.package.version ?? ''}\n` +
-  // Display CVE identifiers, severity, and a link to more info if available.
-    `   - `+
-    cve.advisory.identifiers.
-      sort((a, b) => a.type.localeCompare(b.type)).
-      map(id => {
-          return `${id.value} (${id.type})`
-      }).
-      join(', ') + 
-      (cve.advisory.severity? ` [${cve.advisory.severity}]`: '') +
-      ': '+
-      (cve.advisory.permalink? ` [More info](${cve.advisory.permalink})`: '') +
-      '\n';
+  const ret =
+    `- ${cve.package.name} ${cve.package.version ?? ''}\n` +
+    // Display CVE identifiers, severity, and a link to more info if available.
+    `   - ` +
+    cve.advisory.identifiers
+      .sort((a, b) => a.type.localeCompare(b.type))
+      .map((id) => {
+        return `${id.value} (${id.type})`;
+      })
+      .join(', ') +
+    (cve.advisory.severity ? ` [${cve.advisory.severity}]` : '') +
+    ': ' +
+    (cve.advisory.permalink ? ` [More info](${cve.advisory.permalink})` : '') +
+    '\n';
 
   return ret;
 }
