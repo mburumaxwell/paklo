@@ -85,12 +85,20 @@ export function getPullRequestDescription({
   // https://github.com/dependabot/dependabot-core/blob/313fcff149b3126cb78b38d15f018907d729f8cc/common/lib/dependabot/pull_request_creator/message_builder/link_and_mention_sanitizer.rb#L245-L252
   const description = (body || '').replace(new RegExp(decodeURIComponent('%EF%BF%BD%EF%BF%BD%EF%BF%BD'), 'g'), '');
 
+  /* The securityVulnerabilities list contains all CVE's that were found in the run. We only want to mention those related to this PR's package. */
+  let cvesForPackage: SecurityVulnerability[] = [];
+  if(securityVulnerabilities){
+    cvesForPackage = securityVulnerabilities.filter(sv => dependencies.some(d => d.name == sv.package.name));
+  }
+
   // If security vulnerabilities are available, add CVE information to the header
-  if (securityVulnerabilities && securityVulnerabilities.length > 0) {
-    header+=
-      `${securityVulnerabilities.map(cve => {
-        cve.advisory.identifiers.map(id => id.value+" ("+id.type+")")
-      }).join(',')}\n\n`
+  if (cvesForPackage.length > 0) {
+    header+=`## CVE information \n\n`;
+    header+=`${cvesForPackage.map(cve => {
+      return securityVulnerabilitiesToMarkdown(cve);
+    }).join('')}\n\n`
+  }else{
+    // header+= `## No security vulnerabilities found \n\n`;
   }
 
   // If there is exactly one dependency, add a compatibility score badge to the description header.
@@ -111,6 +119,28 @@ export function getPullRequestDescription({
     return `${header}${description.substring(0, maxDescriptionLengthAfterHeaderAndFooter)}${footer}`;
   }
   return `${header}${description}${footer}`;
+}
+
+export function securityVulnerabilitiesToMarkdown(cve: SecurityVulnerability): string {
+  if(cve.advisory.identifiers.length == 0){
+    return '';
+  }
+  // Display package name and version.
+  let ret = `- ${cve.package.name} ${cve.package.version ?? ''}\n` +
+  // Display CVE identifiers, severity, and a link to more info if available.
+    `   - `+
+    cve.advisory.identifiers.
+      sort((a, b) => a.type.localeCompare(b.type)).
+      map(id => {
+          return `${id.value} (${id.type})`
+      }).
+      join(', ') + 
+      (cve.advisory.severity? ` [${cve.advisory.severity}]`: '') +
+      ': '+
+      (cve.advisory.permalink? ` [More info](${cve.advisory.permalink})`: '') +
+      '\n';
+
+  return ret;
 }
 
 /**
