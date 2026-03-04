@@ -305,6 +305,7 @@ export function mapGroupsFromDependabotConfigToJobConfig(
       return {
         name: name,
         'applies-to': group['applies-to'],
+        'group-by': group['group-by'],
         rules: {
           patterns: group.patterns?.length ? group.patterns : ['*'],
           'exclude-patterns': group['exclude-patterns'],

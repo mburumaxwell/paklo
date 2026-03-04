@@ -194,6 +194,7 @@ describe('mapGroupsFromDependabotConfigToJobConfig', () => {
     const dependencyGroups: Record<string, DependabotGroup> = {
       group: {
         'applies-to': 'version-updates',
+        'group-by': 'dependency-name',
         patterns: ['pattern1', 'pattern2'],
         'exclude-patterns': ['exclude1'],
         'dependency-type': 'production',
