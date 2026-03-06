@@ -100,6 +100,13 @@ Required permissions for Azure DevOps PAT:
 - Code (Full)
 - Pull Requests Threads (Read & Write)
 
+### Security & Advisories Parameters
+
+| Input | Description | Default |
+| ----- | ----------- | ------- |
+| `securityAdvisoriesFile` | Path to JSON file containing security advisories | - |
+| `includeCveInformation` | Include CVE/security advisory identifiers in PR descriptions | `false` |
+
 ### Customization Parameters
 
 | Input | Description | Default |
@@ -152,6 +159,15 @@ steps:
   inputs:
     azureDevOpsServiceConnection: 'my-service-connection'
     gitHubConnection: 'github-connection'
+```
+
+#### Including CVE Information in Pull Requests
+
+```yaml
+- task: dependabot@2
+  inputs:
+    includeCveInformation: true  # Show CVE/GHSA identifiers in PR descriptions
+    gitHubAccessToken: $(GITHUB_TOKEN)  # Required for security advisories
 ```
 
 #### Security-Only Updates
