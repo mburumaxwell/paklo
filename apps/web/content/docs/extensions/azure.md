@@ -99,6 +99,7 @@ Required permissions for Azure DevOps PAT:
 
 - Code (Full)
 - Pull Requests Threads (Read & Write)
+- Identity (Read) if you want to assign optional reviewers to PR's.
 
 ### Customization Parameters
 
