@@ -144,6 +144,15 @@
       "required": false
     },
     {
+      "name": "includeCveInformation",
+      "type": "boolean",
+      "label": "Include CVE/security advisory information in pull request descriptions",
+      "groupName": "security_updates",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "When set to `true`, security vulnerability identifiers (CVE, GHSA, etc.) will be included in the pull request description header. Defaults to `false`."
+    },
+    {
       "name": "azureDevOpsServiceConnection",
       "type": "connectedService:Externaltfs",
       "groupName": "devops",
