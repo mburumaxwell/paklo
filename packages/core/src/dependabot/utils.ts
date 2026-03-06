@@ -89,10 +89,11 @@ export function getPullRequestDescription({
 
   // If security vulnerabilities are available and CVE information task property is enabled, add vulnerability identifiers to the header
   if (includeCveInformation && securityVulnerabilities && securityVulnerabilities.length > 0) {
-    header+=
-      `${securityVulnerabilities.map(cve => {
-        cve.advisory.identifiers.map(id => id.value+" ("+id.type+")")
-      }).join(',')}\n\n`
+    header += `${securityVulnerabilities
+      .map((cve) => {
+        return cve.advisory.identifiers.map((id) => `${id.value} (${id.type})`);
+      })
+      .join(',')}\n\n`;
   }
 
   // If there is exactly one dependency, add a compatibility score badge to the description header.

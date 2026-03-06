@@ -199,7 +199,7 @@ export abstract class LocalDependabotServer {
     return [...affected.created.map((pr) => pr['pr-number']), ...affected.updated, ...affected.closed];
   }
 
-    /**
+  /**
    * Gets the security vulnerabilities for a dependabot job by ID.
    * @param id - The ID of the dependabot job to get security vulnerabilities for.
    * @returns The security vulnerabilities for the job, or undefined if not found.

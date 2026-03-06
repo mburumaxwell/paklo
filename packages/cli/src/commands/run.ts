@@ -214,7 +214,7 @@ export const command = new Command('run')
   .option('--author-email <AUTHOR-EMAIL>', 'Email to use for the git author.', DEPENDABOT_DEFAULT_AUTHOR_EMAIL)
   .option('--target-update-ids <TARGET-UPDATE-IDS...>', 'List of target update IDs to perform.', [])
   .option('--security-advisories-file <SECURITY-ADVISORIES-FILE>', 'Path to private security advisories file.')
-//.option('--include-cve-information','Whether to include CVE/security advisory identifiers in pull request descriptions.',false)
+  //.option('--include-cve-information','Whether to include CVE/security advisory identifiers in pull request descriptions.',false)
   .option(
     '--experiments <EXPERIMENTS>',
     'Comma-separated list of experiments to enable. If not set, default experiments will be used.',
