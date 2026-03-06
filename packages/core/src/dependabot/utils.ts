@@ -70,12 +70,14 @@ export function getPullRequestDescription({
   dependencies,
   maxDescriptionLength,
   securityVulnerabilities,
+  includeCveInformation = false,
 }: {
   packageManager: string;
   body: string | null | undefined;
   dependencies: DependabotDependency[];
   maxDescriptionLength?: number;
   securityVulnerabilities?: SecurityVulnerability[];
+  includeCveInformation?: boolean;
 }): string {
   let header = '';
   const footer = '';
@@ -85,8 +87,8 @@ export function getPullRequestDescription({
   // https://github.com/dependabot/dependabot-core/blob/313fcff149b3126cb78b38d15f018907d729f8cc/common/lib/dependabot/pull_request_creator/message_builder/link_and_mention_sanitizer.rb#L245-L252
   const description = (body || '').replace(new RegExp(decodeURIComponent('%EF%BF%BD%EF%BF%BD%EF%BF%BD'), 'g'), '');
 
-  // If security vulnerabilities are available, add CVE information to the header
-  if (securityVulnerabilities && securityVulnerabilities.length > 0) {
+  // If security vulnerabilities are available and CVE information task property is enabled, add vulnerability identifiers to the header
+  if (includeCveInformation && securityVulnerabilities && securityVulnerabilities.length > 0) {
     header+=
       `${securityVulnerabilities.map(cve => {
         cve.advisory.identifiers.map(id => id.value+" ("+id.type+")")
