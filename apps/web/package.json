@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@azure/arm-appcontainers": "3.0.0",
-    "@azure/core-rest-pipeline": "1.22.2",
+    "@azure/core-rest-pipeline": "1.23.0",
     "@azure/identity": "4.13.0",
     "@azure/keyvault-secrets": "4.10.0",
     "@azure/storage-blob": "12.31.0",
