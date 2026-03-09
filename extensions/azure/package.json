@@ -38,11 +38,11 @@
   "dependencies": {
     "@paklo/core": "workspace:*",
     "@paklo/runner": "workspace:*",
-    "azure-pipelines-task-lib": "5.2.7",
+    "azure-pipelines-task-lib": "5.2.8",
     "semver": "7.7.4"
   },
   "devDependencies": {
-    "@types/node": "25.3.3",
+    "@types/node": "25.3.5",
     "@types/semver": "7.7.1",
     "@vercel/ncc": "0.38.4",
     "tfx-cli": "0.23.1"

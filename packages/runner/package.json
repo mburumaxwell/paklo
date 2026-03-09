@@ -49,7 +49,7 @@
   },
   "homepage": "https://github.com/mburumaxwell/paklo#readme",
   "dependencies": {
-    "@hono/node-server": "1.19.10",
+    "@hono/node-server": "1.19.11",
     "@paklo/core": "workspace:*",
     "dockerode": "4.0.9",
     "ky": "1.14.3",
@@ -59,10 +59,10 @@
   },
   "devDependencies": {
     "@types/dockerode": "4.0.1",
-    "@types/node": "25.3.3",
+    "@types/node": "25.3.5",
     "@types/node-forge": "1.3.14",
     "@types/tar-stream": "3.1.4",
-    "tsdown": "0.20.3",
+    "tsdown": "0.21.0",
     "tsx": "4.21.0"
   },
   "publishConfig": {
