@@ -47,6 +47,9 @@ export type TaskInputs = {
 
   securityAdvisoriesFile: string | undefined;
 
+  /** Determines if CVE/security advisory information should be included in pull request descriptions */
+  includeCveInformation: boolean;
+
   /** Whether to test logic without creating, updating or abandoning pull requests */
   dryRun: boolean;
 
@@ -118,6 +121,7 @@ export function getTaskInputs(): TaskInputs {
 
   // Prepare other variables
   const securityAdvisoriesFile: string | undefined = tl.getInput('securityAdvisoriesFile');
+  const includeCveInformation: boolean = tl.getBoolInput('includeCveInformation', false);
   const dryRun: boolean = tl.getBoolInput('dryRun', false);
 
   const dependabotApiPortStr: string | undefined = tl.getInput('dependabotCliApiListeningPort', false);
@@ -159,6 +163,7 @@ export function getTaskInputs(): TaskInputs {
 
     targetUpdateIds,
     securityAdvisoriesFile,
+    includeCveInformation,
 
     dryRun,
 

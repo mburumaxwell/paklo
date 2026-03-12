@@ -33,6 +33,7 @@ const schema = z.object({
   credentialsTokenOverride: z.string().optional(),
   port: z.coerce.number().min(1).max(65535).optional(),
   securityAdvisoriesFile: z.string().optional(),
+  includeCveInformation: z.boolean(),
   autoApprove: z.boolean(),
   autoApproveToken: z.string().optional(),
   setAutoComplete: z.boolean(),
@@ -213,6 +214,7 @@ export const command = new Command('run')
   .option('--author-email <AUTHOR-EMAIL>', 'Email to use for the git author.', DEPENDABOT_DEFAULT_AUTHOR_EMAIL)
   .option('--target-update-ids <TARGET-UPDATE-IDS...>', 'List of target update IDs to perform.', [])
   .option('--security-advisories-file <SECURITY-ADVISORIES-FILE>', 'Path to private security advisories file.')
+  //.option('--include-cve-information','Whether to include CVE/security advisory identifiers in pull request descriptions.',false)
   .option(
     '--experiments <EXPERIMENTS>',
     'Comma-separated list of experiments to enable. If not set, default experiments will be used.',

@@ -51,6 +51,7 @@ describe('AzureLocalDependabotServer', () => {
       approverClient,
       setAutoComplete: false,
       autoCompleteIgnoreConfigIds: [],
+      includeCveInformation: false,
       existingBranchNames,
       existingPullRequests,
       author: { email: 'test@example.com', name: 'Test User' },
