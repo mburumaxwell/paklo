@@ -36,8 +36,8 @@ export const BLOB_CONTAINER_NAME_CONSOLE_LOGS = 'insights-logs-containerappconso
 export const subscriptionId = process.env.AZURE_SUBSCRIPTION_ID!;
 export const resourceGroupNameJobs = process.env.AZURE_RESOURCE_GROUP_JOBS!;
 
-export { RestError as AzureRestError };
 export type { ContainerAppJob, ContainerResources };
+export { RestError as AzureRestError };
 
 type Clients = {
   /** Azure Key Vault client for secrets */

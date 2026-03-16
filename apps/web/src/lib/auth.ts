@@ -138,9 +138,8 @@ export type Invitation = typeof auth.$Infer.Invitation;
 export type Member = typeof auth.$Infer.Member;
 export type MemberRole = Member['role'];
 export type { Passkey } from '@better-auth/passkey';
-
-export { APIError as BetterAuthApiError };
 export { toNextJsHandler } from 'better-auth/next-js';
+export { APIError as BetterAuthApiError };
 
 export function isPakloAdmin(session: Session) {
   return (
