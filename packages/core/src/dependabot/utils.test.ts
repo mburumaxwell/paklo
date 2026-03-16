@@ -1,6 +1,73 @@
-import { describe, expect, it } from 'vitest';
-import type { DependabotPersistedPr } from './job';
-import { shouldSupersede } from './utils';
+import { readFile } from 'node:fs/promises';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { SecurityVulnerabilitySchema, type SecurityVulnerability } from '../github';
+import type { DependabotDependency, DependabotPersistedPr } from './job';
+import { getPullRequestDescription, shouldSupersede } from './utils';
+
+describe('getPullRequestDescription', () => {
+  let securityVulnerabilities: SecurityVulnerability[];
+
+  beforeAll(async () => {
+    const fileContents = await readFile('../../advisories-example.json', 'utf-8');
+    securityVulnerabilities = await SecurityVulnerabilitySchema.array().parseAsync(JSON.parse(fileContents));
+  });
+
+  const dependency: DependabotDependency = {
+    name: 'Contoso.Utils',
+    'previous-requirements': null,
+    'previous-version': '3.0.0',
+    version: '3.0.1',
+    requirements: null,
+    removed: null,
+    directory: '/',
+  };
+
+  it('includes CVE information markdown when includeCveInformation is true', () => {
+    const description = getPullRequestDescription({
+      packageManager: 'nuget',
+      body: 'Test body',
+      dependencies: [dependency],
+      securityVulnerabilities,
+      includeCveInformation: true,
+    });
+
+    expect(description).toContain('## CVE information');
+    expect(description).toContain('- Contoso.Utils');
+    expect(description).toContain('CVE-2023-12345 (CVE)');
+    expect(description).toContain('![Dependabot compatibility score]');
+    expect(description).toContain('Test body');
+  });
+
+  it('does not include CVE information when includeCveInformation is false', () => {
+    const description = getPullRequestDescription({
+      packageManager: 'nuget',
+      body: 'Test body',
+      dependencies: [dependency],
+      securityVulnerabilities,
+      includeCveInformation: false,
+    });
+
+    expect(description).not.toContain('## CVE information');
+    expect(description).not.toContain('CVE-2023-12345 (CVE)');
+    expect(description).toContain('![Dependabot compatibility score]');
+    expect(description).toContain('Test body');
+  });
+
+  it('filters vulnerabilities to only include dependencies present in the pull request', () => {
+    const description = getPullRequestDescription({
+      packageManager: 'nuget',
+      body: 'Test body',
+      dependencies: [{ ...dependency, name: 'Different.Package' }],
+      securityVulnerabilities,
+      includeCveInformation: true,
+    });
+
+    expect(description).not.toContain('## CVE information');
+    expect(description).not.toContain('CVE-2023-12345 (CVE)');
+    expect(description).toContain('![Dependabot compatibility score]');
+    expect(description).toContain('Test body');
+  });
+});
 
 describe('shouldSupersede', () => {
   it('returns false when there are no overlapping dependencies', () => {

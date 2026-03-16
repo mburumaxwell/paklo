@@ -98,6 +98,7 @@ describe('AzureLocalJobsRunner', () => {
       autoApprove: false,
       setAutoComplete: false,
       autoCompleteIgnoreConfigIds: [],
+      includeCveInformation: false,
       author: { name: 'dependabot', email: 'dependabot@test.com' },
       dryRun: false,
       debug: false,

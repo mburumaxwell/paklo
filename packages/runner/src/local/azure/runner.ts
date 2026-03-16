@@ -359,7 +359,7 @@ export class AzureLocalJobsRunner extends LocalJobsRunner {
             securityVulnerabilities,
           }));
           ({ jobToken, credentialsToken } = this.makeTokens());
-          server.add({ id, update, job, jobToken, credentialsToken, credentials });
+          server.add({ id, update, job, jobToken, credentialsToken, credentials, securityVulnerabilities });
           const { success, message } = await runJob({
             dependabotApiUrl,
             dependabotApiDockerUrl,
@@ -397,7 +397,7 @@ export class AzureLocalJobsRunner extends LocalJobsRunner {
               securityVulnerabilities,
             }));
             ({ jobToken, credentialsToken } = this.makeTokens());
-            server.add({ id, update, job, jobToken, credentialsToken, credentials });
+            server.add({ id, update, job, jobToken, credentialsToken, credentials, securityVulnerabilities });
             const { success, message } = await runJob({
               dependabotApiUrl,
               dependabotApiDockerUrl,

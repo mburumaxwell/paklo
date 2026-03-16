@@ -12,6 +12,7 @@ import {
   type DependabotUpdate,
   type GitAuthor,
 } from '@paklo/core/dependabot';
+import type { SecurityVulnerability } from '@paklo/core/github';
 import { logger } from '@paklo/core/logger';
 
 export type LocalDependabotServerAddOptions = {
@@ -27,6 +28,8 @@ export type LocalDependabotServerAddOptions = {
   credentialsToken: string;
   /** The credentials associated with the job. */
   credentials: DependabotCredential[];
+  /** The security vulnerabilities for the job (optional). */
+  securityVulnerabilities?: SecurityVulnerability[];
 };
 
 export type AffectedPullRequestIds = {
@@ -52,6 +55,7 @@ export abstract class LocalDependabotServer {
   private readonly credentialTokens = new Map<string, string>();
   private readonly jobCredentials = new Map<string, DependabotCredential[]>();
   private readonly receivedRequests = new Map<string, DependabotRequest[]>();
+  private readonly securityVulnerabilities = new Map<string, SecurityVulnerability[]>();
 
   protected readonly affectedPullRequestIds = new Map<string, AffectedPullRequestIds>();
 
@@ -107,7 +111,7 @@ export abstract class LocalDependabotServer {
    * @param value - The dependabot job details.
    */
   add(value: LocalDependabotServerAddOptions) {
-    const { id, update, job, jobToken, credentialsToken, credentials } = value;
+    const { id, update, job, jobToken, credentialsToken, credentials, securityVulnerabilities } = value;
     const {
       trackedJobs,
       updates,
@@ -124,6 +128,9 @@ export abstract class LocalDependabotServer {
     jobCredentials.set(id, credentials);
     receivedRequests.set(id, []);
     affectedPullRequestIds.set(id, { created: [], updated: [], closed: [] });
+    if (securityVulnerabilities) {
+      this.securityVulnerabilities.set(id, securityVulnerabilities);
+    }
   }
 
   /**
@@ -193,6 +200,15 @@ export abstract class LocalDependabotServer {
   }
 
   /**
+   * Gets the security vulnerabilities for a dependabot job by ID.
+   * @param id - The ID of the dependabot job to get security vulnerabilities for.
+   * @returns The security vulnerabilities for the job, or undefined if not found.
+   */
+  vulnerabilities(id: string): SecurityVulnerability[] | undefined {
+    return this.securityVulnerabilities.get(id);
+  }
+
+  /**
    * Clears all data associated with a dependabot job by ID.
    * This should be called when the job is no longer needed.
    * @param id - The ID of the dependabot job to clear.
@@ -205,6 +221,7 @@ export abstract class LocalDependabotServer {
     this.jobCredentials.delete(id);
     this.receivedRequests.delete(id);
     this.affectedPullRequestIds.delete(id);
+    this.securityVulnerabilities.delete(id);
   }
 
   /**

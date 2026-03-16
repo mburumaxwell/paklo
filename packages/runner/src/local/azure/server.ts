@@ -30,6 +30,7 @@ export type AzureLocalDependabotServerOptions = LocalDependabotServerOptions & {
   setAutoComplete: boolean;
   mergeStrategy?: AzdoPullRequestMergeStrategy;
   autoCompleteIgnoreConfigIds: number[];
+  includeCveInformation: boolean;
   existingBranchNames: string[] | undefined;
   existingPullRequests: AzdoPrExtractedWithProperties[];
 };
@@ -57,6 +58,7 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
       mergeStrategy,
       setAutoComplete,
       autoCompleteIgnoreConfigIds,
+      includeCveInformation,
       author,
       dryRun,
     } = options;
@@ -148,6 +150,8 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
             body: data['pr-body'],
             dependencies: data.dependencies,
             maxDescriptionLength: PR_DESCRIPTION_MAX_LENGTH,
+            securityVulnerabilities: this.vulnerabilities(id),
+            includeCveInformation,
           }),
           commitMessage: data['commit-message'],
           autoComplete: setAutoComplete
