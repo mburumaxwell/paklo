@@ -42,8 +42,8 @@
     "zod": "4.3.6"
   },
   "devDependencies": {
-    "@types/node": "25.3.5",
-    "tsdown": "0.21.0"
+    "@types/node": "25.5.0",
+    "tsdown": "0.21.3"
   },
   "publishConfig": {
     "access": "public",
