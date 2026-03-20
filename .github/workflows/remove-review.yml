@@ -18,7 +18,7 @@ on:
 
 permissions:
   contents: read
-  id-token: write # needed for azure/login@v2
+  id-token: write # needed for azure/login@v3
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -37,7 +37,7 @@ jobs:
           dotnet-version: '9.x'
 
       - name: Azure Login
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
