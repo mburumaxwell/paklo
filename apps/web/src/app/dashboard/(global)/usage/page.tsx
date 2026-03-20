@@ -1,30 +1,25 @@
 import type { DependabotPackageManager } from '@paklo/core/dependabot';
 import type { Metadata } from 'next';
 import { headers as requestHeaders } from 'next/headers';
-import { forbidden } from 'next/navigation';
+import { forbidden, unauthorized } from 'next/navigation';
 import { getDateFromTimeRange, type TimeRange } from '@/lib/aggregation';
-import { auth, isPakloAdmin } from '@/lib/auth';
+import { auth, userHasPermission } from '@/lib/auth';
 import { unwrapWithAll, type WithAll } from '@/lib/enums';
 import { type Filter, getMongoCollection, type UsageTelemetry } from '@/lib/mongodb';
 import type { RegionCode } from '@/lib/regions';
 import { type SlimTelemetry, TelemetryDashboard } from './page.client';
 
-export async function generateMetadata(props: PageProps<'/dashboard/usage'>): Promise<Metadata> {
-  const headers = await requestHeaders();
-  const session = (await auth.api.getSession({ headers }))!;
-  if (!isPakloAdmin(session)) return forbidden();
-
-  return {
-    title: 'Usage Statistics',
-    description: 'View usage statistics',
-    openGraph: { url: `/dashboard/usage` },
-  };
-}
+export const metadata: Metadata = {
+  title: 'Usage Statistics',
+  description: 'View usage statistics',
+  openGraph: { url: `/dashboard/usage` },
+};
 
 export default async function Page(props: PageProps<'/dashboard/usage'>) {
   const headers = await requestHeaders();
-  const session = (await auth.api.getSession({ headers }))!;
-  if (!isPakloAdmin(session)) return forbidden();
+  const session = await auth.api.getSession({ headers });
+  if (!session) return unauthorized();
+  if (!(await userHasPermission({ headers, permissions: { usage: ['view'] } }))) return forbidden();
 
   const searchParams = (await props.searchParams) as {
     timeRange?: TimeRange;

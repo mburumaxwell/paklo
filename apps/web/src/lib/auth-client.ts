@@ -9,6 +9,7 @@ import {
 } from 'better-auth/client/plugins';
 import { createAuthClient } from 'better-auth/react';
 import type { auth } from '@/lib/auth';
+import { accessControl, admin as adminRole, user as userRole } from '@/lib/auth-permissions';
 
 export const authClient = createAuthClient({
   // auth server is running on the same domain as your client, hence no need to set baseURL
@@ -18,7 +19,13 @@ export const authClient = createAuthClient({
     magicLinkClient(),
     passkeyClient(),
     organizationClient({ schema: inferOrgAdditionalFields<typeof auth>() }),
-    adminClient(),
+    adminClient({
+      ac: accessControl,
+      roles: {
+        user: userRole,
+        admin: adminRole,
+      },
+    }),
     lastLoginMethodClient(),
   ],
 });

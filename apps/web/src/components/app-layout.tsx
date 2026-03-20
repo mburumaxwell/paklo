@@ -15,19 +15,11 @@ type AppLayoutProps = {
   children: React.ReactNode;
   session?: Session;
   organizations?: (Pick<Organization, 'id' | 'name' | 'slug' | 'type' | 'logo'> & { active: boolean })[];
-  pakloAdmin?: boolean;
   breadcrumb?: boolean;
   cookies?: Awaited<ReturnType<typeof cookies>>;
 };
 
-export async function AppLayout({
-  children,
-  session,
-  organizations = [],
-  pakloAdmin = false,
-  breadcrumb = true,
-  cookies,
-}: AppLayoutProps) {
+export async function AppLayout({ children, session, organizations = [], breadcrumb = true, cookies }: AppLayoutProps) {
   const slugs = organizations.map((org) => org.slug);
   const activeOrganization = organizations.find((org) => org.active);
 
@@ -36,7 +28,7 @@ export async function AppLayout({
   return (
     <>
       <SidebarProvider defaultOpen={defaultSidebarOpen}>
-        {session && <AppSidebar session={session} organizations={organizations} pakloAdmin={pakloAdmin} />}
+        {session && <AppSidebar session={session} organizations={organizations} />}
         <SidebarInset>
           <header className='flex h-16 shrink-0 items-center gap-2 border-b px-4'>
             {session && (

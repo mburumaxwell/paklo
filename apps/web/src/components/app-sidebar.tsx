@@ -56,9 +56,8 @@ type SimpleOrganization = Pick<Organization, 'id' | 'name' | 'slug' | 'type' | '
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   session: Session;
   organizations: SimpleOrganization[];
-  pakloAdmin: boolean;
 }
-export function AppSidebar({ session, organizations, pakloAdmin, ...props }: AppSidebarProps) {
+export function AppSidebar({ session, organizations, ...props }: AppSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const isActive = (href: MenuItem['href']) => pathname === href;
@@ -95,7 +94,7 @@ export function AppSidebar({ session, organizations, pakloAdmin, ...props }: App
         ] satisfies MenuGroup[])),
 
     // Admin group, only for Paklo admins
-    ...(pakloAdmin
+    ...(session.user.role === 'admin'
       ? ([
           {
             label: 'Admin',

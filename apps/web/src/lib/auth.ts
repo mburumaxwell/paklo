@@ -11,6 +11,7 @@ import {
   sendOrganizationInviteEmail,
   sendUserDeleteVerificationEmail,
 } from '@/emails';
+import { accessControl, admin as adminRole, user as userRole } from '@/lib/auth-permissions';
 import { OrganizationTypeSchema } from '@/lib/enums';
 import { environment } from '@/lib/environment';
 import { PakloId } from '@/lib/ids';
@@ -68,7 +69,13 @@ export const auth = betterAuth({
     changeEmail: { enabled: false },
   },
   plugins: [
-    admin({}),
+    admin({
+      ac: accessControl,
+      roles: {
+        user: userRole,
+        admin: adminRole,
+      },
+    }),
     organization({
       schema: {
         organization: {
@@ -138,7 +145,21 @@ export type { Passkey } from '@better-auth/passkey';
 export { toNextJsHandler } from 'better-auth/next-js';
 export { APIError as BetterAuthApiError };
 
-export function isPakloAdmin(session: Session) {
-  // TODO: move this to permissions system
-  return session.user.role === 'admin';
+export type UserHasPermissionParams = {
+  headers: Headers;
+  permissions: {
+    [K in keyof typeof accessControl.statements]?: (typeof accessControl.statements)[K][number][];
+  };
+};
+
+/**
+ * Helper function to check if the user has the required permissions.
+ * This can only be used in server-side.
+ */
+export async function userHasPermission({ headers, permissions }: UserHasPermissionParams): Promise<boolean> {
+  const { success } = await auth.api.userHasPermission({
+    headers,
+    body: { permissions },
+  });
+  return success;
 }
