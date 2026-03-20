@@ -21,7 +21,8 @@ resource keyVault 'Microsoft.KeyVault/vaults@2025-05-01' = {
     sku: { name: 'standard', family: 'A' }
     enabledForDeployment: false
     enableRbacAuthorization: true
-    enableSoftDelete: false
+    enableSoftDelete: true
+    softDeleteRetentionInDays: 90
   }
 }
 
