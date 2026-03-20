@@ -61,10 +61,6 @@ jobs:
         run: pnpm turbo run build
         working-directory: '${{ github.workspace }}/extensions/azure'
 
-      - name: Lint
-        run: pnpm turbo run lint
-        working-directory: '${{ github.workspace }}/extensions/azure'
-
       - name: Test
         run: pnpm turbo run test
         working-directory: '${{ github.workspace }}/extensions/azure'

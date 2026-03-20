@@ -58,10 +58,6 @@ jobs:
         run: pnpm turbo run build
         working-directory: '${{ github.workspace }}/packages/cli'
 
-      - name: Lint
-        run: pnpm turbo run lint
-        working-directory: '${{ github.workspace }}/packages/cli'
-
       - name: Test
         run: pnpm turbo run test
         working-directory: '${{ github.workspace }}/packages/cli'
