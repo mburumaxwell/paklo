@@ -23,12 +23,13 @@ export function HelpScoutBeacon({ session, organization }: HelpScoutBeaconProps)
         `}
       </Script>
       <Script id='helpscout-beacon-source' src='https://beacon-v2.helpscout.net' strategy='afterInteractive' />
-      <Script
-        id={`helpscout-beacon-init-${organization?.name ?? 'none'}-${user?.email ?? 'anon'}`}
-        strategy='afterInteractive'
-      >
+      <Script id='helpscout-beacon-init' strategy='afterInteractive'>
         {`
-          window.Beacon('init', '${beaconId}');
+          window.__helpScoutBeaconInitialized = window.__helpScoutBeaconInitialized || false;
+          if (!window.__helpScoutBeaconInitialized) {
+            window.Beacon('init', '${beaconId}');
+            window.__helpScoutBeaconInitialized = true;
+          }
           ${identify ? `window.Beacon('identify', ${JSON.stringify(identify)});` : ''}
           ${sessionData ? `window.Beacon('session-data', ${JSON.stringify(sessionData)});` : ''}
         `}
