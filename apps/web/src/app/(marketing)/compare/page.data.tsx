@@ -1,5 +1,5 @@
 import { PRICE_AMOUNT_MONTHLY_MANAGEMENT } from '@/lib/billing';
-import { formatMoney, type Money } from '@/lib/money';
+import { type Money, formatMoney } from '@/lib/money';
 
 export const AZDO_ADS_PRICE_AMOUNT_MONTHLY: Money = { amount: 4900, currency: 'USD' }; // $49.00
 

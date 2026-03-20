@@ -1,30 +1,32 @@
 import { ArrowRight, Check, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { numify } from 'numify';
+
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item';
 import { extensions } from '@/site-config';
-import { faqs, features, INSTALLATIONS, pricing, stats } from './page.data';
+
+import { INSTALLATIONS, faqs, features, pricing, stats } from './page.data';
 
 export default function HomePage() {
   return (
     <>
       {/* Hero */}
       <section className='relative overflow-hidden py-12 lg:py-20'>
-        <div className='absolute inset-0 bg-grid-white/[0.02] bg-size-[50px_50px]' />
+        <div className='bg-grid-white/[0.02] absolute inset-0 bg-size-[50px_50px]' />
         <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
           <div className='mx-auto max-w-4xl text-center'>
-            <div className='mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-primary text-sm'>
+            <div className='mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary'>
               <Shield className='size-4' />
               Trusted by {numify(INSTALLATIONS)}+ engineering teams
             </div>
-            <h1 className='mb-6 text-balance font-bold text-4xl lg:text-6xl'>
+            <h1 className='mb-6 text-4xl font-bold text-balance lg:text-6xl'>
               Secure your dependencies, <span className='text-primary'>ship with confidence</span>
             </h1>
-            <p className='mx-auto mb-8 max-w-2xl text-balance text-muted-foreground text-xl lg:max-w-3xl'>
+            <p className='mx-auto mb-8 max-w-2xl text-xl text-balance text-muted-foreground lg:max-w-3xl'>
               Automated vulnerability scanning and dependency management for modern development teams. Keep your code
               secure without slowing down.
             </p>
@@ -49,15 +51,15 @@ export default function HomePage() {
               <CardContent className='p-0'>
                 <div className='grid grid-cols-1 gap-6 bg-muted/50 p-8 md:grid-cols-3'>
                   <div className='space-y-3'>
-                    <div className='flex items-center gap-2 font-medium text-sm'>
+                    <div className='flex items-center gap-2 text-sm font-medium'>
                       <div className='size-3 rounded-full bg-red-500' />
                       Critical: 2
                     </div>
-                    <div className='flex items-center gap-2 font-medium text-sm'>
+                    <div className='flex items-center gap-2 text-sm font-medium'>
                       <div className='size-3 rounded-full bg-orange-500' />
                       High: 5
                     </div>
-                    <div className='flex items-center gap-2 font-medium text-sm'>
+                    <div className='flex items-center gap-2 text-sm font-medium'>
                       <div className='size-3 rounded-full bg-yellow-500' />
                       Medium: 12
                     </div>
@@ -83,7 +85,7 @@ export default function HomePage() {
             {stats.map((stat) => (
               <div key={stat.name} className='text-center'>
                 <p className='mb-2'>
-                  <span className='font-semibold text-3xl tracking-tight'>{stat.value}</span>
+                  <span className='text-3xl font-semibold tracking-tight'>{stat.value}</span>
                   {stat.unit ? <span className='ml-2 text-sm'>{stat.unit}</span> : null}
                 </p>
                 <p className='text-lg text-muted-foreground'>{stat.name}</p>
@@ -97,8 +99,8 @@ export default function HomePage() {
       <section id='features' className='bg-muted/30 py-12 lg:py-20'>
         <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
           <div className='mx-auto mb-16 max-w-3xl text-center'>
-            <h2 className='mb-4 font-bold text-3xl lg:text-4xl'>Everything you need to stay secure</h2>
-            <p className='text-muted-foreground text-xl'>
+            <h2 className='mb-4 text-3xl font-bold lg:text-4xl'>Everything you need to stay secure</h2>
+            <p className='text-xl text-muted-foreground'>
               Comprehensive security monitoring and automated updates for your entire stack
             </p>
           </div>
@@ -123,8 +125,8 @@ export default function HomePage() {
       <section id='pricing' className='py-12 lg:py-20'>
         <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
           <div className='mx-auto mb-16 max-w-3xl text-center'>
-            <h2 className='mb-4 font-bold text-3xl lg:text-4xl'>Simple, transparent pricing</h2>
-            <p className='text-muted-foreground text-xl'>Choose the option that works best for you</p>
+            <h2 className='mb-4 text-3xl font-bold lg:text-4xl'>Simple, transparent pricing</h2>
+            <p className='text-xl text-muted-foreground'>Choose the option that works best for you</p>
           </div>
 
           <div className='mx-auto grid max-w-4xl grid-cols-1 gap-8 lg:grid-cols-2'>
@@ -135,7 +137,7 @@ export default function HomePage() {
                   <div className='mb-4 flex items-baseline gap-2'>
                     <span className='text-2xl'>Free Forever</span>
                   </div>
-                  <p className='text-muted-foreground text-sm'>Install and run the extension yourself</p>
+                  <p className='text-sm text-muted-foreground'>Install and run the extension yourself</p>
                 </div>
                 <a href={extensions.azure.url} target='_blank' rel='noopener noreferrer'>
                   <Button variant='outline' className='mb-6 w-full bg-transparent'>
@@ -164,7 +166,7 @@ export default function HomePage() {
                     <span className='text-2xl'>{pricing.paid.monthly}</span>
                     <span className='text-muted-foreground'>/organization/month</span>
                   </div>
-                  <p className='text-muted-foreground text-sm'>Fully managed cloud service</p>
+                  <p className='text-sm text-muted-foreground'>Fully managed cloud service</p>
                 </div>
                 <Link href='/signup'>
                   <Button variant='brand' className='mb-6 w-full'>
@@ -189,8 +191,8 @@ export default function HomePage() {
       <section id='faqs' className='bg-muted/30 py-12 lg:py-20'>
         <div className='mx-auto max-w-4xl px-4 sm:px-6 lg:px-8'>
           <div className='mb-16 text-center'>
-            <h2 className='mb-4 font-bold text-3xl lg:text-4xl'>Frequently Asked Questions</h2>
-            <p className='text-muted-foreground text-xl'>Everything you need to know about Paklo</p>
+            <h2 className='mb-4 text-3xl font-bold lg:text-4xl'>Frequently Asked Questions</h2>
+            <p className='text-xl text-muted-foreground'>Everything you need to know about Paklo</p>
           </div>
 
           <Accordion type='single' collapsible className='space-y-2'>

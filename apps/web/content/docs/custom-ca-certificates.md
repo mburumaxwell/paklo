@@ -118,7 +118,7 @@ steps:
     displayName: 'Create CA certificate file'
     env:
       COMPANY_CA_CERT: $(CompanyCACertificate)
-  
+
   - task: dependabot@2
     inputs:
       mergeStrategy: 'squash'

@@ -17,17 +17,18 @@ import {
   CA_CERT_FILENAME,
   CA_CERT_INPUT_PATH,
   CONFIG_FILE_NAME,
-  extractUpdaterSha,
   JOB_INPUT_FILENAME,
   JOB_INPUT_PATH,
   PROXY_IMAGE_NAME,
   ProxyBuilder,
   REPO_CONTENTS_PATH,
+  extractUpdaterSha,
   updaterImageName,
 } from '@paklo/runner';
 import { filesize } from 'filesize';
-import { createHook, FatalError, getWorkflowMetadata, sleep, type WorkflowMetadata } from 'workflow';
+import { FatalError, type WorkflowMetadata, createHook, getWorkflowMetadata, sleep } from 'workflow';
 import { z } from 'zod';
+
 import { getGithubToken, getSecretValue } from '@/integrations';
 import {
   AzureRestError,
@@ -43,10 +44,11 @@ import { environment } from '@/lib/environment';
 import { enableDependabotConnectivityCheck } from '@/lib/flags';
 import { SequenceNumber } from '@/lib/ids';
 import { logger } from '@/lib/logger';
-import { prisma, type UpdateJob } from '@/lib/prisma';
+import { type UpdateJob, prisma } from '@/lib/prisma';
 import { type RegionCode, toAzureLocation } from '@/lib/regions';
 import { streamToString } from '@/lib/utils';
 import { config } from '@/site-config';
+
 import type { TriggerUpdateJobsWorkflowOptions } from './types';
 
 /** Result of hook waiting for job completion */
@@ -220,8 +222,8 @@ async function getOrCreateUpdateJobs(options: GetOrCreateUpdateJobOptions): Prom
     const id = SequenceNumber.generate().toString();
     const builder = new DependabotJobBuilder({
       source: {
-        provider: organization.type,
-        hostname: organization.providerHostname,
+        'provider': organization.type,
+        'hostname': organization.providerHostname,
         'api-endpoint': organization.providerApiEndpoint,
         'repository-slug': repository.slug,
       },

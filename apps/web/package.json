@@ -20,7 +20,6 @@
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
-    "lint": "biome check",
     "test": "vitest",
     "clean": "rimraf .turbo .next .source .react-email .generated src/app/.well-known/workflow out"
   },

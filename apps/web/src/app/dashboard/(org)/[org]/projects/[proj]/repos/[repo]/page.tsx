@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import type { UpdateJobStatus } from '@/lib/enums';
 import { prisma } from '@/lib/prisma';
+
 import { RepositoryView } from './page.client';
 
 export async function generateMetadata(

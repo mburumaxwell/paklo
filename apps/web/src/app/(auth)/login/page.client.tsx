@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+
 import { LastUsedIndicator } from '@/components/last-used-indicator';
 import { AppleLogo, GoogleLogo, PakloIcon } from '@/components/logos';
 import { Button } from '@/components/ui/button';
@@ -54,7 +55,7 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
         autoFill: true,
         fetchOptions: {
           signal: abortController.signal,
-          onSuccess(context) {
+          onSuccess() {
             window.location.href = redirectTo;
           },
           onError(context) {
@@ -126,7 +127,7 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
             </div>
             <span className='sr-only'>Paklo</span>
           </Link>
-          <h1 className='font-bold text-xl'>Welcome to Paklo Dashboard</h1>
+          <h1 className='text-xl font-bold'>Welcome to Paklo Dashboard</h1>
           <FieldDescription>
             Don&apos;t have an account? <Link href='/signup'>Sign up</Link>
           </FieldDescription>
@@ -163,7 +164,7 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
               </div>
             </div>
             <FieldGroup>
-              <FieldDescription className='font-semibold text-lg'>Check your email</FieldDescription>
+              <FieldDescription className='text-lg font-semibold'>Check your email</FieldDescription>
               <FieldDescription>
                 We sent a magic link to <span className='font-medium'>{email}</span>. Click the link to sign in.
               </FieldDescription>

@@ -5,6 +5,7 @@ import {
 } from '@paklo/core/azure';
 import { DEFAULT_EXPERIMENTS, type DependabotExperiments, parseExperiments } from '@paklo/core/dependabot';
 import * as tl from 'azure-pipelines-task-lib/task';
+
 import { setSecrets } from '../formatting';
 
 export type TaskInputs = {

@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { UAParser } from 'ua-parser-js';
+
 import { storeFeedback } from '@/actions/feedback';
 import { TimeAgo } from '@/components/time-ago';
 import {
@@ -56,7 +57,7 @@ import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, 
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
-import { authClient, type Organization, type Passkey, type Session } from '@/lib/auth-client';
+import { type Organization, type Passkey, type Session, authClient } from '@/lib/auth-client';
 
 export function ProfileSection({ user }: { user: { id: string; name: string; email: string } }) {
   const [name, setName] = useState(user.name);
@@ -547,7 +548,7 @@ export function OrganizationsSection({ organizations: initialOrganizations }: { 
                 organization.
               </p>
               <div className='space-y-2 pt-2'>
-                <Label htmlFor='leave-feedback' className='font-normal text-foreground text-sm'>
+                <Label htmlFor='leave-feedback' className='text-sm font-normal text-foreground'>
                   Help us improve (optional)
                 </Label>
                 <Textarea
@@ -555,7 +556,7 @@ export function OrganizationsSection({ organizations: initialOrganizations }: { 
                   value={leaveFeedback}
                   onChange={(e) => setLeaveFeedback(e.target.value)}
                   placeholder='Why are you leaving? Your feedback helps us improve...'
-                  className='min-h-20 w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+                  className='min-h-20 w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50'
                   disabled={isLeavingOrg}
                 />
               </div>
@@ -628,9 +629,9 @@ export function DangerSection({ userId, hasOrganizations }: { userId: string; ha
           <div className='grid grid-cols-1 items-start justify-between py-4 md:grid-cols-3'>
             <div className='space-y-1 md:col-span-2'>
               <p className='font-medium'>Delete account</p>
-              <p className='text-muted-foreground text-sm'>Permanently delete your account and all associated data</p>
+              <p className='text-sm text-muted-foreground'>Permanently delete your account and all associated data</p>
               {hasOrganizations && (
-                <p className='mt-1 text-destructive text-xs'>
+                <p className='mt-1 text-xs text-destructive'>
                   You need to leave or delete all organizations before closing your account.
                 </p>
               )}
@@ -657,7 +658,7 @@ export function DangerSection({ userId, hasOrganizations }: { userId: string; ha
                 our servers.
               </p>
               <div className='space-y-2 pt-2'>
-                <Label htmlFor='delete-feedback' className='font-normal text-foreground text-sm'>
+                <Label htmlFor='delete-feedback' className='text-sm font-normal text-foreground'>
                   Help us improve (optional)
                 </Label>
                 <textarea
@@ -665,7 +666,7 @@ export function DangerSection({ userId, hasOrganizations }: { userId: string; ha
                   value={deleteFeedback}
                   onChange={(e) => setDeleteFeedback(e.target.value)}
                   placeholder='Why are you leaving? Your feedback helps us improve...'
-                  className='min-h-20 w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+                  className='min-h-20 w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50'
                   disabled={isDeletingAccount}
                 />
               </div>

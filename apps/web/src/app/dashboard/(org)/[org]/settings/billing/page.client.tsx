@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+
 import { storeFeedback } from '@/actions/feedback';
 import {
   cancelSubscription,
@@ -153,7 +154,7 @@ export function ManageSection({ organization, projects }: { organization: Simple
                       </>
                     )}
                     <div className='space-y-2 pt-2'>
-                      <Label htmlFor='cancel-feedback' className='font-normal text-foreground text-sm'>
+                      <Label htmlFor='cancel-feedback' className='text-sm font-normal text-foreground'>
                         Help us improve (optional)
                       </Label>
                       <Textarea
@@ -161,7 +162,7 @@ export function ManageSection({ organization, projects }: { organization: Simple
                         value={cancelFeedback}
                         onChange={(e) => setCancelFeedback(e.target.value)}
                         placeholder='Why are you cancelling? Your feedback helps us improve...'
-                        className='min-h-20 w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+                        className='min-h-20 w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50'
                         disabled={isHandlingCancel}
                       />
                     </div>

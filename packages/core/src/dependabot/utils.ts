@@ -55,10 +55,10 @@ export function getPullRequestCloseReason(data: DependabotClosePullRequest): str
 export function getPersistedPr(data: DependabotCreatePullRequest): DependabotPersistedPr {
   return {
     'dependency-group-name': data['dependency-group']?.name || null,
-    dependencies: data.dependencies.map((dep) => ({
+    'dependencies': data.dependencies.map((dep) => ({
       'dependency-name': dep.name,
       'dependency-version': dep.version,
-      directory: dep.directory,
+      'directory': dep.directory,
     })),
   };
 }

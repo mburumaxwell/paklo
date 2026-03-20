@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { SequenceNumber } from './sequence-number';
 
 describe('SequenceNumber', () => {

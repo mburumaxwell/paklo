@@ -1,15 +1,15 @@
-// biome-ignore-all lint/suspicious/noExplicitAny: test file
-// biome-ignore-all lint/complexity/useLiteralKeys: test file
+/* oxlint-disable typescript/no-explicit-any */
 
-import type { AzureDevOpsClientWrapper } from '@paklo/core/azure';
 import {
   type AzdoPrExtractedWithProperties,
-  extractRepositoryUrl,
+  type AzureDevOpsClientWrapper,
   PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
   PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER,
+  extractRepositoryUrl,
 } from '@paklo/core/azure';
 import type { DependabotJobBuilderOutput, DependabotUpdate } from '@paklo/core/dependabot';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AzureLocalDependabotServer, type AzureLocalDependabotServerOptions } from './server';
 
 vi.mock('./client');
@@ -69,14 +69,14 @@ describe('AzureLocalDependabotServer', () => {
       vi.clearAllMocks();
       jobBuilderOutput = {
         job: {
-          id: '1',
+          'id': '1',
           'package-manager': 'npm_and_yarn',
-          source: {
+          'source': {
             hostname: 'localhost:8081',
             provider: 'azure',
             repo: 'testproject/_git/test-repo',
           },
-          experiments: {},
+          'experiments': {},
           'credentials-metadata': [],
           'allowed-updates': [],
           'existing-group-pull-requests': [],
@@ -84,14 +84,14 @@ describe('AzureLocalDependabotServer', () => {
           'lockfile-only': false,
           'requirements-update-strategy': null,
           'update-subdependencies': false,
-          debug: false,
-          dependencies: [],
+          'debug': false,
+          'dependencies': [],
           'security-advisories': [],
           'security-updates-only': false,
           'updating-a-pull-request': false,
           'ignore-conditions': [],
           'commit-message-options': {
-            prefix: null,
+            'prefix': null,
             'prefix-development': null,
             'include-scope': null,
           },
@@ -102,7 +102,7 @@ describe('AzureLocalDependabotServer', () => {
       };
       update = {
         'package-ecosystem': 'npm',
-        schedule: { interval: 'daily', time: '02:00', timezone: 'UTC', day: 'sunday' },
+        'schedule': { interval: 'daily', time: '02:00', timezone: 'UTC', day: 'sunday' },
       };
 
       // Mock the job and update methods
@@ -171,7 +171,7 @@ describe('AzureLocalDependabotServer', () => {
           'pr-body': 'Test body',
           'pr-title': 'Test PR',
           'updated-dependency-files': [],
-          dependencies: [],
+          'dependencies': [],
         },
       });
 
@@ -209,7 +209,7 @@ describe('AzureLocalDependabotServer', () => {
           'pr-body': 'Test body',
           'pr-title': 'Test PR',
           'updated-dependency-files': [],
-          dependencies: [],
+          'dependencies': [],
         },
       });
 
@@ -241,7 +241,7 @@ describe('AzureLocalDependabotServer', () => {
           'pr-body': 'Test body',
           'pr-title': 'Test PR',
           'updated-dependency-files': [],
-          dependencies: [],
+          'dependencies': [],
         },
       });
 
@@ -439,7 +439,7 @@ describe('AzureLocalDependabotServer', () => {
       }
       server['affectedPullRequestIds'].get('1')!.created.push({
         'pr-number': 11,
-        dependencies: [],
+        'dependencies': [],
       });
 
       vi.mocked(authorClient.addCommentThread).mockResolvedValue(1);

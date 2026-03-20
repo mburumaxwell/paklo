@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import { prisma } from '@/lib/prisma';
+
 import { GitHubSection, PrimaryIntegrationSection } from './page.client';
 
 export async function generateMetadata(props: PageProps<'/dashboard/[org]/settings/integrations'>): Promise<Metadata> {
@@ -33,7 +35,7 @@ export default async function IntegrationsPage(props: PageProps<'/dashboard/[org
   return (
     <div className='mx-auto w-full max-w-5xl space-y-6 p-6'>
       <div>
-        <h1 className='mb-2 font-semibold text-3xl'>Integrations</h1>
+        <h1 className='mb-2 text-3xl font-semibold'>Integrations</h1>
         <p className='text-muted-foreground'>Manage your organization's integrations and access tokens</p>
       </div>
 

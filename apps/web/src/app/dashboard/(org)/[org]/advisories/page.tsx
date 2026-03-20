@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+
 import wipImage from './work-in-progress.png';
 
 export async function generateMetadata(props: PageProps<'/dashboard/[org]/advisories'>): Promise<Metadata> {
@@ -13,6 +14,8 @@ export async function generateMetadata(props: PageProps<'/dashboard/[org]/adviso
 
 // TODO: implement this page
 export default async function AdvisoriesPage(props: PageProps<'/dashboard/[org]/advisories'>) {
+  await props.params; // avoid lint warning
+
   return (
     <div className='flex h-full flex-col items-center justify-center gap-2'>
       <Image src={wipImage} alt='Work In Progress' width={128} height={128} />

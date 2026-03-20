@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { headers as requestHeaders } from 'next/headers';
 import { forbidden, notFound } from 'next/navigation';
+
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+
 import { DangerSection, MembersSection } from './page.client';
 
 export async function generateMetadata(props: PageProps<'/dashboard/[org]/settings/integrations'>): Promise<Metadata> {
@@ -33,7 +35,7 @@ export default async function TeamPage(props: PageProps<'/dashboard/[org]/settin
   return (
     <div className='mx-auto w-full max-w-5xl space-y-6 p-6'>
       <div>
-        <h1 className='mb-2 font-semibold text-3xl'>Team</h1>
+        <h1 className='mb-2 text-3xl font-semibold'>Team</h1>
         <p className='text-muted-foreground'>Manage your organization members and invitations</p>
       </div>
 

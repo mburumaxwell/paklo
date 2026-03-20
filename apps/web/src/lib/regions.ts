@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-// biome-ignore format: the array should not be formatted
 /**
  * Codes for organization regions using IATA airport codes, similar to Vercel
  * and can be translated to/from Azure regions as needed.
  * Not all regions may be documented at https://vercel.com/docs/regions,
  * especially when a new one is being added.
  */
+// prettier-ignore
 export const RegionCodeSchema = z.enum([
   'arn', 'bom', 'cdg', 'cle', 'cpt',
   'dub', 'dxb', 'fra', 'gru', 'hkg',
@@ -24,8 +24,8 @@ export type RegionInfo = {
   label: string; // Human label
 };
 
-// biome-ignore format: the array should not be formatted
 /** List of supported regions with their mappings and availability */
+// prettier-ignore
 export const REGIONS: RegionInfo[] = [
   // Europe
   { code: 'arn', vercel: 'arn1', azure: 'swedencentral',      visible: false, available: false, label: 'Stockholm (SE)', }, // Azure city: Stockholm

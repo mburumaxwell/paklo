@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import type { OrganizationSecretSafe } from '@/actions/organizations';
 import { prisma } from '@/lib/prisma';
+
 import { SecretsView } from './page.client';
 
 export async function generateMetadata(props: PageProps<'/dashboard/[org]/secrets'>): Promise<Metadata> {

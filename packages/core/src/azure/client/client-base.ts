@@ -1,4 +1,5 @@
 import type { KyInstance } from 'ky';
+
 import { API_VERSION } from './constants';
 
 export class BaseAzureDevOpsClient {

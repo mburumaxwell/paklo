@@ -3,6 +3,7 @@
 import { Handshake, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { type SyntheticEvent, useEffect, useState, useTransition } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { Field, FieldGroup, FieldSet } from '@/components/ui/field';
@@ -92,7 +93,7 @@ export function Feedback({
       }}
     >
       <div className='flex flex-row items-center gap-2'>
-        <p className='pe-2 font-medium text-sm'>How is this guide?</p>
+        <p className='pe-2 text-sm font-medium'>How is this guide?</p>
         <Button
           disabled={previous !== null}
           variant={activeOpinion === 'good' ? 'default' : 'outline'}

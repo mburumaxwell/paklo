@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+
 import * as yaml from 'js-yaml';
 import { describe, expect, it } from 'vitest';
 import { ZodError } from 'zod';
@@ -127,25 +128,37 @@ describe('Directory validation', () => {
       {
         version: 2,
         updates: [
-          { 'package-ecosystem': 'npm', schedule: { interval: 'cron', cronjob: '0 0 * * *' }, directory: '/src/*' },
+          { 'package-ecosystem': 'npm', 'schedule': { interval: 'cron', cronjob: '0 0 * * *' }, 'directory': '/src/*' },
         ],
       },
       {
         version: 2,
         updates: [
-          { 'package-ecosystem': 'npm', schedule: { interval: 'cron', cronjob: '0 0 * * *' }, directory: '/src/app-?' },
+          {
+            'package-ecosystem': 'npm',
+            'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
+            'directory': '/src/app-?',
+          },
         ],
       },
       {
         version: 2,
         updates: [
-          { 'package-ecosystem': 'npm', schedule: { interval: 'cron', cronjob: '0 0 * * *' }, directory: '/src/[abc]' },
+          {
+            'package-ecosystem': 'npm',
+            'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
+            'directory': '/src/[abc]',
+          },
         ],
       },
       {
         version: 2,
         updates: [
-          { 'package-ecosystem': 'npm', schedule: { interval: 'cron', cronjob: '0 0 * * *' }, directory: '/src/{a,b}' },
+          {
+            'package-ecosystem': 'npm',
+            'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
+            'directory': '/src/{a,b}',
+          },
         ],
       },
     ];
@@ -163,8 +176,8 @@ describe('Directory validation', () => {
       updates: [
         {
           'package-ecosystem': 'npm',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
-          directory: '/src/app',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/src/app',
         },
       ],
     };
@@ -179,23 +192,23 @@ describe('Directory validation', () => {
       updates: [
         {
           'package-ecosystem': 'npm',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
-          directory: '/src/app-name',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/src/app-name',
         },
         {
           'package-ecosystem': 'docker',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
-          directory: '/src/app_name',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/src/app_name',
         },
         {
           'package-ecosystem': 'nuget',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
-          directory: '/src/app.name',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/src/app.name',
         },
         {
           'package-ecosystem': 'pip',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
-          directory: '/src/app@version',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/src/app@version',
         },
       ],
     };
@@ -211,8 +224,8 @@ describe('Directory validation', () => {
   it('Should validate individual DependabotUpdate schema with glob patterns', async () => {
     const invalidUpdate = {
       'package-ecosystem': 'npm',
-      schedule: { interval: 'cron', cronjob: '0 0 * * *' },
-      directory: '/src/*',
+      'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
+      'directory': '/src/*',
     };
 
     await expect(DependabotUpdateSchema.parseAsync(invalidUpdate)).rejects.toThrow(
@@ -223,8 +236,8 @@ describe('Directory validation', () => {
   it('Should validate individual DependabotUpdate schema without glob patterns', async () => {
     const validUpdate = {
       'package-ecosystem': 'npm',
-      schedule: { interval: 'cron', cronjob: '0 0 * * *' },
-      directory: '/src/app',
+      'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
+      'directory': '/src/app',
     };
 
     const result = await DependabotUpdateSchema.parseAsync(validUpdate);
@@ -237,13 +250,13 @@ describe('Directory validation', () => {
       updates: [
         {
           'package-ecosystem': 'npm',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
-          directory: '/src/*',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/src/*',
         },
         {
           'package-ecosystem': 'docker',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
-          directory: '/apps/[abc]',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/apps/[abc]',
         },
       ],
     };
@@ -536,13 +549,13 @@ describe('Duplicate update configuration detection', () => {
       updates: [
         {
           'package-ecosystem': 'npm',
-          directory: '/client',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/client',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
         },
         {
           'package-ecosystem': 'npm',
-          directory: '/client',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/client',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
         },
       ],
     };
@@ -558,13 +571,13 @@ describe('Duplicate update configuration detection', () => {
       updates: [
         {
           'package-ecosystem': 'nuget',
-          directories: ['/src/client', '/src/server'],
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
+          'directories': ['/src/client', '/src/server'],
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
         },
         {
           'package-ecosystem': 'nuget',
-          directories: ['/src/client', '/src/server'],
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
+          'directories': ['/src/client', '/src/server'],
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
         },
       ],
     };
@@ -580,13 +593,13 @@ describe('Duplicate update configuration detection', () => {
       updates: [
         {
           'package-ecosystem': 'npm',
-          directory: '/src',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/src',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
         },
         {
           'package-ecosystem': 'npm',
-          directories: ['/src'],
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
+          'directories': ['/src'],
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
         },
       ],
     };
@@ -602,13 +615,13 @@ describe('Duplicate update configuration detection', () => {
       updates: [
         {
           'package-ecosystem': 'npm',
-          directory: '/client',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/client',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
         },
         {
           'package-ecosystem': 'docker',
-          directory: '/client',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/client',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
         },
       ],
     };
@@ -623,13 +636,13 @@ describe('Duplicate update configuration detection', () => {
       updates: [
         {
           'package-ecosystem': 'npm',
-          directory: '/client',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/client',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
         },
         {
           'package-ecosystem': 'npm',
-          directory: '/server',
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/server',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
         },
       ],
     };
@@ -646,8 +659,8 @@ describe('Beta ecosystems validation', () => {
       updates: [
         {
           'package-ecosystem': ecosystem,
-          schedule: { interval: 'daily' },
-          directory: '/',
+          'schedule': { interval: 'daily' },
+          'directory': '/',
         },
       ],
     };
@@ -666,13 +679,13 @@ describe('Beta ecosystems validation', () => {
     'conda',
   ])('Should allow %s when enable-beta-ecosystems is true', async (ecosystem) => {
     const config = {
-      version: 2,
+      'version': 2,
       'enable-beta-ecosystems': true,
-      updates: [
+      'updates': [
         {
           'package-ecosystem': ecosystem,
-          schedule: { interval: 'cron', cronjob: '0 0 * * *' },
-          directory: '/',
+          'schedule': { interval: 'cron', cronjob: '0 0 * * *' },
+          'directory': '/',
         },
       ],
     };
@@ -693,10 +706,10 @@ describe('Validate registries', () => {
     const updates: DependabotUpdate[] = [
       {
         'package-ecosystem': 'npm',
-        schedule: { interval: 'daily', time: '02:00', timezone: 'UTC', day: 'sunday' },
-        directory: '/',
-        directories: undefined,
-        registries: ['dummy1', 'dummy2'],
+        'schedule': { interval: 'daily', time: '02:00', timezone: 'UTC', day: 'sunday' },
+        'directory': '/',
+        'directories': undefined,
+        'registries': ['dummy1', 'dummy2'],
       },
     ];
 
@@ -707,10 +720,10 @@ describe('Validate registries', () => {
         token: 'pwd_1234567890',
       },
       dummy2: {
-        type: 'python-index',
-        url: 'https://pkgs.dev.azure.com/octocat/_packaging/my-feed/pypi/example',
-        username: 'octocat@example.com',
-        password: 'pwd_1234567890',
+        'type': 'python-index',
+        'url': 'https://pkgs.dev.azure.com/octocat/_packaging/my-feed/pypi/example',
+        'username': 'octocat@example.com',
+        'password': 'pwd_1234567890',
         'replaces-base': true,
       },
     };

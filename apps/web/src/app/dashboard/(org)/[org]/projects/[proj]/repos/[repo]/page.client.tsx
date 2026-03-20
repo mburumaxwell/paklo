@@ -2,6 +2,7 @@
 
 import { Download, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
+
 import { EcosystemIcon, UpdateJobStatusIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -60,8 +61,8 @@ export function RepositoryView({
     <div className='mx-auto w-full max-w-5xl space-y-6 p-6'>
       <div className='grid grid-cols-1 items-center justify-center gap-4 md:grid-cols-3'>
         <div className='md:col-span-2'>
-          <h1 className='mb-2 font-semibold text-2xl'>Repository: {repository.name}</h1>
-          <p className='text-muted-foreground text-sm'>
+          <h1 className='mb-2 text-2xl font-semibold'>Repository: {repository.name}</h1>
+          <p className='text-sm text-muted-foreground'>
             <a href={repository.url} target='_blank' rel='noreferrer' className='underline-offset-4 hover:underline'>
               {repository.slug}
             </a>
@@ -84,7 +85,7 @@ export function RepositoryView({
             <CardContent className='flex min-h-100 items-center justify-center'>
               <div className='space-y-2 text-center'>
                 <p className='text-lg text-muted-foreground'>Coming Soon</p>
-                <p className='text-muted-foreground text-sm'>Dependency visualization will be available soon</p>
+                <p className='text-sm text-muted-foreground'>Dependency visualization will be available soon</p>
               </div>
             </CardContent>
           </Card>
@@ -116,7 +117,7 @@ export function RepositoryView({
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                              <DropdownMenuLabel className='font-light text-xs'>Monitored files</DropdownMenuLabel>
+                              <DropdownMenuLabel className='text-xs font-light'>Monitored files</DropdownMenuLabel>
                               {update.files.slice(1).map((file) => (
                                 <DropdownMenuItem key={file} asChild>
                                   <a href={fileLinks.get(file)} target='_blank' rel='noreferrer'>

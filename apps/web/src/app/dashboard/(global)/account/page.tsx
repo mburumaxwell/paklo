@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { headers as requestHeaders } from 'next/headers';
+
 import { auth } from '@/lib/auth';
+
 import { DangerSection, OrganizationsSection, PasskeysSection, ProfileSection, SessionsSection } from './page.client';
 
 export const metadata: Metadata = {
@@ -19,7 +21,7 @@ export default async function AccountPage() {
   return (
     <div className='mx-auto w-full max-w-5xl space-y-6 p-6'>
       <div>
-        <h1 className='mb-2 font-semibold text-3xl'>Account Settings</h1>
+        <h1 className='mb-2 text-3xl font-semibold'>Account Settings</h1>
         <p className='text-muted-foreground'>Manage your account preferences and security settings</p>
       </div>
 

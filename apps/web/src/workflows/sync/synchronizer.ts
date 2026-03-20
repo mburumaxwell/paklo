@@ -1,11 +1,13 @@
 import { type DependabotConfig, makeDirectoryKey, parseDependabotConfig } from '@paklo/core/dependabot';
+
 import { generateCron } from '@/lib/cron';
 import { environment } from '@/lib/environment';
 import { PakloId } from '@/lib/ids';
 import { logger } from '@/lib/logger';
 import { getMongoCollection } from '@/lib/mongodb';
-import { type Organization, type OrganizationCredential, type Project, prisma, type Repository } from '@/lib/prisma';
+import { type Organization, type OrganizationCredential, type Project, type Repository, prisma } from '@/lib/prisma';
 import { startTriggerUpdateJobs } from '@/workflows';
+
 import { type ISyncProvider, type SynchronizerConfigurationItem, toSynchronizerProject } from './provider';
 
 export type SyncResult = { count: number; deleted: number; updated: number };

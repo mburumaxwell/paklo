@@ -1,6 +1,6 @@
 ---
 title: Terms of Service
-description: "The terms and conditions for paklo"
+description: 'The terms and conditions for paklo'
 published: 2025-05-24
 ---
 

@@ -15,10 +15,10 @@ Install the [extension](https://marketplace.visualstudio.com/items?itemName=ting
 ```yaml
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
 ```
 
 ## Documentation

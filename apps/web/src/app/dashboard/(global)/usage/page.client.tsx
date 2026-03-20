@@ -4,14 +4,15 @@ import type { DependabotPackageManager } from '@paklo/core/dependabot';
 import { Calendar, Funnel, FunnelX } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, XAxis } from 'recharts';
+
 import { MetricCard } from '@/components/metric-card';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Item, ItemActions, ItemContent, ItemMedia } from '@/components/ui/item';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { isHourlyRange, type TimeRange, timeRangeOptions } from '@/lib/aggregation';
-import { packageManagerOptions, type WithAll } from '@/lib/enums';
+import { type TimeRange, isHourlyRange, timeRangeOptions } from '@/lib/aggregation';
+import { type WithAll, packageManagerOptions } from '@/lib/enums';
 import type { UsageTelemetry } from '@/lib/mongodb';
 import { REGIONS, type RegionCode } from '@/lib/regions';
 import { formatDuration, updateFiltersInSearchParams } from '@/lib/utils';
@@ -71,8 +72,8 @@ export function TelemetryDashboard({ telemetries }: TelemetryDashboardProps) {
       {/* Header */}
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='font-semibold text-3xl text-foreground'>Usage Telemetry</h1>
-          <p className='mt-1 text-muted-foreground text-sm'>Monitor and analyze pipeline execution metrics</p>
+          <h1 className='text-3xl font-semibold text-foreground'>Usage Telemetry</h1>
+          <p className='mt-1 text-sm text-muted-foreground'>Monitor and analyze pipeline execution metrics</p>
         </div>
       </div>
 
@@ -255,8 +256,8 @@ function RunsChart({ telemetries, timeRange }: RunsChartProps) {
     <Card className='p-6'>
       <div className='flex flex-col gap-4'>
         <div>
-          <h3 className='font-semibold text-foreground text-lg'>Pipeline Runs</h3>
-          <p className='text-muted-foreground text-sm'>Total executions over time</p>
+          <h3 className='text-lg font-semibold text-foreground'>Pipeline Runs</h3>
+          <p className='text-sm text-muted-foreground'>Total executions over time</p>
         </div>
         <ChartContainer config={chartConfig} className='h-50 w-full'>
           <LineChart data={chartData}>
@@ -309,8 +310,8 @@ function RegionChart({ telemetries }: RegionChartProps) {
     <Card className='p-6'>
       <div className='flex flex-col gap-4'>
         <div>
-          <h3 className='font-semibold text-foreground text-lg'>Region Usage</h3>
-          <p className='text-muted-foreground text-sm'>Distribution by region</p>
+          <h3 className='text-lg font-semibold text-foreground'>Region Usage</h3>
+          <p className='text-sm text-muted-foreground'>Distribution by region</p>
         </div>
         <ChartContainer config={chartConfig} className='h-50 w-full'>
           <BarChart data={chartData}>
@@ -365,8 +366,8 @@ function PackageManagerChart({ telemetries }: PackageManagerChartProps) {
     <Card className='p-6'>
       <div className='flex flex-col gap-4'>
         <div>
-          <h3 className='font-semibold text-foreground text-lg'>Package Manager Usage</h3>
-          <p className='text-muted-foreground text-sm'>Distribution by package manager</p>
+          <h3 className='text-lg font-semibold text-foreground'>Package Manager Usage</h3>
+          <p className='text-sm text-muted-foreground'>Distribution by package manager</p>
         </div>
         <ChartContainer config={chartConfig} className='h-50 w-full'>
           <BarChart data={chartData}>

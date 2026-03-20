@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import { listAvailableProjects } from '@/integrations';
 import { prisma } from '@/lib/prisma';
+
 import { ConnectProjectsView } from './page.client';
 
 export async function generateMetadata(props: PageProps<'/dashboard/[org]/projects/connect'>): Promise<Metadata> {
@@ -27,7 +29,7 @@ export default async function ProjectConnectPage(props: PageProps<'/dashboard/[o
     <div className='mx-auto w-full max-w-5xl space-y-6 p-6'>
       <div className='flex items-center gap-4'>
         <div>
-          <h1 className='mb-2 font-semibold text-3xl'>Connect Projects</h1>
+          <h1 className='mb-2 text-3xl font-semibold'>Connect Projects</h1>
           <p className='text-muted-foreground'>Select projects from your integration provider to connect</p>
         </div>
       </div>

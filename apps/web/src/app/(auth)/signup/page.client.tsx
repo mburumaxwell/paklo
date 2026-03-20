@@ -5,6 +5,7 @@ import type { Route } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
+
 import { PakloIcon } from '@/components/logos';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from '@/components/ui/field';
@@ -57,7 +58,7 @@ export function SignupForm({ className, redirectTo, ...props }: SignupFormProps)
             </div>
             <span className='sr-only'>Paklo</span>
           </Link>
-          <h1 className='font-bold text-xl'>Welcome to Paklo Dashboard</h1>
+          <h1 className='text-xl font-bold'>Welcome to Paklo Dashboard</h1>
           <FieldDescription>
             Already have an account? <Link href='/login'>Login</Link>
           </FieldDescription>
@@ -73,7 +74,7 @@ export function SignupForm({ className, redirectTo, ...props }: SignupFormProps)
             </div>
           </div>
           <FieldGroup>
-            <FieldDescription className='font-semibold text-lg'>Check your email</FieldDescription>
+            <FieldDescription className='text-lg font-semibold'>Check your email</FieldDescription>
             <FieldDescription>
               We sent a magic link to <span className='font-medium'>{email}</span>. Click the link to complete your
               signup and login.

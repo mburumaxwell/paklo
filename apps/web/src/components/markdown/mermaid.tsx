@@ -49,7 +49,7 @@ function MermaidContent({ chart }: { chart: string }) {
       ref={(container) => {
         if (container) bindFunctions?.(container);
       }}
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: Necessary for mermaid rendering
+      // oxlint-disable-next-line react/no-danger -- required to render Mermaid SVG output
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   );

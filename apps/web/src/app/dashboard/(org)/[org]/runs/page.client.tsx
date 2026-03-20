@@ -3,6 +3,7 @@
 import type { DependabotPackageManager } from '@paklo/core/dependabot';
 import { Calendar, Funnel, FunnelX } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
+
 import { EcosystemIcon, UpdateJobStatusBadge, UpdateJobTriggerIcon } from '@/components/icons';
 import { TimeAgo } from '@/components/time-ago';
 import { Button } from '@/components/ui/button';
@@ -11,12 +12,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { type TimeRange, timeRangeOptions } from '@/lib/aggregation';
 import {
-  packageManagerOptions,
   type UpdateJobStatus,
   type UpdateJobTrigger,
+  type WithAll,
+  packageManagerOptions,
   updateJobStatusOptions,
   updateJobTriggerOptions,
-  type WithAll,
 } from '@/lib/enums';
 import type { Organization, Project, UpdateJob } from '@/lib/prisma';
 import { formatDuration, updateFiltersInSearchParams } from '@/lib/utils';
@@ -186,7 +187,7 @@ export default function RunsView({
                   <TableCell className='text-medium'>
                     <div className='flex items-center gap-2'>
                       <EcosystemIcon ecosystem={job.ecosystem} className='size-5' />
-                      <span className='wrap-break-word text-wrap'>{job.repositorySlug}</span>
+                      <span className='text-wrap wrap-break-word'>{job.repositorySlug}</span>
                     </div>
                   </TableCell>
                   <TableCell>

@@ -4,6 +4,7 @@ import { AlertCircle, Calendar, Download, GitBranch, MapPinHouse, PlayCircle, Ti
 import type { Route } from 'next';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+
 import { EcosystemIcon, type Icon, UpdateJobStatusIcon, UpdateJobTriggerIcon } from '@/components/icons';
 import { TimeAgo } from '@/components/time-ago';
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,7 @@ import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Spinner } from '@/components/ui/spinner';
 import type { Organization, UpdateJob } from '@/lib/prisma';
-import { getRegionInfo, type RegionCode } from '@/lib/regions';
+import { type RegionCode, getRegionInfo } from '@/lib/regions';
 import { formatDuration } from '@/lib/utils';
 
 type SlimOrganization = Pick<Organization, 'id' | 'slug'>;
@@ -58,7 +59,7 @@ export function InfoSection({ job }: { job: SlimUpdateJob }) {
             </ItemMedia>
             <ItemContent className='gap-0.5'>
               <ItemTitle>{label}</ItemTitle>
-              <p className='text-balance font-normal text-muted-foreground text-sm leading-normal'>{value}</p>
+              <p className='text-sm leading-normal font-normal text-balance text-muted-foreground'>{value}</p>
             </ItemContent>
           </Item>
         </React.Fragment>
@@ -133,7 +134,7 @@ export function LogsSection({ organization, job }: { organization: SlimOrganizat
         <div className='flex h-125 w-full items-center justify-center rounded-md border bg-muted/50'>
           <div className='flex flex-col items-center gap-3'>
             <Spinner className='size-8 text-muted-foreground' />
-            <p className='text-muted-foreground text-sm'>Loading logs...</p>
+            <p className='text-sm text-muted-foreground'>Loading logs...</p>
           </div>
         </div>
       )}
@@ -141,13 +142,13 @@ export function LogsSection({ organization, job }: { organization: SlimOrganizat
         <div className='flex h-125 w-full items-center justify-center rounded-md border bg-muted/50'>
           <div className='flex flex-col items-center gap-3'>
             <AlertCircle className='size-8 text-muted-foreground' />
-            <p className='text-muted-foreground text-sm'>{error}</p>
+            <p className='text-sm text-muted-foreground'>{error}</p>
           </div>
         </div>
       )}
       {!loading && !error && (
         <ScrollArea className='h-125 w-full border bg-muted/50 p-4'>
-          <pre className='whitespace-pre-wrap font-mono text-xs leading-relaxed'>{logs}</pre>
+          <pre className='font-mono text-xs leading-relaxed whitespace-pre-wrap'>{logs}</pre>
         </ScrollArea>
       )}
     </Item>

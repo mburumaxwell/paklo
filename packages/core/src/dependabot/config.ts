@@ -2,11 +2,11 @@ import * as yaml from 'js-yaml';
 import { z } from 'zod';
 
 import { makeDirectoryKey } from './directory-key';
-import { convertPlaceholder, type VariableFinderFn } from './placeholder';
+import { type VariableFinderFn, convertPlaceholder } from './placeholder';
 
 export const DependabotRegistrySchema = z
   .object({
-    type: z.enum([
+    'type': z.enum([
       // order matches
       // https://docs.github.com/en/enterprise-cloud@latest/code-security/dependabot/working-with-dependabot/configuring-access-to-private-registries-for-dependabot#supported-private-registries
 
@@ -26,16 +26,16 @@ export const DependabotRegistrySchema = z
       'rubygems-server',
       'terraform-registry',
     ]),
-    url: z.string().optional(),
-    username: z.string().optional(),
-    password: z.string().optional(),
-    key: z.string().optional(),
-    token: z.string().optional(),
+    'url': z.string().optional(),
+    'username': z.string().optional(),
+    'password': z.string().optional(),
+    'key': z.string().optional(),
+    'token': z.string().optional(),
     'replaces-base': z.boolean().optional(),
-    host: z.string().optional(), // for terraform and composer only
-    registry: z.string().optional(), // for npm only
-    organization: z.string().optional(), // for hex-organization only
-    repo: z.string().optional(), // for hex-repository only
+    'host': z.string().optional(), // for terraform and composer only
+    'registry': z.string().optional(), // for npm only
+    'organization': z.string().optional(), // for hex-organization only
+    'repo': z.string().optional(), // for hex-repository only
     'public-key-fingerprint': z.string().optional(), // for hex-repository only
     'index-url': z.string().optional(), // for python-index only
     'auth-key': z.string().optional(), // used by composer-repository, docker-registry, etc
@@ -49,7 +49,7 @@ export type DependabotRegistry = z.infer<typeof DependabotRegistrySchema>;
 export const DependabotGroupSchema = z.object({
   // Define an identifier for the group to use in branch names and pull request titles.
   // This must start and end with a letter, and can contain letters, pipes |, underscores _, or hyphens -.
-  IDENTIFIER: z
+  'IDENTIFIER': z
     .string()
     .check(
       z.regex(/^[a-zA-Z][a-zA-Z0-9|_-]*[a-zA-Z]$/, {
@@ -60,7 +60,7 @@ export const DependabotGroupSchema = z.object({
     .optional(),
   'applies-to': z.enum(['version-updates', 'security-updates']).optional(),
   'dependency-type': z.enum(['development', 'production']).optional(),
-  patterns: z.string().array().optional(),
+  'patterns': z.string().array().optional(),
   'exclude-patterns': z.string().array().optional(),
   'update-types': z.enum(['major', 'minor', 'patch']).array().optional(),
 });
@@ -76,7 +76,7 @@ export type DependabotAllowCondition = z.infer<typeof DependabotAllowConditionSc
 export const DependabotIgnoreConditionSchema = z
   .object({
     'dependency-name': z.string().optional(),
-    versions: z.string().array().or(z.string()).optional(),
+    'versions': z.string().array().or(z.string()).optional(),
     'update-types': z
       .enum(['version-update:semver-major', 'version-update:semver-minor', 'version-update:semver-patch'])
       .array()
@@ -132,9 +132,9 @@ export const DependabotScheduleSchema = z
 export type DependabotSchedule = z.infer<typeof DependabotScheduleSchema>;
 
 export const DependabotCommitMessageSchema = z.object({
-  prefix: z.string().optional(),
+  'prefix': z.string().optional(),
   'prefix-development': z.string().optional(),
-  include: z.string().optional(),
+  'include': z.string().optional(),
 });
 export type DependabotCommitMessage = z.infer<typeof DependabotCommitMessageSchema>;
 
@@ -143,8 +143,8 @@ export const DependabotCooldownSchema = z.object({
   'semver-major-days': z.number().optional(),
   'semver-minor-days': z.number().optional(),
   'semver-patch-days': z.number().optional(),
-  include: z.string().array().optional(),
-  exclude: z.string().array().optional(),
+  'include': z.string().array().optional(),
+  'exclude': z.string().array().optional(),
 });
 export type DependabotCooldown = z.infer<typeof DependabotCooldownSchema>;
 
@@ -201,27 +201,27 @@ export type VersioningStrategy = z.infer<typeof VersioningStrategySchema>;
 export const DependabotUpdateSchema = z
   .object({
     'package-ecosystem': PackageEcosystemSchema,
-    directory: z.string().optional(),
-    directories: z.string().array().optional(),
+    'directory': z.string().optional(),
+    'directories': z.string().array().optional(),
     'exclude-paths': z.string().array().optional(),
-    allow: DependabotAllowConditionSchema.array().optional(),
-    assignees: z.string().array().optional(),
+    'allow': DependabotAllowConditionSchema.array().optional(),
+    'assignees': z.string().array().optional(),
     'commit-message': DependabotCommitMessageSchema.optional(),
-    cooldown: DependabotCooldownSchema.optional(),
-    groups: z.record(z.string(), DependabotGroupSchema).optional(),
-    ignore: DependabotIgnoreConditionSchema.array().optional(),
+    'cooldown': DependabotCooldownSchema.optional(),
+    'groups': z.record(z.string(), DependabotGroupSchema).optional(),
+    'ignore': DependabotIgnoreConditionSchema.array().optional(),
     'insecure-external-code-execution': z.enum(['allow', 'deny']).optional(),
-    labels: z.string().array().optional(),
-    milestone: z.coerce.string().optional(),
+    'labels': z.string().array().optional(),
+    'milestone': z.coerce.string().optional(),
     'open-pull-requests-limit': z.number().check(z.int(), z.gte(0)).optional(),
     'pull-request-branch-name': DependabotPullRequestBranchNameSchema.optional(),
     'rebase-strategy': z.string().optional(),
-    registries: z.string().array().optional(),
-    schedule: DependabotScheduleSchema,
+    'registries': z.string().array().optional(),
+    'schedule': DependabotScheduleSchema,
     'target-branch': z.string().optional(),
-    vendor: z.boolean().optional(),
+    'vendor': z.boolean().optional(),
     'versioning-strategy': VersioningStrategySchema.optional(),
-    patterns: z.string().array().optional(),
+    'patterns': z.string().array().optional(),
     'multi-ecosystem-group': z.string().optional(),
   })
   .transform((value, { addIssue }) => {
@@ -251,10 +251,10 @@ export const DependabotUpdateSchema = z
 export type DependabotUpdate = z.infer<typeof DependabotUpdateSchema>;
 
 export const DependabotMultiEcosystemGroupSchema = z.object({
-  schedule: DependabotScheduleSchema,
-  labels: z.string().array().optional(), // behaviour: additive
-  milestone: z.coerce.string().optional(), // behaviour: group-only
-  assignees: z.string().array().optional(), // behaviour: additive
+  'schedule': DependabotScheduleSchema,
+  'labels': z.string().array().optional(), // behaviour: additive
+  'milestone': z.coerce.string().optional(), // behaviour: group-only
+  'assignees': z.string().array().optional(), // behaviour: additive
   'target-branch': z.string().optional(), // behaviour: group-only
   'commit-message': DependabotCommitMessageSchema.optional(), // behaviour: group-only
   'pull-request-branch-name': DependabotPullRequestBranchNameSchema.optional(), // behaviour: group-only
@@ -273,7 +273,7 @@ export const DependabotConfigSchema = z
     /**
      * Mandatory. configuration file version.
      **/
-    version: z.number().refine((v) => v === 2, { message: 'Only version 2 of dependabot is supported' }),
+    'version': z.number().refine((v) => v === 2, { message: 'Only version 2 of dependabot is supported' }),
 
     /**
      * Optional. Configure groups of ecosystems to update together in a single pull request.
@@ -284,7 +284,7 @@ export const DependabotConfigSchema = z
      * Mandatory. Configure how Dependabot updates the versions or project dependencies.
      * Each entry configures the update settings for a particular package manager.
      */
-    updates: DependabotUpdateSchema.array().check(
+    'updates': DependabotUpdateSchema.array().check(
       z.minLength(1, { message: 'At least one update configuration is required' }),
     ),
 
@@ -292,7 +292,7 @@ export const DependabotConfigSchema = z
      * Optional.
      * Specify authentication details to access private package registries.
      */
-    registries: z.record(z.string(), DependabotRegistrySchema).optional(),
+    'registries': z.record(z.string(), DependabotRegistrySchema).optional(),
 
     /**
      * Optional. Enables updates for ecosystems that are not yet generally available.

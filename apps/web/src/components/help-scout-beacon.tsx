@@ -1,4 +1,5 @@
 import Script from 'next/script';
+
 import type { Organization, Session } from '@/lib/auth-client';
 
 type HelpScoutBeaconProps = {

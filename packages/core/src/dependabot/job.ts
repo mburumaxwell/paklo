@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { DependabotCooldownSchema } from './config';
 
 // we use nullish() because it does optional() and allows the value to be set to null
@@ -22,13 +23,13 @@ export const DependabotSourceProviderSchema = z.enum(['azure', 'bitbucket', 'git
 export type DependabotSourceProvider = z.infer<typeof DependabotSourceProviderSchema>;
 
 export const DependabotSourceSchema = z.object({
-  provider: DependabotSourceProviderSchema,
-  repo: z.string(),
-  directory: z.string().nullish(),
-  directories: z.string().array().nullish(),
-  branch: z.string().nullish(),
-  commit: z.string().nullish(),
-  hostname: z.string().nullish(), // Must be provided if api-endpoint is
+  'provider': DependabotSourceProviderSchema,
+  'repo': z.string(),
+  'directory': z.string().nullish(),
+  'directories': z.string().array().nullish(),
+  'branch': z.string().nullish(),
+  'commit': z.string().nullish(),
+  'hostname': z.string().nullish(), // Must be provided if api-endpoint is
   'api-endpoint': z.string().nullish(), // Must be provided if hostname is
 });
 export type DependabotSource = z.infer<typeof DependabotSourceSchema>;
@@ -36,20 +37,20 @@ export type DependabotSource = z.infer<typeof DependabotSourceSchema>;
 export const DependabotExistingPrDependencySchema = z.object({
   'dependency-name': z.string(),
   'dependency-version': z.string().nullish(),
-  directory: z.string().nullish(),
-  removed: z.boolean().nullish(),
+  'directory': z.string().nullish(),
+  'removed': z.boolean().nullish(),
 });
 export type DependabotExistingPrDependency = z.infer<typeof DependabotExistingPrDependencySchema>;
 
 export const DependabotExistingPrSchema = z.object({
   'pr-number': z.number(),
-  dependencies: DependabotExistingPrDependencySchema.array(),
+  'dependencies': DependabotExistingPrDependencySchema.array(),
 });
 export type DependabotExistingPr = z.infer<typeof DependabotExistingPrSchema>;
 
 export const DependabotExistingGroupPrSchema = DependabotExistingPrSchema.extend({
   'dependency-group-name': z.string(),
-  dependencies: DependabotExistingPrDependencySchema.array(),
+  'dependencies': DependabotExistingPrDependencySchema.array(),
 });
 export type DependabotExistingGroupPr = z.infer<typeof DependabotExistingGroupPrSchema>;
 
@@ -61,7 +62,7 @@ export const DependabotAllowedSchema = z.object({
 export type DependabotAllowed = z.infer<typeof DependabotAllowedSchema>;
 
 export const DependabotGroupRuleJobSchema = z.object({
-  patterns: z.string().array().nullish(),
+  'patterns': z.string().array().nullish(),
   'exclude-patterns': z.string().array().nullish(),
   'dependency-type': z.string().nullish(),
   'update-types': z.string().array().nullish(),
@@ -69,15 +70,15 @@ export const DependabotGroupRuleJobSchema = z.object({
 export type DependabotGroupRuleJob = z.infer<typeof DependabotGroupRuleJobSchema>;
 
 export const DependabotGroupJobSchema = z.object({
-  name: z.string(),
+  'name': z.string(),
   'applies-to': z.string().nullish(),
-  rules: DependabotGroupRuleJobSchema,
+  'rules': DependabotGroupRuleJobSchema,
 });
 export type DependabotGroupJob = z.infer<typeof DependabotGroupJobSchema>;
 
 export const DependabotConditionSchema = z.object({
   'dependency-name': z.string(),
-  source: z.string().nullish(),
+  'source': z.string().nullish(),
   'update-types': z.string().array().nullish(),
   'updated-at': z.coerce.string().nullish(),
   'version-requirement': z.string().nullish(),
@@ -96,29 +97,29 @@ export const DependabotRequirementSourceSchema = z.record(z.string(), z.any());
 export type DependabotRequirementSource = z.infer<typeof DependabotRequirementSourceSchema>;
 
 export const DependabotRequirementSchema = z.object({
-  file: z.string().nullish(), // e.g. 'requirements.txt' or '/Root.csproj'
-  groups: z.string().array().nullish(), // e.g. ['dependencies']
-  metadata: z.record(z.string(), z.any()).nullish(),
-  requirement: z.string().nullish(), // e.g. '==3.2.0' or '8.1.0'
-  source: DependabotRequirementSourceSchema.nullish(),
-  version: z.string().nullish(),
+  'file': z.string().nullish(), // e.g. 'requirements.txt' or '/Root.csproj'
+  'groups': z.string().array().nullish(), // e.g. ['dependencies']
+  'metadata': z.record(z.string(), z.any()).nullish(),
+  'requirement': z.string().nullish(), // e.g. '==3.2.0' or '8.1.0'
+  'source': DependabotRequirementSourceSchema.nullish(),
+  'version': z.string().nullish(),
   'previous-version': z.string().nullish(),
 });
 export type DependabotRequirement = z.infer<typeof DependabotRequirementSchema>;
 
 export const DependabotDependencySchema = z.object({
-  name: z.string(), // e.g. 'django' or 'GraphQL.Server.Ui.Voyager'
+  'name': z.string(), // e.g. 'django' or 'GraphQL.Server.Ui.Voyager'
   'previous-requirements': DependabotRequirementSchema.array().nullish(),
   'previous-version': z.string().nullish(),
-  version: z.string().nullish(), // e.g. '5.0.1' or '8.1.0'
-  requirements: DependabotRequirementSchema.array().nullish(),
-  removed: z.boolean().nullish(),
-  directory: z.string().nullish(),
+  'version': z.string().nullish(), // e.g. '5.0.1' or '8.1.0'
+  'requirements': DependabotRequirementSchema.array().nullish(),
+  'removed': z.boolean().nullish(),
+  'directory': z.string().nullish(),
 });
 export type DependabotDependency = z.infer<typeof DependabotDependencySchema>;
 
 export const DependabotCommitOptionsSchema = z.object({
-  prefix: z.string().nullish(),
+  'prefix': z.string().nullish(),
   'prefix-development': z.string().nullish(),
   'include-scope': z.boolean().nullish(),
 });
@@ -174,23 +175,23 @@ export type DependabotCommand = z.infer<typeof DependabotCommandSchema>;
 // See: https://github.com/dependabot/cli/blob/main/internal/model/job.go
 //      https://github.com/dependabot/dependabot-core/blob/main/updater/lib/dependabot/job.rb
 export const DependabotJobConfigSchema = z.object({
-  id: z.string(),
-  command: DependabotCommandSchema.optional(),
+  'id': z.string(),
+  'command': DependabotCommandSchema.optional(),
   'package-manager': DependabotPackageManagerSchema,
   'allowed-updates': DependabotAllowedSchema.array(),
-  debug: z.boolean().nullable(),
+  'debug': z.boolean().nullable(),
   'dependency-groups': DependabotGroupJobSchema.array().nullish(),
-  dependencies: z.string().array().nullable(),
+  'dependencies': z.string().array().nullable(),
   'dependency-group-to-refresh': z.string().nullish(),
   'existing-pull-requests': DependabotExistingPrSchema.array(),
   'existing-group-pull-requests': DependabotExistingGroupPrSchema.array(),
-  experiments: DependabotExperimentsSchema,
+  'experiments': DependabotExperimentsSchema,
   'ignore-conditions': DependabotConditionSchema.array(),
   'lockfile-only': z.boolean(),
   'requirements-update-strategy': z.string().nullable(),
   'security-advisories': DependabotSecurityAdvisorySchema.array(),
   'security-updates-only': z.boolean(),
-  source: DependabotSourceSchema,
+  'source': DependabotSourceSchema,
   'update-subdependencies': z.boolean(),
   'updating-a-pull-request': z.boolean(),
   'vendor-dependencies': z.boolean(),
@@ -199,7 +200,7 @@ export const DependabotJobConfigSchema = z.object({
   'commit-message-options': DependabotCommitOptionsSchema,
   'credentials-metadata': DependabotCredentialSchema.array().nullish(),
   'max-updater-run-time': z.int().nullish(),
-  cooldown: DependabotCooldownSchema.nullish(),
+  'cooldown': DependabotCooldownSchema.nullish(),
   'proxy-log-response-body-on-auth-failure': z.boolean().nullish(),
   'enable-beta-ecosystems': z.boolean().nullish(),
   'multi-ecosystem-update': z.boolean().nullish(),
@@ -214,13 +215,13 @@ export type DependabotJobFile = z.infer<typeof DependabotJobFileSchema>;
 
 // Code below is borrowed and adapted from dependabot-action
 
-// biome-ignore-start lint/suspicious/noExplicitAny: generic
+/* oxlint-disable typescript/no-explicit-any */
 export type FetchedFiles = {
   base_commit_sha: string;
   dependency_files: any[];
   base64_dependency_files: any[];
 };
-// biome-ignore-end lint/suspicious/noExplicitAny: generic
+/* oxlint-enable typescript/no-explicit-any */
 
 export type FileFetcherInput = {
   job: DependabotJobConfig;

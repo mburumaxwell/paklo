@@ -18,9 +18,9 @@ type MakeDirectoryKeyOptions =
       /** The package ecosystem using alternative naming convention */
       'package-ecosystem': string;
       /** Single directory path (optional if directories is provided) */
-      directory?: string | null;
+      'directory'?: string | null;
       /** Multiple directory paths (optional if directory is provided) */
-      directories?: string[];
+      'directories'?: string[];
     };
 
 /**

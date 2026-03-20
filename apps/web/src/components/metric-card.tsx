@@ -1,4 +1,5 @@
 import { ArrowDown, ArrowUp } from 'lucide-react';
+
 import type { Icon } from '@/components/icons';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -23,12 +24,12 @@ export function MetricCard({ title, value, subtitle, trend, direction, unit, ico
   return (
     <Card className='gap-4 py-4'>
       <CardHeader className='flex flex-row items-center justify-between'>
-        <CardTitle className='font-normal text-muted-foreground text-sm'>{title}</CardTitle>
+        <CardTitle className='text-sm font-normal text-muted-foreground'>{title}</CardTitle>
         {Icon && <Icon className='size-4 text-muted-foreground' />}
       </CardHeader>
       <CardContent className='gap-1'>
         <div className='flex items-baseline gap-2'>
-          <p className='font-semibold text-2xl text-foreground'>{value}</p>
+          <p className='text-2xl font-semibold text-foreground'>{value}</p>
           {trend && direction && (
             <span
               className={cn(
@@ -42,7 +43,7 @@ export function MetricCard({ title, value, subtitle, trend, direction, unit, ico
             </span>
           )}
         </div>
-        {subtitle && <p className='text-muted-foreground text-xs'>{subtitle}</p>}
+        {subtitle && <p className='text-xs text-muted-foreground'>{subtitle}</p>}
       </CardContent>
       {footer && <CardFooter> {footer} </CardFooter>}
     </Card>

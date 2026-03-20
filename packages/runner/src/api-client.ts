@@ -5,7 +5,8 @@ import type {
   DependabotRecordUpdateJobError,
 } from '@paklo/core/dependabot';
 import { logger } from '@paklo/core/logger';
-import { isHTTPError, type KyInstance, type KyResponse } from 'ky';
+import { type KyInstance, type KyResponse, isHTTPError } from 'ky';
+
 import type { JobParameters } from './params';
 
 export class JobDetailsFetchingError extends Error {}
@@ -182,7 +183,7 @@ export class ApiClient {
         },
         hooks: {
           beforeRetry: [
-            async ({ request, options, error, retryCount }) => {
+            async ({ request: _request, options: _options, error, retryCount: _retryCount }) => {
               if (isHTTPError(error)) {
                 logger.warn(`Retrying failed request with status code: ${error.response.status}`);
               }

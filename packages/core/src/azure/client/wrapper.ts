@@ -1,5 +1,6 @@
 import { normalizeBranchName, normalizeFilePath } from '@/dependabot';
 import { logger } from '@/logger';
+
 import type { AzdoEvent, AzdoEventType } from '../events';
 import type { AzureDevOpsOrganizationUrl } from '../url-parts';
 import { AzureDevOpsClient } from './client';

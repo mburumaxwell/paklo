@@ -1,5 +1,6 @@
 import { cacheLife } from 'next/cache';
-import { getDateFromTimeRange, type TimeRange } from '@/lib/aggregation';
+
+import { type TimeRange, getDateFromTimeRange } from '@/lib/aggregation';
 import { logger } from '@/lib/logger';
 import { getMongoCollection } from '@/lib/mongodb';
 
@@ -64,7 +65,7 @@ export async function getInstallations(id: string): Promise<number> {
   const response = await fetch('https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery', {
     method: 'POST',
     headers: {
-      Accept: 'application/json;api-version=6.0-preview.1',
+      'Accept': 'application/json;api-version=6.0-preview.1',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({

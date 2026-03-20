@@ -22,6 +22,6 @@ Thank you for contributing to Paklo!
    ```bash
    pnpm lint
    pnpm test
-   pnpm format:check
+   pnpm run format
    ```
 7. Submit a pull request

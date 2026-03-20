@@ -1,5 +1,7 @@
-import ky, { isHTTPError, type Options as KyOptions } from 'ky';
+import ky, { type Options as KyOptions, isHTTPError } from 'ky';
+
 import { logger } from '@/logger';
+
 import type { AzureDevOpsOrganizationUrl } from '../url-parts';
 import { ConnectionClient } from './client-connection';
 import { GitClient } from './client-git';
@@ -48,12 +50,12 @@ export class AzureDevOpsClient {
       },
       hooks: {
         beforeRequest: [
-          async (request, options) => {
+          async (request, _options) => {
             if (debug) logger.debug(`🌎 🠊 [${request.method}] ${request.url}`);
           },
         ],
         afterResponse: [
-          async (request, options, response) => {
+          async (request, _options, response) => {
             if (debug) {
               logger.debug(`🌎 🠈 [${response.status}] ${response.statusText}`);
 
@@ -69,7 +71,7 @@ export class AzureDevOpsClient {
           },
         ],
         beforeRetry: [
-          async ({ request, options, error, retryCount }) => {
+          async ({ request: _request, options: _options, error, retryCount: _retryCount }) => {
             if (debug && isHTTPError(error)) {
               logger.debug(`⏳ Retrying failed request with status code: ${error.response.status}`);
             }
@@ -78,7 +80,7 @@ export class AzureDevOpsClient {
       },
       retry: {
         limit: 3,
-        delay: (attempt) => 3000, // all attempts after 3 seconds
+        delay: (_attempt) => 3000, // all attempts after 3 seconds
       },
       ...options,
     };

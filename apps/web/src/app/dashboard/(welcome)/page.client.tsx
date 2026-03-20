@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
 import { PakloIcon } from '@/components/logos';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,7 +25,7 @@ export function NoOrganizationsView() {
         <CardDescription className='text-base'>Get started by creating your first organization</CardDescription>
       </CardHeader>
       <CardContent className='space-y-4'>
-        <p className='text-center text-muted-foreground text-sm'>
+        <p className='text-center text-sm text-muted-foreground'>
           Organizations help you manage your projects, team members, and integrations all in one place.
         </p>
         <Link href='/dashboard/setup'>
@@ -89,7 +90,7 @@ export function SelectOrganizationView({ organizations }: { organizations: Organ
             'Continue to Dashboard'
           )}
         </Button>
-        <p className='text-center text-muted-foreground text-xs'>You can change this at any time in your sidebar.</p>
+        <p className='text-center text-xs text-muted-foreground'>You can change this at any time in your sidebar.</p>
         <Separator />
         <Link href='/dashboard/setup'>
           <Button variant='outline' className='w-full bg-transparent'>

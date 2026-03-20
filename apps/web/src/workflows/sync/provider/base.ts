@@ -1,4 +1,5 @@
 import type { AzdoRepositoryItem } from '@paklo/core/azure';
+
 import type { Project } from '@/lib/prisma';
 
 export type SynchronizerProject = {

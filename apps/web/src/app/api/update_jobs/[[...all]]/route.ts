@@ -1,11 +1,11 @@
-import { buildPullRequestProperties, getPullRequestChangedFiles, PR_DESCRIPTION_MAX_LENGTH } from '@paklo/core/azure';
+import { PR_DESCRIPTION_MAX_LENGTH, buildPullRequestProperties, getPullRequestChangedFiles } from '@paklo/core/azure';
 import {
-  areEqual,
-  createApiServerApp,
   type DependabotCredential,
   type DependabotJobConfig,
   type DependabotRequest,
   type DependabotTokenType,
+  areEqual,
+  createApiServerApp,
   getBranchNameForUpdate,
   getDependencyNames,
   getPersistedPr,
@@ -16,6 +16,7 @@ import {
 } from '@paklo/core/dependabot';
 import { toNextJsHandler } from '@paklo/core/hono';
 import { resumeHook } from 'workflow/api';
+
 import { createAzdoClient } from '@/integrations';
 import { author } from '@/lib/author';
 import { logger } from '@/lib/logger';
@@ -23,11 +24,11 @@ import { getMongoCollection } from '@/lib/mongodb';
 import {
   type Organization,
   type Project,
-  prisma,
   type Repository,
   type RepositoryPullRequest,
   type RepositoryUpdate,
   type UpdateJob,
+  prisma,
 } from '@/lib/prisma';
 import type { UpdateJobHookResult } from '@/workflows/jobs';
 

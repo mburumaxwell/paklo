@@ -1,8 +1,10 @@
 import { readFile } from 'node:fs/promises';
+
 import type { CertificateAuthority, DependabotCredential, DependabotProxyConfig } from '@paklo/core/dependabot';
 import { logger } from '@paklo/core/logger';
 import type Docker from 'dockerode';
 import type { Container, Network } from 'dockerode';
+
 import { ContainerService } from './container-service';
 import { errStream, nullStream, outStream } from './utils';
 

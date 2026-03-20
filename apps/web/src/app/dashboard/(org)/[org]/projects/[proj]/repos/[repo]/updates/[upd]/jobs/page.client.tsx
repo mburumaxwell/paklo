@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { toast } from 'sonner';
+
 import { requestTriggerUpdateJobs } from '@/actions/workflows';
 import { EcosystemIcon, UpdateJobStatusIcon } from '@/components/icons';
 import { TimeAgo } from '@/components/time-ago';
@@ -104,8 +105,8 @@ export function UpdateJobsView({
   return (
     <div className='mx-auto w-full max-w-5xl space-y-6 p-6'>
       <div>
-        <h1 className='mb-2 font-semibold text-2xl'>Repository: {repository.name}</h1>
-        <p className='text-muted-foreground text-sm'>
+        <h1 className='mb-2 text-2xl font-semibold'>Repository: {repository.name}</h1>
+        <p className='text-sm text-muted-foreground'>
           <a href={repository.url} target='_blank' rel='noreferrer' className='underline-offset-4 hover:underline'>
             {repository.slug}
           </a>
@@ -137,7 +138,7 @@ export function UpdateJobsView({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuLabel className='font-light text-xs'>Monitored files</DropdownMenuLabel>
+                        <DropdownMenuLabel className='text-xs font-light'>Monitored files</DropdownMenuLabel>
                         {update.files.slice(1).map((file) => (
                           <DropdownMenuItem key={file} asChild>
                             <a href={fileLinks.get(file)} target='_blank' rel='noreferrer'>
@@ -190,7 +191,6 @@ export function UpdateJobsView({
                       Failed with {(job.errors.length || 0) > 1 ? 'errors' : 'an error'}:{' '}
                       <ul className='list-inside list-disc'>
                         {job.errors.map((error, index) => (
-                          // biome-ignore lint/suspicious/noArrayIndexKey: no other id available
                           <li key={index}>
                             {error['error-type']}
                             {error['error-details'] ? `: ${JSON.stringify(error['error-details'])}` : ''}
@@ -225,7 +225,7 @@ export function UpdateJobsView({
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent>
-                                <DropdownMenuLabel className='font-light text-xs'>PRs Affected</DropdownMenuLabel>
+                                <DropdownMenuLabel className='text-xs font-light'>PRs Affected</DropdownMenuLabel>
                                 {job.affectedPrIds.slice(1).map((prId) => (
                                   <DropdownMenuItem key={prId} asChild>
                                     <a href={prLinks.get(prId)} target='_blank' rel='noreferrer'>

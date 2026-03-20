@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
+
 import {
   type AzdoPrExtractedWithProperties,
   AzureDevOpsClientWrapper,
@@ -16,14 +17,15 @@ import {
   normalizeBranchName,
 } from '@paklo/core/dependabot';
 import {
-  filterVulnerabilities,
   GitHubSecurityAdvisoryClient,
-  getGhsaPackageEcosystemFromDependabotPackageManager,
   type Package,
   type SecurityVulnerability,
   SecurityVulnerabilitySchema,
+  filterVulnerabilities,
+  getGhsaPackageEcosystemFromDependabotPackageManager,
 } from '@paklo/core/github';
 import { logger } from '@paklo/core/logger';
+
 import { type RunJobOptions, runJob } from '../../run';
 import { LocalJobsRunner, type LocalJobsRunnerOptions, type RunJobsResult } from '../runner';
 import { AzureLocalDependabotServer, type AzureLocalDependabotServerOptions } from './server';
@@ -41,11 +43,9 @@ export type AzureLocalJobsRunnerOptions = LocalJobsRunnerOptions &
   };
 
 export class AzureLocalJobsRunner extends LocalJobsRunner {
-  // biome-ignore-start lint/correctness/noUnusedPrivateClassMembers: variables are used
   private readonly options: AzureLocalJobsRunnerOptions;
   private readonly authorClient: AzureDevOpsClientWrapper;
   private readonly approverClient?: AzureDevOpsClientWrapper;
-  // biome-ignore-end lint/correctness/noUnusedPrivateClassMembers: variables are used
 
   constructor(options: AzureLocalJobsRunnerOptions) {
     super({ ...options });
@@ -224,10 +224,10 @@ export class AzureLocalJobsRunner extends LocalJobsRunner {
 
     function makeUsageData(job: DependabotJobConfig): RunJobOptions['usage'] {
       return {
-        trigger: 'user',
-        provider: job.source.provider,
-        owner: url.value.toString(),
-        project: `${url.value.toString().replace(/\/$/, '')}/${url.project}`,
+        'trigger': 'user',
+        'provider': job.source.provider,
+        'owner': url.value.toString(),
+        'project': `${url.value.toString().replace(/\/$/, '')}/${url.project}`,
         'package-manager': job['package-manager'],
       };
     }

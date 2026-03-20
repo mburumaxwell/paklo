@@ -7,8 +7,8 @@ import {
   DockerOriginal,
   DotNetOriginal,
   ElmOriginal,
-  GithubactionsOriginal,
   GitOriginal,
+  GithubactionsOriginal,
   GoOriginal,
   GradleOriginal,
   HelmOriginal,
@@ -25,6 +25,7 @@ import {
   YarnOriginal,
 } from 'devicons-react';
 import { Package } from 'lucide-react';
+
 import type { IconProps } from './types';
 
 export function EcosystemIcon({ ecosystem, ...props }: { ecosystem: string | PackageEcosystem } & IconProps) {

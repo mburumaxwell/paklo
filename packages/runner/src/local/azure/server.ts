@@ -1,14 +1,12 @@
-import type {
-  AzdoPrExtractedWithProperties,
-  AzureDevOpsClientWrapper,
-  AzureDevOpsRepositoryUrl,
-} from '@paklo/core/azure';
 import {
+  type AzdoPrExtractedWithProperties,
   type AzdoPullRequestMergeStrategy,
+  type AzureDevOpsClientWrapper,
+  type AzureDevOpsRepositoryUrl,
+  PR_DESCRIPTION_MAX_LENGTH,
   buildPullRequestProperties,
   getPullRequestChangedFiles,
   getPullRequestForDependencyNames,
-  PR_DESCRIPTION_MAX_LENGTH,
   parsePullRequestProperties,
 } from '@paklo/core/azure';
 import {
@@ -20,6 +18,7 @@ import {
   shouldSupersede,
 } from '@paklo/core/dependabot';
 import { logger } from '@paklo/core/logger';
+
 import { LocalDependabotServer, type LocalDependabotServerOptions } from '../server';
 
 export type AzureLocalDependabotServerOptions = LocalDependabotServerOptions & {
@@ -35,7 +34,6 @@ export type AzureLocalDependabotServerOptions = LocalDependabotServerOptions & {
 };
 
 export class AzureLocalDependabotServer extends LocalDependabotServer {
-  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: options is used
   private readonly options: AzureLocalDependabotServerOptions;
 
   constructor(options: AzureLocalDependabotServerOptions) {

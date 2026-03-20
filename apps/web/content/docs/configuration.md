@@ -17,10 +17,10 @@ Place your configuration file at:
 ```yaml
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
 ```
 
 ## Azure DevOps-Specific Behaviors
@@ -37,8 +37,8 @@ Azure DevOps doesn't support pull request assignees. The `assignees` field is im
 
 ```yaml
 assignees:
-  - "user1"
-  - "user2"
+  - 'user1'
+  - 'user2'
 ```
 
 These users will be added as optional reviewers.
@@ -84,22 +84,22 @@ registries:
 ```yaml
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/frontend"
+  - package-ecosystem: 'npm'
+    directory: '/frontend'
     schedule:
-      interval: "weekly"
-    labels: ["dependencies", "frontend"]
+      interval: 'weekly'
+    labels: ['dependencies', 'frontend']
 
-  - package-ecosystem: "npm"
-    directory: "/backend"
+  - package-ecosystem: 'npm'
+    directory: '/backend'
     schedule:
-      interval: "weekly"
-    labels: ["dependencies", "backend"]
+      interval: 'weekly'
+    labels: ['dependencies', 'backend']
 
-  - package-ecosystem: "docker"
-    directory: "/"
+  - package-ecosystem: 'docker'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
 ```
 
 ### With Private Registry
@@ -113,10 +113,10 @@ registries:
     token: ${{ NPM_TOKEN }}
 
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     registries:
       - npm-private
 ```
@@ -130,13 +130,13 @@ For more on configuring private package registries see [Private Registries](/doc
 ```yaml
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "daily"
-    open-pull-requests-limit: 0  # Only security updates
+      interval: 'daily'
+    open-pull-requests-limit: 0 # Only security updates
     assignees:
-      - "security-team"
+      - 'security-team'
 ```
 
 :::info
@@ -148,14 +148,14 @@ For more on security-only updates and custom advisories see [Security Advisories
 ```yaml
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     groups:
       development:
-        dependency-type: "development"
+        dependency-type: 'development'
       production-minor:
-        update-types: ["minor", "patch"]
-        dependency-type: "production"
+        update-types: ['minor', 'patch']
+        dependency-type: 'production'
 ```

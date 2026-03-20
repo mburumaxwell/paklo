@@ -5,6 +5,7 @@ import { APIError } from 'better-auth/api';
 import { betterAuth } from 'better-auth/minimal';
 import { nextCookies } from 'better-auth/next-js';
 import { admin, lastLoginMethod, magicLink, organization } from 'better-auth/plugins';
+
 import {
   sendMagicLinkEmail,
   sendOrganizationInviteDeclinedEmail,
@@ -19,6 +20,7 @@ import { logger } from '@/lib/logger';
 import { prisma as prismaClient } from '@/lib/prisma';
 import { RegionCodeSchema } from '@/lib/regions';
 import { config } from '@/site-config';
+
 import app from '../../package.json';
 
 export const auth = betterAuth({
@@ -37,8 +39,7 @@ export const auth = betterAuth({
   ],
   advanced: {
     database: {
-      generateId: ({ model, size }) =>
-        PakloId.isValidType(model) ? PakloId.generate(model) : PakloId.generateKidOnly(),
+      generateId: ({ model }) => (PakloId.isValidType(model) ? PakloId.generate(model) : PakloId.generateKidOnly()),
     },
     // since we have not set baseURL, we need to trust proxy headers on ACA
     trustedProxyHeaders: environment.platform === 'azure_container_apps',
@@ -48,7 +49,7 @@ export const auth = betterAuth({
     deleteUser: {
       enabled: true,
       deleteTokenExpiresIn: 5 * 60, // 5 minutes
-      async beforeDelete(user, request) {
+      async beforeDelete(user, _request) {
         // block delete if user owns organizations
         const ownedOrgs = await prismaClient.organization.count({
           where: { members: { some: { userId: user.id, role: 'owner' } } },
@@ -60,7 +61,7 @@ export const auth = betterAuth({
           });
         }
       },
-      async sendDeleteAccountVerification({ user, url }, request) {
+      async sendDeleteAccountVerification({ user, url }, _request) {
         logger.debug(`Sending account deletion verification to ${user.email} url: ${url}`);
         // not awaiting, backgroundTask will handle waiting
         void sendUserDeleteVerificationEmail({ recipient: user.email, url });
@@ -95,7 +96,7 @@ export const auth = betterAuth({
           },
         },
       },
-      async sendInvitationEmail(data, request) {
+      async sendInvitationEmail(data, _request) {
         const acceptUrl = `${config.siteUrl}/invite/accept?id=${data.id}`;
         const declineUrl = `${config.siteUrl}/invite/decline?id=${data.id}`;
         logger.debug(`Sending invitation to ${data.invitation.email} url: ${acceptUrl}`);
@@ -125,7 +126,7 @@ export const auth = betterAuth({
     passkey({ rpName: 'Paklo' }),
     magicLink({
       expiresIn: 5 * 60, // 5 minutes
-      async sendMagicLink({ email, url }, ctx) {
+      async sendMagicLink({ email, url }, _ctx) {
         logger.debug(`Sending magic link to ${email} url: ${url}`);
         // not awaiting, backgroundTask will handle waiting
         void sendMagicLinkEmail({ recipient: email, url });

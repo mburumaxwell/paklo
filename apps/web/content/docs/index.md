@@ -37,37 +37,37 @@ Fully managed Dependabot updates without infrastructure management.
 
 2. Create a `dependabot.yml` file at `.github/dependabot.yml` or `.azuredevops/dependabot.yml`:
 
-    ```yaml
-    version: 2
-    updates:
-      - package-ecosystem: "npm"
-        directory: "/"
-        schedule:
-          interval: "weekly"
-    ```
+   ```yaml
+   version: 2
+   updates:
+     - package-ecosystem: 'npm'
+       directory: '/'
+       schedule:
+         interval: 'weekly'
+   ```
 
 3. Create a pipeline with the `dependabot@2` task:
 
-    ```yaml
-    trigger: none # Disable CI trigger
+   ```yaml
+   trigger: none # Disable CI trigger
 
-    schedules:
-      - cron: '0 0 * * 0' # Weekly on Sunday at midnight UTC
-        always: true
-        branches:
-          include:
-            - main
-        batch: true
-        displayName: Weekly Dependabot
+   schedules:
+     - cron: '0 0 * * 0' # Weekly on Sunday at midnight UTC
+       always: true
+       branches:
+         include:
+           - main
+       batch: true
+       displayName: Weekly Dependabot
 
-    pool:
-      vmImage: 'ubuntu-latest' # Requires macOS or Ubuntu (Windows not supported)
+   pool:
+     vmImage: 'ubuntu-latest' # Requires macOS or Ubuntu (Windows not supported)
 
-    steps:
-      - task: dependabot@2
-        inputs:
-          mergeStrategy: 'squash'
-    ```
+   steps:
+     - task: dependabot@2
+       inputs:
+         mergeStrategy: 'squash'
+   ```
 
 The task accepts many inputs such as `dryRun`, `setAutoComplete`, and `mergeStrategy`. See [Azure DevOps Extension](/docs/extensions/azure) for the full list.
 

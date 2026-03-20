@@ -7,24 +7,24 @@ While Paklo aims to support all [official Dependabot configuration options](http
 
 ## Feature Parity Status
 
-| Feature | Extension (v2) | Hosted | CLI |
-| ------- | -------------- | ------ | --- |
-| Basic updates | ✅ | ✅ | ✅ |
-| Security-only updates | ✅ | ✅ | ✅ |
-| Private registries | ✅ | ✅ | ✅ |
-| Custom CA certificates | ✅ | ❌ | ✅ |
-| Experiments | ✅ | ⚠️ Partial | ✅ |
-| Groups | ✅ | ✅ | ✅ |
-| Assignees | ✅ | ✅ | ✅ |
-| Labels | ✅ | ✅ | ✅ |
-| Milestones | ✅ | ✅ | ✅ |
-| Custom commit messages | ✅ | ✅ | ✅ |
-| Ignore rules | ✅ | ✅ | ✅ |
-| Allow rules | ✅ | ✅ | ✅ |
-| Target branch | ✅ | ✅ | ✅ |
-| Rebase strategy | ✅ | ✅ | ✅ |
-| Vendor (Go) | ✅ | ✅ | ✅ |
-| Version strategy | ✅ | ✅ | ✅ |
+| Feature                | Extension (v2) | Hosted     | CLI |
+| ---------------------- | -------------- | ---------- | --- |
+| Basic updates          | ✅             | ✅         | ✅  |
+| Security-only updates  | ✅             | ✅         | ✅  |
+| Private registries     | ✅             | ✅         | ✅  |
+| Custom CA certificates | ✅             | ❌         | ✅  |
+| Experiments            | ✅             | ⚠️ Partial | ✅  |
+| Groups                 | ✅             | ✅         | ✅  |
+| Assignees              | ✅             | ✅         | ✅  |
+| Labels                 | ✅             | ✅         | ✅  |
+| Milestones             | ✅             | ✅         | ✅  |
+| Custom commit messages | ✅             | ✅         | ✅  |
+| Ignore rules           | ✅             | ✅         | ✅  |
+| Allow rules            | ✅             | ✅         | ✅  |
+| Target branch          | ✅             | ✅         | ✅  |
+| Rebase strategy        | ✅             | ✅         | ✅  |
+| Vendor (Go)            | ✅             | ✅         | ✅  |
+| Version strategy       | ✅             | ✅         | ✅  |
 
 **Legend**:
 

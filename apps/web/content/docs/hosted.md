@@ -53,12 +53,12 @@ The hosted service reads your `dependabot.yml` configuration file:
 ```yaml
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "daily"
-      time: "04:00"
-      timezone: "America/New_York"
+      interval: 'daily'
+      time: '04:00'
+      timezone: 'America/New_York'
 ```
 
 See [Configuration](/docs/configuration) for all options.
@@ -83,7 +83,7 @@ registries:
   npm-private:
     type: npm-registry
     url: https://npm.example.com
-    token: ${{ NPM_TOKEN }}  # Resolved from organization secrets
+    token: ${{ NPM_TOKEN }} # Resolved from organization secrets
 ```
 
 ## Features
@@ -104,11 +104,11 @@ Enable [security-only updates](/docs/security-advisories) by setting `open-pull-
 
 ```yaml
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "daily"
-    open-pull-requests-limit: 0  # Only security updates
+      interval: 'daily'
+    open-pull-requests-limit: 0 # Only security updates
 ```
 
 Requires a GitHub token in integration settings.

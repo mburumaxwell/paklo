@@ -1,7 +1,8 @@
-// biome-ignore-all lint/suspicious/noExplicitAny: tests
+/* oxlint-disable typescript/no-explicit-any */
 
 import ky from 'ky';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { extractRepositoryUrl } from '../url-parts';
 import { AzureDevOpsClientWrapper } from './wrapper';
 

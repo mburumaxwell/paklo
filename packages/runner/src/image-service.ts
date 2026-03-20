@@ -1,4 +1,5 @@
 import { Readable } from 'node:stream';
+
 import { logger } from '@paklo/core/logger';
 import Docker from 'dockerode';
 
@@ -98,7 +99,6 @@ export const ImageService = {
           }
 
           // Add jitter to avoid synchronization issues
-          // biome-ignore lint/style/useExponentiationOperator: This is clearer for now
           const baseDelay = INITIAL_DELAY_MS * Math.pow(2, attempt);
           const jitter = Math.random() * baseDelay;
           const delay = baseDelay / 2 + jitter;

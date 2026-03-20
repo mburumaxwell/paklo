@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { environment } from './index';
 
 describe('environment', () => {

@@ -1,5 +1,7 @@
 import { ImageResponse } from 'next/og';
+
 import { OpenGraphImageMarketing } from '@/components/og-image';
+
 import { metadata } from './page';
 
 export const contentType = 'image/png';

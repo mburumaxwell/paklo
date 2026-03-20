@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import os from 'node:os';
+
 import { logger } from '@paklo/core/logger';
 import type { UsageTelemetryRequestData } from '@paklo/core/usage';
 import ky from 'ky';
@@ -115,9 +116,9 @@ export async function runJob(options: RunJobOptions): Promise<RunJobResult> {
     const data: UsageTelemetryRequestData = {
       ...usage,
       host: {
-        platform: os.platform(),
-        release: os.release(),
-        arch: os.arch(),
+        'platform': os.platform(),
+        'release': os.release(),
+        'arch': os.arch(),
         'machine-hash': crypto.createHash('sha256').update(os.hostname()).digest('hex'),
         'docker-container': inDocker,
       },

@@ -38,7 +38,7 @@ export function OrganizationInvite({
           <Container className='mx-auto my-10 max-w-116.25 p-5'>
             <Section>
               <Row>
-                <Text className='mb-4 font-bold text-[24px] text-black'>You're invited to join {organization}</Text>
+                <Text className='mb-4 text-[24px] font-bold text-black'>You're invited to join {organization}</Text>
               </Row>
               <Row>
                 <Text>
@@ -47,7 +47,7 @@ export function OrganizationInvite({
                 </Text>
               </Row>
               <Row>
-                <Text className='mt-2 text-[#666666] text-[14px]'>
+                <Text className='mt-2 text-[14px] text-[#666666]'>
                   This invitation link expires on{' '}
                   {expires.toLocaleDateString(undefined, {
                     weekday: 'long',
@@ -66,21 +66,21 @@ export function OrganizationInvite({
               </Row>
               <Row>
                 <Button
-                  className='mr-2 rounded bg-[#0070f3] px-5 py-3 text-center font-semibold text-[14px] text-white no-underline'
+                  className='mr-2 rounded bg-[#0070f3] px-5 py-3 text-center text-[14px] font-semibold text-white no-underline'
                   href={acceptUrl}
                 >
                   Accept Invitation
                 </Button>
                 <Button
-                  className='rounded bg-[#666666] px-5 py-3 text-center font-semibold text-[14px] text-white no-underline'
+                  className='rounded bg-[#666666] px-5 py-3 text-center text-[14px] font-semibold text-white no-underline'
                   href={declineUrl}
                 >
                   Decline
                 </Button>
               </Row>
             </Section>
-            <Hr className='mx-0 my-6.5 w-full border border-[#eaeaea] border-solid' />
-            <Text className='text-[#666666] text-[12px] leading-6'>
+            <Hr className='mx-0 my-6.5 w-full border border-solid border-[#eaeaea]' />
+            <Text className='text-[12px] leading-6 text-[#666666]'>
               This email was intended for <span className='text-black'>{recipient}</span>. If you were not expecting
               this email, you can ignore it. If you are concerned about your account's safety, please reply to this
               email to get in touch with us.

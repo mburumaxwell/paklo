@@ -1,5 +1,6 @@
 import type { cookies } from 'next/headers';
 import { Suspense } from 'react';
+
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { AppSidebar } from '@/components/app-sidebar';
 import { HelpScoutBeacon } from '@/components/help-scout-beacon';

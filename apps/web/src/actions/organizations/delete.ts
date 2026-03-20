@@ -2,12 +2,13 @@
 
 import { headers as requestHeaders } from 'next/headers';
 import { z } from 'zod';
+
 import { deleteGithubToken } from '@/integrations';
 import { auth } from '@/lib/auth';
 import { deleteKeyVaultSecret } from '@/lib/azure';
 import { stripe } from '@/lib/billing';
 import { prisma } from '@/lib/prisma';
-import { createServerAction, ServerActionValidationError } from '@/lib/server-action';
+import { ServerActionValidationError, createServerAction } from '@/lib/server-action';
 
 export const deleteOrganization = createServerAction({
   input: z.object({ organizationId: z.string() }),

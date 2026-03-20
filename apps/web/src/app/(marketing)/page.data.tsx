@@ -1,5 +1,6 @@
 import { Globe, Layers, Lock, Shield, Users, Zap } from 'lucide-react';
 import { numify } from 'numify';
+
 import type { Icon } from '@/components/icons';
 import { INCLUDED_USAGE_MINUTES, PRICE_AMOUNT_MONTHLY_MANAGEMENT, PRICE_AMOUNT_PER_MINUTE_USAGE } from '@/lib/billing';
 import { formatMoney } from '@/lib/money';

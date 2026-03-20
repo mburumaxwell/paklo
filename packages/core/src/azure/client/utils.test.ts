@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { type DependabotCreatePullRequest, DependabotPersistedPrSchema, getPersistedPr } from '@/dependabot';
+
 import { PR_PROPERTY_DEPENDABOT_DEPENDENCIES, PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER } from './constants';
 import type { AzdoPrExtractedWithProperties } from './types';
 import {
@@ -19,7 +20,7 @@ describe('parsePullRequestProps', () => {
         {
           name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
           value: JSON.stringify({
-            dependencies: [{ 'dependency-name': 'lodash', 'dependency-version': '4.17.21', directory: '/' }],
+            dependencies: [{ 'dependency-name': 'lodash', 'dependency-version': '4.17.21', 'directory': '/' }],
           }),
         },
       ],
@@ -28,7 +29,7 @@ describe('parsePullRequestProps', () => {
     const result = parsePullRequestProps(pr);
     const expected = {
       'pr-number': 123,
-      dependencies: [{ 'dependency-name': 'lodash', 'dependency-version': '4.17.21', directory: '/' }],
+      'dependencies': [{ 'dependency-name': 'lodash', 'dependency-version': '4.17.21', 'directory': '/' }],
     };
 
     // Validate against the schema
@@ -46,9 +47,9 @@ describe('parsePullRequestProps', () => {
           name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
           value: JSON.stringify({
             'dependency-group-name': 'group-1',
-            dependencies: [
-              { 'dependency-name': 'lodash', 'dependency-version': '4.17.21', directory: '/' },
-              { 'dependency-name': 'express', 'dependency-version': '4.17.1', directory: '/' },
+            'dependencies': [
+              { 'dependency-name': 'lodash', 'dependency-version': '4.17.21', 'directory': '/' },
+              { 'dependency-name': 'express', 'dependency-version': '4.17.1', 'directory': '/' },
             ],
           }),
         },
@@ -59,9 +60,9 @@ describe('parsePullRequestProps', () => {
     const expected = {
       'pr-number': 123,
       'dependency-group-name': 'group-1',
-      dependencies: [
-        { 'dependency-name': 'lodash', 'dependency-version': '4.17.21', directory: '/' },
-        { 'dependency-name': 'express', 'dependency-version': '4.17.1', directory: '/' },
+      'dependencies': [
+        { 'dependency-name': 'lodash', 'dependency-version': '4.17.21', 'directory': '/' },
+        { 'dependency-name': 'express', 'dependency-version': '4.17.1', 'directory': '/' },
       ],
     };
 
@@ -78,7 +79,7 @@ describe('parsePullRequestProps', () => {
         { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: 'npm' },
         {
           name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
-          value: JSON.stringify([{ 'dependency-name': 'lodash', 'dependency-version': '4.17.21', directory: '/' }]),
+          value: JSON.stringify([{ 'dependency-name': 'lodash', 'dependency-version': '4.17.21', 'directory': '/' }]),
         },
       ],
     };
@@ -86,7 +87,7 @@ describe('parsePullRequestProps', () => {
     const result = parsePullRequestProps(pr);
     const expected = {
       'pr-number': 123,
-      dependencies: [{ 'dependency-name': 'lodash', 'dependency-version': '4.17.21', directory: '/' }],
+      'dependencies': [{ 'dependency-name': 'lodash', 'dependency-version': '4.17.21', 'directory': '/' }],
     };
 
     // Validate against the schema
@@ -104,9 +105,9 @@ describe('parsePullRequestProps', () => {
           name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
           value: JSON.stringify({
             'dependency-group-name': 'group-1',
-            dependencies: [
-              { 'dependency-name': 'lodash', 'dependency-version': '4.17.21', directory: '/' },
-              { 'dependency-name': 'express', 'dependency-version': '4.17.1', directory: '/' },
+            'dependencies': [
+              { 'dependency-name': 'lodash', 'dependency-version': '4.17.21', 'directory': '/' },
+              { 'dependency-name': 'express', 'dependency-version': '4.17.1', 'directory': '/' },
             ],
           }),
         },
@@ -117,9 +118,9 @@ describe('parsePullRequestProps', () => {
     const expected = {
       'pr-number': 123,
       'dependency-group-name': 'group-1',
-      dependencies: [
-        { 'dependency-name': 'lodash', 'dependency-version': '4.17.21', directory: '/' },
-        { 'dependency-name': 'express', 'dependency-version': '4.17.1', directory: '/' },
+      'dependencies': [
+        { 'dependency-name': 'lodash', 'dependency-version': '4.17.21', 'directory': '/' },
+        { 'dependency-name': 'express', 'dependency-version': '4.17.1', 'directory': '/' },
       ],
     };
 
@@ -255,7 +256,7 @@ describe('getPullRequestForDependencyNames', () => {
             name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
             value: JSON.stringify({
               'dependency-group-name': 'dev-dependencies',
-              dependencies: [{ 'dependency-name': 'lodash' }, { 'dependency-name': 'express' }],
+              'dependencies': [{ 'dependency-name': 'lodash' }, { 'dependency-name': 'express' }],
             }),
           },
         ],
@@ -339,7 +340,7 @@ describe('getPullRequestForDependencyNames', () => {
             name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
             value: JSON.stringify({
               'dependency-group-name': 'System-Commandline',
-              dependencies: [
+              'dependencies': [
                 { 'dependency-name': 'System.CommandLine.Hosting', 'dependency-version': '0.4.0-alpha.25320.106' },
                 { 'dependency-name': 'System.CommandLine.Rendering', 'dependency-version': '0.4.0-alpha.25320.106' },
               ],
@@ -366,7 +367,7 @@ describe('getPullRequestForDependencyNames', () => {
             name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
             value: JSON.stringify({
               'dependency-group-name': 'production',
-              dependencies: [{ 'dependency-name': 'lodash' }],
+              'dependencies': [{ 'dependency-name': 'lodash' }],
             }),
           },
         ],
@@ -409,7 +410,7 @@ describe('getPullRequestForDependencyNames', () => {
             name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
             value: JSON.stringify({
               'dependency-group-name': 'production',
-              dependencies: [{ 'dependency-name': 'lodash' }],
+              'dependencies': [{ 'dependency-name': 'lodash' }],
             }),
           },
         ],
@@ -426,7 +427,7 @@ describe('getPullRequestForDependencyNames', () => {
 describe('getPersistedPr and buildPullRequestProperties', () => {
   it('round-trip: persisted format excludes pr-number, runtime format includes it', () => {
     const createData: DependabotCreatePullRequest = {
-      dependencies: [
+      'dependencies': [
         { name: 'lodash', version: '4.17.21', directory: '/' },
         { name: 'express', version: '4.18.0', directory: '/' },
       ],

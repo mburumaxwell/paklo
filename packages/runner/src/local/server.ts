@@ -1,8 +1,8 @@
 import type { AddressInfo } from 'node:net';
+
 import { createAdaptorServer } from '@hono/node-server';
 import {
   type CreateApiServerAppOptions,
-  createApiServerApp,
   type DependabotCredential,
   type DependabotExistingGroupPr,
   type DependabotExistingPr,
@@ -11,6 +11,7 @@ import {
   type DependabotTokenType,
   type DependabotUpdate,
   type GitAuthor,
+  createApiServerApp,
 } from '@paklo/core/dependabot';
 import { logger } from '@paklo/core/logger';
 

@@ -6,8 +6,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "format": "biome format --write",
-    "format:check": "biome format",
+    "format": "oxfmt --check",
+    "format:fix": "oxfmt --write",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
 
     "changeset": "changeset",
     "packages:version": "changeset version && turbo run packages:version",
@@ -25,15 +27,15 @@
     "typecheck": "turbo run typecheck",
     "codegen": "turbo run codegen",
     "build": "turbo run build",
-    "lint": "turbo run lint",
     "test": "turbo run test",
     "package": "turbo run package",
     "clean": "turbo run clean && rimraf .turbo"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.7",
     "@changesets/changelog-github": "0.6.0",
     "@changesets/cli": "2.30.0",
+    "oxfmt": "0.41.0",
+    "oxlint": "1.56.0",
     "rimraf": "6.1.3",
     "tsx": "4.21.0",
     "turbo": "2.8.17",

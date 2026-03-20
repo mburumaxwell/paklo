@@ -2,6 +2,7 @@
 
 import { logger } from '@paklo/core/logger';
 import { Command, Option } from 'commander';
+
 import packageJson from '../package.json';
 import { cleanup, fetchImages, run, validate } from './commands';
 

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { TemplateString } from 'next/dist/lib/metadata/types/metadata-types';
+
 import { config, socials } from '@/site-config';
 
 const rootTitleTemplate: TemplateString = {

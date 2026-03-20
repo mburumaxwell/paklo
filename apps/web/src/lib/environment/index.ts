@@ -1,5 +1,5 @@
 import { getBranch, getSha } from './git';
-import { getPlatform, type Platform } from './platform';
+import { type Platform, getPlatform } from './platform';
 import { getSiteUrlCombined } from './site-url';
 
 export type Environment = {

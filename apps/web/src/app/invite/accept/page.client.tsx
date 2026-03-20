@@ -3,6 +3,7 @@
 import { CheckCircle2, XCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { authClient } from '@/lib/auth-client';
@@ -80,7 +81,7 @@ export function InviteAcceptView({ invitationId }: { invitationId: string }) {
         </CardHeader>
         {(status === 'success' || status === 'error') && (
           <CardContent className='text-center'>
-            <p className='text-muted-foreground text-sm'>
+            <p className='text-sm text-muted-foreground'>
               Redirecting in {countdown} second{countdown !== 1 ? 's' : ''}...
             </p>
           </CardContent>

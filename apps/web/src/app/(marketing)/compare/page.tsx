@@ -1,11 +1,13 @@
 import { ArrowRight, CircleCheck, CircleCheckBig, CircleX } from 'lucide-react';
 import Link from 'next/link';
+
 import { Button } from '@/components/ui/button';
 import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { PRICE_AMOUNT_MONTHLY_MANAGEMENT } from '@/lib/billing';
 import { formatMoney } from '@/lib/money';
 import { cn } from '@/lib/utils';
+
 import { AZDO_ADS_PRICE_AMOUNT_MONTHLY, comparison } from './page.data';
 
 export const metadata = {
@@ -26,8 +28,8 @@ export default function ComparePage() {
       <div className='py-12 lg:py-20'>
         <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
           <div className='mx-auto mb-16 max-w-3xl text-center'>
-            <h1 className='mb-4 font-bold text-4xl lg:text-5xl'>How does Paklo compare?</h1>
-            <p className='text-muted-foreground text-xl'>
+            <h1 className='mb-4 text-4xl font-bold lg:text-5xl'>How does Paklo compare?</h1>
+            <p className='text-xl text-muted-foreground'>
               See how our managed service stacks up against other dependency management solutions
             </p>
           </div>
@@ -39,21 +41,21 @@ export default function ComparePage() {
                   <TableHead className='p-4 text-left font-semibold'>Feature</TableHead>
                   <TableHead className='bg-brand/20 p-4 text-center font-semibold'>
                     <div className='font-bold'>Paklo Managed</div>
-                    <div className='font-normal text-muted-foreground text-sm'>
+                    <div className='text-sm font-normal text-muted-foreground'>
                       {formatMoney(PRICE_AMOUNT_MONTHLY_MANAGEMENT, { whole: true })}/mo + usage <sup>3</sup>
                     </div>
                   </TableHead>
                   <TableHead className='p-4 text-center font-semibold'>
                     <div>Paklo Self-Managed</div>
-                    <div className='font-normal text-muted-foreground text-sm'>Free</div>
+                    <div className='text-sm font-normal text-muted-foreground'>Free</div>
                   </TableHead>
                   <TableHead className='p-4 text-center font-semibold'>
                     <div>GitHub Dependabot</div>
-                    <div className='font-normal text-muted-foreground text-sm'>Free on GitHub</div>
+                    <div className='text-sm font-normal text-muted-foreground'>Free on GitHub</div>
                   </TableHead>
                   <TableHead className='p-4 text-center font-semibold'>
                     <div>Azure DevOps Advanced Security</div>
-                    <div className='font-normal text-muted-foreground text-sm'>
+                    <div className='text-sm font-normal text-muted-foreground'>
                       {formatMoney(AZDO_ADS_PRICE_AMOUNT_MONTHLY, { whole: true })}/user/mo <sup>2</sup>
                     </div>
                   </TableHead>
@@ -82,7 +84,7 @@ export default function ComparePage() {
             </Table>
           </div>
 
-          <div className='mt-8 flex flex-col gap-1 text-muted-foreground text-sm'>
+          <div className='mt-8 flex flex-col gap-1 text-sm text-muted-foreground'>
             <p>
               <sup>1</sup> GitHub Dependabot is free on GitHub.com but limited to GitHub repositories only.
             </p>
@@ -121,7 +123,7 @@ export default function ComparePage() {
       <div className='py-12 lg:py-20'>
         <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
           <div className='text-center'>
-            <h2 className='mb-4 font-bold text-3xl'>Ready to get started?</h2>
+            <h2 className='mb-4 text-3xl font-bold'>Ready to get started?</h2>
             <p className='mb-8 text-muted-foreground'>Start securing your dependencies today with Paklo Managed</p>
             <Link href='/signup'>
               <Button size='lg' variant='brand'>

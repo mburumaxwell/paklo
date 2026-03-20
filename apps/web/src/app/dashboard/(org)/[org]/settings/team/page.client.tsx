@@ -4,6 +4,7 @@ import { Mail, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+
 import { deleteOrganization } from '@/actions/organizations';
 import { TimeAgo } from '@/components/time-ago';
 import {
@@ -286,7 +287,7 @@ export function MembersSection({
               <Item key={member.id} variant='outline'>
                 <ItemMedia>
                   <Avatar className='size-10'>
-                    <AvatarFallback className='bg-primary text-primary-foreground text-sm'>
+                    <AvatarFallback className='bg-primary text-sm text-primary-foreground'>
                       {getInitials(member.user.name)}
                     </AvatarFallback>
                   </Avatar>
@@ -375,7 +376,7 @@ export function DangerSection({ organizationId }: { organizationId: string }) {
         <div className='grid grid-cols-1 items-start justify-between md:grid-cols-3'>
           <div className='space-y-1 md:col-span-2'>
             <p className='font-medium'>Delete this organization</p>
-            <p className='text-muted-foreground text-sm'>
+            <p className='text-sm text-muted-foreground'>
               This action cannot be undone. All projects, data, and team members will be removed.
             </p>
           </div>

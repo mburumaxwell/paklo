@@ -13,10 +13,11 @@ import {
 import { CONFIG_FILE_PATHS_AZURE } from '@paklo/core/dependabot';
 import { Hono } from 'hono';
 import { bearerAuth } from 'hono/bearer-auth';
+
 import { createAzdoClient } from '@/integrations';
 import { author } from '@/lib/author';
 import { logger } from '@/lib/logger';
-import { type Organization, type Project, prisma, type Repository } from '@/lib/prisma';
+import { type Organization, type Project, type Repository, prisma } from '@/lib/prisma';
 import { HEADER_NAME_ORGANIZATION, HEADER_NAME_PROJECT } from '@/lib/webhooks';
 import { startSync, startTriggerUpdateJobs } from '@/workflows';
 

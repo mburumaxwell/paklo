@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { DependabotDependencySchema, DependabotPackageManagerSchema } from './job';
 
 // we use nullish() because it does optional() and allows the value to be set to null
@@ -73,7 +74,7 @@ export type DependabotDependencySubmission = z.infer<typeof DependabotDependency
 
 export const DependabotCreatePullRequestSchema = z.object({
   'base-commit-sha': z.string(),
-  dependencies: DependabotDependencySchema.array(),
+  'dependencies': DependabotDependencySchema.array(),
   'updated-dependency-files': DependabotDependencyFileSchema.array(),
   'pr-title': z.string(),
   'pr-body': z.string().nullish(),
@@ -103,7 +104,7 @@ export const DependabotClosePullRequestReasonEnum = z.enum([
 export type DependabotClosePullRequestReason = z.infer<typeof DependabotClosePullRequestReasonEnum>;
 export const DependabotClosePullRequestSchema = z.object({
   'dependency-names': z.string().array(),
-  reason: DependabotClosePullRequestReasonEnum.nullish(),
+  'reason': DependabotClosePullRequestReasonEnum.nullish(),
 });
 export type DependabotClosePullRequest = z.infer<typeof DependabotClosePullRequestSchema>;
 
@@ -115,7 +116,7 @@ export type DependabotMarkAsProcessed = z.infer<typeof DependabotMarkAsProcessed
 export const DependabotJobErrorSchema = z.object({
   'error-type': z.string(),
   'error-details': z.record(z.string(), z.any()).nullish(),
-  unknown: z.boolean().nullish(), // own property to differentiate between known and unknown errors
+  'unknown': z.boolean().nullish(), // own property to differentiate between known and unknown errors
 });
 export type DependabotJobError = z.infer<typeof DependabotJobErrorSchema>;
 

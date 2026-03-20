@@ -1,4 +1,5 @@
 import { Globe } from 'lucide-react';
+
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { REGIONS, type RegionCode } from '@/lib/regions';
 import { cn } from '@/lib/utils';
@@ -40,14 +41,14 @@ export function RegionsSelect({ selected, className, onValueChange, ...props }: 
               </div>
               <div className='flex-1'>
                 <div className='font-semibold'>{region.label}</div>
-                <div className='text-muted-foreground text-sm'>
+                <div className='text-sm text-muted-foreground'>
                   {region.available ? 'Available now' : 'Coming soon'}
                 </div>
               </div>
             </div>
             {!region.available && (
               <div className='absolute inset-0 flex items-center justify-center rounded-lg backdrop-blur-[2px]'>
-                <span className='rounded-full border bg-background/90 px-4 py-2 font-medium text-sm'>Coming Soon</span>
+                <span className='rounded-full border bg-background/90 px-4 py-2 text-sm font-medium'>Coming Soon</span>
               </div>
             )}
           </label>

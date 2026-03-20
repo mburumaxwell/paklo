@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { getBranchNameForUpdate, sanitizeRef } from './branch-name';
 
 describe('getBranchNameForUpdate', () => {
@@ -17,7 +18,7 @@ describe('getBranchNameForUpdate', () => {
       packageEcosystem: 'npm',
       targetBranchName: 'main',
       directory: '/',
-      dependencies: [{ 'dependency-name': 'react', removed: true }],
+      dependencies: [{ 'dependency-name': 'react', 'removed': true }],
     });
     expect(result).toBe('dependabot/npm/main/react-removed');
   });

@@ -1,4 +1,5 @@
 import { Activity } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
 import type { SynchronizationStatus } from '@/lib/enums';

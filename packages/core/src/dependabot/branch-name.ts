@@ -1,4 +1,5 @@
 import * as crypto from 'node:crypto';
+
 import type { PackageEcosystem } from './config';
 import type { DependabotExistingPrDependency } from './job';
 

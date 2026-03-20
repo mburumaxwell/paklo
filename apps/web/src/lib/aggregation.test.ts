@@ -1,6 +1,7 @@
-// biome-ignore-all lint/suspicious/noExplicitAny: test file
+/* oxlint-disable typescript/no-explicit-any */
 
 import { describe, expect, it } from 'vitest';
+
 import { getDateFromTimeRange } from './aggregation';
 
 describe('getDateFromTimeRange', () => {

@@ -4,6 +4,7 @@ import { Calendar, MoreHorizontalIcon, RefreshCw, Unplug } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+
 import { disconnectProject } from '@/actions/projects';
 import { requestSync } from '@/actions/workflows';
 import { SynchronizationStatusBadge } from '@/components/icons';
@@ -93,8 +94,8 @@ export function RepositoriesView({
     <div className='mx-auto w-full max-w-5xl space-y-6 p-6'>
       <div className='grid grid-cols-1 items-center justify-center gap-4 md:grid-cols-3'>
         <div className='md:col-span-2'>
-          <h1 className='mb-2 font-semibold text-3xl'>Project: {project.name}</h1>
-          <p className='text-muted-foreground text-sm'>
+          <h1 className='mb-2 text-3xl font-semibold'>Project: {project.name}</h1>
+          <p className='text-sm text-muted-foreground'>
             <a href={project.url} target='_blank' rel='noopener noreferrer' className='underline underline-offset-4'>
               {project.url}
             </a>

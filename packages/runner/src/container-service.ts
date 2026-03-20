@@ -2,6 +2,7 @@ import type { DependabotProxyConfig, FileFetcherInput, FileUpdaterInput } from '
 import { logger } from '@paklo/core/logger';
 import type { Container } from 'dockerode';
 import { pack } from 'tar-stream';
+
 import { errStream, outStream } from './utils';
 
 // Code below is borrowed and adapted from dependabot-action

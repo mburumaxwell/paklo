@@ -12,11 +12,11 @@ To enable security-only updates, set `open-pull-requests-limit: 0` in your `depe
 ```yaml
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "daily"
-    open-pull-requests-limit: 0  # Only create PRs for security updates
+      interval: 'daily'
+    open-pull-requests-limit: 0 # Only create PRs for security updates
 ```
 
 This configuration mirrors the [GitHub-hosted Dependabot security updates behavior](https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/configuring-dependabot-security-updates#overriding-the-default-behavior-with-a-configuration-file).
@@ -147,14 +147,14 @@ paklo run \
 
 Use standard semantic versioning ranges in your advisories:
 
-| Range | Meaning |
-| ----- | ------- |
-| `< 2.0.0` | Versions less than 2.0.0 |
-| `<= 2.0.0` | Versions less than or equal to 2.0.0 |
-| `> 1.0.0` | Versions greater than 1.0.0 |
-| `>= 1.0.0` | Versions greater than or equal to 1.0.0 |
-| `>= 1.0.0, < 2.0.0` | Versions 1.0.0 or higher, but less than 2.0.0 |
-| `~> 2.1.0` | Versions 2.1.0 or higher, but less than 2.2.0 (pessimistic operator) |
+| Range               | Meaning                                                              |
+| ------------------- | -------------------------------------------------------------------- |
+| `< 2.0.0`           | Versions less than 2.0.0                                             |
+| `<= 2.0.0`          | Versions less than or equal to 2.0.0                                 |
+| `> 1.0.0`           | Versions greater than 1.0.0                                          |
+| `>= 1.0.0`          | Versions greater than or equal to 1.0.0                              |
+| `>= 1.0.0, < 2.0.0` | Versions 1.0.0 or higher, but less than 2.0.0                        |
+| `~> 2.1.0`          | Versions 2.1.0 or higher, but less than 2.2.0 (pessimistic operator) |
 
 You can combine multiple ranges with commas.
 

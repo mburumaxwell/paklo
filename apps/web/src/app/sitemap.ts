@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+
 import { docs, legal } from '@/lib/fumadocs';
 import { config } from '@/site-config';
 

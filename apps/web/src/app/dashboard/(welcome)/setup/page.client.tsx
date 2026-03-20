@@ -4,9 +4,10 @@ import { CheckCircle2, Eye, EyeOff, Globe, XCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import validator from 'validator';
+
 import {
-  createOrganizationWithCredential,
   type OrganizationCreateOptions,
+  createOrganizationWithCredential,
   validateOrganizationCredentials,
 } from '@/actions/organizations';
 import { RegionsSelect } from '@/components/regions-select';
@@ -248,7 +249,7 @@ export function CreateOrganizationPage() {
                   </div>
                   {slugError && <FieldError>{slugError}</FieldError>}
                   {slugVerified && (
-                    <p className='flex items-center gap-1 text-green-600 text-sm'>
+                    <p className='flex items-center gap-1 text-sm text-green-600'>
                       <CheckCircle2 className='size-4' />
                       Slug is available
                     </p>
@@ -290,13 +291,13 @@ export function CreateOrganizationPage() {
                         )}
                       >
                         <div
-                          className={`size-12 rounded-lg bg-[${provider.logoBackground}] flex items-center justify-center`}
+                          className={`bg-[ size-12 rounded-lg${provider.logoBackground}] flex items-center justify-center`}
                         >
                           <provider.logo className='size-8 text-foreground' />
                         </div>
                         <div className='text-center'>
                           <div className='font-semibold'>{provider.name}</div>
-                          <div className='text-muted-foreground text-sm'>{provider.vendor}</div>
+                          <div className='text-sm text-muted-foreground'>{provider.vendor}</div>
                         </div>
                         {data.type === provider.type && (
                           <div className='absolute top-3 right-3'>

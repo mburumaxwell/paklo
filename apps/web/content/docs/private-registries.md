@@ -18,12 +18,12 @@ registries:
     token: ${{ NPM_TOKEN }}
 
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     registries:
       - my-private-npm
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
 ```
 
 ## Azure DevOps-Specific: Variable Substitution
@@ -90,26 +90,26 @@ registries:
     type: nuget-feed
     url: https://pkgs.dev.azure.com/org/_packaging/feed/nuget/v3/index.json
     token: PAT:${{ AZDO_PAT }}
-  
+
   npm-private:
     type: npm-registry
     url: https://npm.example.com
     token: ${{ NPM_TOKEN }}
 
 updates:
-  - package-ecosystem: "nuget"
-    directory: "/"
+  - package-ecosystem: 'nuget'
+    directory: '/'
     registries:
       - azure-nuget
     schedule:
-      interval: "weekly"
-  
-  - package-ecosystem: "npm"
-    directory: "/frontend"
+      interval: 'weekly'
+
+  - package-ecosystem: 'npm'
+    directory: '/frontend'
     registries:
       - npm-private
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
 ```
 
 ## Troubleshooting

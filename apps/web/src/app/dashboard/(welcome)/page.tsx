@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { headers as requestHeaders } from 'next/headers';
+
 import { auth } from '@/lib/auth';
+
 import { NoOrganizationsView, SelectOrganizationView } from './page.client';
 
 export const metadata: Metadata = {

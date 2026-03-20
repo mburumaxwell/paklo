@@ -3,6 +3,7 @@
 import { Calendar, ChevronRightIcon, Folder, FolderGit2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+
 import { SynchronizationStatusBadge } from '@/components/icons';
 import { TimeAgo } from '@/components/time-ago';
 import { Button } from '@/components/ui/button';
@@ -48,7 +49,7 @@ export function ProjectsView({
         <div className='mx-auto w-full max-w-5xl space-y-6 p-6'>
           <div className='grid grid-cols-1 items-center justify-center gap-4 md:grid-cols-3'>
             <div className='md:col-span-2'>
-              <h1 className='mb-2 font-semibold text-3xl'>Projects</h1>
+              <h1 className='mb-2 text-3xl font-semibold'>Projects</h1>
               <p className='text-muted-foreground'>
                 Manage and monitor your connected projects. Keep track of synchronization status and recent activity.
               </p>

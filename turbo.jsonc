@@ -21,37 +21,34 @@
     "MONGO_URL",
     "RESEND_API_KEY",
     "STRIPE_SECRET_KEY",
-    "STRIPE_WEBHOOK_SECRET"
+    "STRIPE_WEBHOOK_SECRET",
   ],
   "tasks": {
     "typecheck": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
     },
     "codegen": {},
     "build": {
       "dependsOn": ["^build", "typecheck", "codegen"],
-      "outputs": ["dist/**"]
-    },
-    "lint": {
-      "cache": false
+      "outputs": ["dist/**"],
     },
     "test": {
-      "cache": false
+      "cache": false,
     },
     "clean": {
-      "cache": false
+      "cache": false,
     },
     "package": {
-      "cache": false
+      "cache": false,
     },
     "dev": {
       "dependsOn": ["codegen"],
       "cache": false,
       "persistent": true,
-      "interruptible": true
+      "interruptible": true,
     },
     "packages:version": {
-      "cache": false
-    }
-  }
+      "cache": false,
+    },
+  },
 }

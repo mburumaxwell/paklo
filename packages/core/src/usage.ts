@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { DependabotPackageManagerSchema, DependabotSourceProviderSchema } from '@/dependabot/job';
 
 /**
@@ -28,24 +29,24 @@ import { DependabotPackageManagerSchema, DependabotSourceProviderSchema } from '
  * ```
  */
 export const UsageTelemetryRequestDataSchema = z.object({
-  host: z.object({
-    platform: z.string().max(50), // e.g. linux, darwin, win32
-    release: z.string().max(100), // e.g. 26.0.0, 10.0.19043
-    arch: z.string().max(50), // e.g. x64, arm64
+  'host': z.object({
+    'platform': z.string().max(50), // e.g. linux, darwin, win32
+    'release': z.string().max(100), // e.g. 26.0.0, 10.0.19043
+    'arch': z.string().max(50), // e.g. x64, arm64
     'machine-hash': z.string().max(250), // e.g. "d3bbb66be2ad9dfab10af69b450f7e7e814ef7bbf1277a6d0df9e1db44ba4f5c" for "Maxwells-MacBook-Pro.local"
     'docker-container': z.boolean().optional(), // whether running inside a Docker container
   }),
-  version: z.string().max(50),
-  trigger: z.enum(['user', 'service']),
-  provider: DependabotSourceProviderSchema,
-  owner: z.url(),
-  project: z.url(),
+  'version': z.string().max(50),
+  'trigger': z.enum(['user', 'service']),
+  'provider': DependabotSourceProviderSchema,
+  'owner': z.url(),
+  'project': z.url(),
   'package-manager': DependabotPackageManagerSchema,
-  id: z.string(), // job identifier, for correlation
-  started: z.coerce.date(),
-  duration: z.number().min(0), // in milliseconds
-  success: z.boolean(),
-  error: z.object({ message: z.string() }).optional(),
+  'id': z.string(), // job identifier, for correlation
+  'started': z.coerce.date(),
+  'duration': z.number().min(0), // in milliseconds
+  'success': z.boolean(),
+  'error': z.object({ message: z.string() }).optional(),
 });
 
 /**

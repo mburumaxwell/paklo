@@ -3,18 +3,19 @@
 import { Activity, CheckCircle2, CircleDotDashed, Clock } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
-import { getMetricDirection, MetricCard } from '@/components/metric-card';
+
+import { MetricCard, getMetricDirection } from '@/components/metric-card';
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
-  defaultStatsTimeRangeOption,
   type Granularity,
+  type TimeRange,
+  defaultStatsTimeRangeOption,
   getCompareLabels,
   statsTimeRangeOptions,
-  type TimeRange,
 } from '@/lib/aggregation';
 import { updateFiltersInSearchParams } from '@/lib/utils';
 

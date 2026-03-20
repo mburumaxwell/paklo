@@ -1,5 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { join, relative } from 'node:path';
+
 import * as semver from 'semver';
 
 async function updateTaskJsonFiles({ cwd, dev, version, buildNumber }) {
@@ -24,7 +25,7 @@ async function updateTaskJsonFiles({ cwd, dev, version, buildNumber }) {
   }
 }
 
-async function updateVssExtensions({ cwd, dev, version, buildNumber }) {
+async function updateVssExtensions({ cwd, dev: _dev, version, buildNumber }) {
   const fileName = join(cwd, 'vss-extension.json');
   const contents = JSON.parse(await readFile(fileName, 'utf-8'));
   contents.version = `${version.major}.${version.minor}.${version.patch}.${buildNumber}`;

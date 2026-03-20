@@ -26,7 +26,6 @@
     "dev": "tsdown --watch",
     "typecheck": "tsc",
     "build": "tsdown",
-    "lint": "biome check",
     "test": "vitest",
     "scripts:fetch-images": "tsx src/fetch-images.ts",
     "scripts:cleanup-docker": "tsx src/cleanup-docker.ts",

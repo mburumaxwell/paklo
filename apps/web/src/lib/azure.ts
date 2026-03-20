@@ -1,11 +1,12 @@
 import { type Job as ContainerAppJob, ContainerAppsAPIClient, type ContainerResources } from '@azure/arm-appcontainers';
 import { RestError } from '@azure/core-rest-pipeline';
 import { ClientAssertionCredential, DefaultAzureCredential, type TokenCredential } from '@azure/identity';
-import { parseKeyVaultSecretIdentifier, SecretClient } from '@azure/keyvault-secrets';
+import { SecretClient, parseKeyVaultSecretIdentifier } from '@azure/keyvault-secrets';
 import { BlobServiceClient } from '@azure/storage-blob';
 import { getVercelOidcToken } from '@vercel/oidc';
+
 import { environment } from '@/lib/environment';
-import { isRegionAvailable, type RegionCode } from '@/lib/regions';
+import { type RegionCode, isRegionAvailable } from '@/lib/regions';
 
 /**
  * There are only 3 possible places we run the application:

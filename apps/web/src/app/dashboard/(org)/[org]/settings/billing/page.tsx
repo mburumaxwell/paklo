@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import { INCLUDED_USAGE_MINUTES } from '@/lib/billing';
 import { prisma } from '@/lib/prisma';
+
 import { ManageSection, RegionSection, UsageSection } from './page.client';
 
 export async function generateMetadata(props: PageProps<'/dashboard/[org]/settings/billing'>): Promise<Metadata> {
@@ -42,7 +44,7 @@ export default async function BillingPage(props: PageProps<'/dashboard/[org]/set
   return (
     <div className='mx-auto w-full max-w-5xl space-y-6 p-6'>
       <div>
-        <h1 className='mb-2 font-semibold text-3xl'>Billing</h1>
+        <h1 className='mb-2 text-3xl font-semibold'>Billing</h1>
         <p className='text-muted-foreground'>Manage your billing settings and payment methods</p>
       </div>
 

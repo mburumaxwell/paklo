@@ -1,5 +1,6 @@
 import type { Route } from 'next';
 import Link from 'next/link';
+
 import { HelpScoutBeacon } from '@/components/help-scout-beacon';
 import { GitHubLogo, LinkedInLogo, PakloIcon, TwitterLogo } from '@/components/logos';
 import { ThemeToggle } from '@/components/theme';
@@ -12,6 +13,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Separator } from '@/components/ui/separator';
 import { socials } from '@/site-config';
+
 import { type HeaderLink, MobileMenuSheet } from './layout.client';
 
 export default function Layout({ children }: LayoutProps<'/'>) {
@@ -33,11 +35,11 @@ function Header() {
   ];
 
   return (
-    <nav className='sticky top-0 z-50 border-border/40 border-b bg-background/80 backdrop-blur-sm'>
+    <nav className='sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-sm'>
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <div className='flex h-16 items-center justify-between'>
           <div className='flex items-center gap-8'>
-            <Link href='/' className='flex gap-2 align-middle font-semibold text-xl'>
+            <Link href='/' className='flex gap-2 align-middle text-xl font-semibold'>
               <PakloIcon className='size-6' />
               Paklo
             </Link>
@@ -48,11 +50,11 @@ function Header() {
                     <NavigationMenuLink
                       asChild
                       // these styles are so that it looks like before instead of a button but perhaps we should remove them
-                      className='hover:bg-inherit p-0'
+                      className='p-0 hover:bg-inherit'
                     >
                       <Link
                         href={link.href}
-                        className='text-muted-foreground text-sm transition-colors hover:text-foreground'
+                        className='text-sm text-muted-foreground transition-colors hover:text-foreground'
                       >
                         {link.name}
                       </Link>
@@ -118,7 +120,7 @@ async function Footer() {
   }
 
   return (
-    <footer className='border-border/40 border-t bg-muted/10 py-8'>
+    <footer className='border-t border-border/40 bg-muted/10 py-8'>
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <div className='mb-4 grid md:grid-cols-3 md:gap-8'>
           <div className='order-last flex flex-col items-start space-y-4 md:order-first'>
@@ -142,13 +144,13 @@ async function Footer() {
             </div>
             <ThemeToggle />
             <Separator className='mt-2' />
-            <p className='text-muted-foreground text-sm'>&copy; {await getCurrentYear()} Paklo. All rights reserved.</p>
+            <p className='text-sm text-muted-foreground'>&copy; {await getCurrentYear()} Paklo. All rights reserved.</p>
           </div>
           <div className='order-first grid grid-cols-2 gap-8 md:order-last md:col-span-2'>
             {columns.map((column) => (
               <div key={column.name}>
                 <h3 className='mb-3 font-semibold'>{column.name}</h3>
-                <ul className='space-y-3 text-muted-foreground text-sm'>
+                <ul className='space-y-3 text-sm text-muted-foreground'>
                   {column.links.map((link) => (
                     <li key={link.name}>
                       <Link href={link.href} className='transition-colors hover:text-foreground'>

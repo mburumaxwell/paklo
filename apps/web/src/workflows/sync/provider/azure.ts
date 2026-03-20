@@ -1,5 +1,6 @@
 import type { AzdoRepository, AzdoRepositoryItem, AzureDevOpsClient } from '@paklo/core/azure';
 import { CONFIG_FILE_PATHS_AZURE } from '@paklo/core/dependabot';
+
 import {
   type ISyncProvider,
   SynchronizerConfigurationItem,

@@ -2,6 +2,7 @@ import { DependabotPackageManagerSchema } from '@paklo/core/dependabot';
 import { ImageService, PROXY_IMAGE_NAME, updaterImageName } from '@paklo/runner';
 import { Argument, Command } from 'commander';
 import { z } from 'zod';
+
 import { type HandlerOptions, handlerOptions } from './base';
 
 const schema = z.object({

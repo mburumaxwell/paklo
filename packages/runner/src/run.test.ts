@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { isRunningInDocker } from './run';
 
 describe('isRunningInDocker', () => {

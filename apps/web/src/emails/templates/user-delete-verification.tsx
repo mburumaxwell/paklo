@@ -42,7 +42,7 @@ export function UserDeleteVerification({
               </Row>
               <Row>
                 <Button
-                  className='rounded bg-[#dc2626] px-5 py-3 text-center font-semibold text-[12px] text-white no-underline'
+                  className='rounded bg-[#dc2626] px-5 py-3 text-center text-[12px] font-semibold text-white no-underline'
                   href={url}
                 >
                   Confirm Account Deletion
@@ -56,8 +56,8 @@ export function UserDeleteVerification({
                 </Text>
               </Row>
             </Section>
-            <Hr className='mx-0 my-6.5 w-full border border-[#eaeaea] border-solid' />
-            <Text className='text-[#666666] text-[12px] leading-6'>
+            <Hr className='mx-0 my-6.5 w-full border border-solid border-[#eaeaea]' />
+            <Text className='text-[12px] leading-6 text-[#666666]'>
               This email was intended for <span className='text-black'>{recipient}</span>. If you were not expecting
               this email, you can ignore it. If you are concerned about your account's safety, please reply to this
               email to get in touch with us.

@@ -3,7 +3,7 @@
   "extends": ["//"],
   "tasks": {
     "codegen": {
-      "outputs": [".generated/**", "src/generated/**", "prisma/generated/**"]
+      "outputs": [".generated/**", "src/generated/**", "prisma/generated/**"],
     },
     "build": {
       "dependsOn": ["^build", "codegen"],
@@ -11,7 +11,7 @@
         "$TURBO_EXTENDS$",
         "NEXT_PUBLIC_HELP_SCOUT_BEACON_ID",
         "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
-        "NEXT_RUNTIME"
+        "NEXT_RUNTIME",
       ],
       "passThroughEnv": [
         "$TURBO_EXTENDS$",
@@ -38,7 +38,7 @@
         "STRIPE_WEBHOOK_SECRET",
         "VERCEL_BRANCH_URL",
         "VERCEL_GIT_COMMIT_REF",
-        "VERCEL_GIT_COMMIT_SHA"
+        "VERCEL_GIT_COMMIT_SHA",
       ],
 
       // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -60,8 +60,8 @@
         // fumadocs static site generation output
         ".source/**",
         // generated files from other tools like prisma, etc.
-        ".generated/**"
-      ]
-    }
-  }
+        ".generated/**",
+      ],
+    },
+  },
 }

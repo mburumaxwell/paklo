@@ -1,5 +1,4 @@
 // This file must be a module, so we include an empty export.
-// biome-ignore lint/complexity/noUselessEmptyExport: as above
 export {};
 
 import type {
@@ -12,9 +11,7 @@ import type {
   DependabotJobError as ImportedDependabotJobError,
   DependabotRecordUpdateJobWarning as ImportedDependabotRecordUpdateJobWarning,
 } from '@paklo/core/dependabot';
-import type { RegionCode as ImportedRegionCode } from '@/lib/regions';
-import type { Period as ImportedPeriod } from '@/lib/period';
-import type { FeedbackType as ImportedFeedbackType, FeedbackOpinion as ImportedFeedbackOpinion } from '@/lib/feedback';
+
 import type {
   UpdateJobStatus as ImportedUpdateJobStatus,
   UpdateJobTrigger as ImportedUpdateJobTrigger,
@@ -22,6 +19,9 @@ import type {
   SynchronizationStatus as ImportedSynchronizationStatus,
   SubscriptionStatus as ImportedSubscriptionStatus,
 } from '@/lib/enums';
+import type { FeedbackType as ImportedFeedbackType, FeedbackOpinion as ImportedFeedbackOpinion } from '@/lib/feedback';
+import type { Period as ImportedPeriod } from '@/lib/period';
+import type { RegionCode as ImportedRegionCode } from '@/lib/regions';
 
 declare global {
   namespace PrismaJson {

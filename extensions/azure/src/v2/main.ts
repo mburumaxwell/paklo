@@ -8,6 +8,7 @@ import { logger } from '@paklo/core/logger';
 import type { SecretMasker } from '@paklo/runner';
 import { AzureLocalJobsRunner, type AzureLocalJobsRunnerOptions } from '@paklo/runner/local/azure';
 import * as tl from 'azure-pipelines-task-lib/task';
+
 import { setSecrets } from '../formatting';
 import { getTaskInputs } from './inputs';
 

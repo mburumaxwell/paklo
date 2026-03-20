@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
+
 import { OpenGraphImageDocs } from '@/components/og-image';
 import { legal } from '@/lib/fumadocs';
 

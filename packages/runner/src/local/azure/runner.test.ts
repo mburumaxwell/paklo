@@ -1,16 +1,17 @@
-// biome-ignore-all lint/suspicious/noExplicitAny: testing
+/* oxlint-disable typescript/no-explicit-any */
 
 import {
   type AzdoPrExtractedWithProperties,
   AzureDevOpsClientWrapper,
-  extractRepositoryUrl,
   PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
   PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER,
   PR_PROPERTY_MICROSOFT_GIT_SOURCE_REF_NAME,
+  extractRepositoryUrl,
 } from '@paklo/core/azure';
 import { DEFAULT_EXPERIMENTS, type DependabotConfig, type DependabotUpdate } from '@paklo/core/dependabot';
 import { GitHubSecurityAdvisoryClient } from '@paklo/core/github';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import type { SecretMasker } from '../../api-client';
 import { runJob } from '../../run';
 import { AzureLocalJobsRunner, type AzureLocalJobsRunnerOptions } from './runner';
@@ -106,7 +107,7 @@ describe('AzureLocalJobsRunner', () => {
         updates: [
           {
             'package-ecosystem': 'npm',
-            directory: '/',
+            'directory': '/',
             'open-pull-requests-limit': 5,
           } as DependabotUpdate,
         ],
@@ -475,12 +476,12 @@ describe('AzureLocalJobsRunner', () => {
       options.config.updates = [
         {
           'package-ecosystem': 'npm',
-          directory: '/',
+          'directory': '/',
           'open-pull-requests-limit': 5,
         } as DependabotUpdate,
         {
           'package-ecosystem': 'nuget',
-          directory: '/src',
+          'directory': '/src',
           'open-pull-requests-limit': 5,
         } as DependabotUpdate,
       ];
@@ -546,12 +547,12 @@ describe('AzureLocalJobsRunner', () => {
       options.config.updates = [
         {
           'package-ecosystem': 'npm',
-          directory: '/',
+          'directory': '/',
           'open-pull-requests-limit': 5,
         } as DependabotUpdate,
         {
           'package-ecosystem': 'nuget',
-          directory: '/src',
+          'directory': '/src',
           'open-pull-requests-limit': 5,
         } as DependabotUpdate,
       ];

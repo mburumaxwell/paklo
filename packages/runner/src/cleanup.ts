@@ -1,6 +1,7 @@
 import { logger } from '@paklo/core/logger';
 import Docker from 'dockerode';
-import { digestName, hasDigest, PROXY_IMAGE_NAME, repositoryName, updaterImages } from './docker-tags';
+
+import { PROXY_IMAGE_NAME, digestName, hasDigest, repositoryName, updaterImages } from './docker-tags';
 
 // Code below is borrowed and adapted from dependabot-action
 

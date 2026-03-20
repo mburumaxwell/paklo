@@ -3,7 +3,8 @@
 import { extractOrganizationUrl } from '@paklo/core/azure';
 import { Keygen } from '@paklo/core/keygen';
 import { z } from 'zod';
-import { auth, type Organization } from '@/lib/auth';
+
+import { type Organization, auth } from '@/lib/auth';
 import { type OrganizationType, OrganizationTypeSchema } from '@/lib/enums';
 import { prisma } from '@/lib/prisma';
 import { type RegionCode, RegionCodeSchema } from '@/lib/regions';

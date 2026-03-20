@@ -1,16 +1,18 @@
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
+
 import {
   type DateTimeRangePair,
+  type TimeRange,
   defaultStatsTimeRangeOption,
   getDateFromTimeRange,
   getStatsGranularity,
   granularityToMilliseconds,
   statsTimeRangeOptions,
-  type TimeRange,
 } from '@/lib/aggregation';
 import { prisma } from '@/lib/prisma';
 import { updateSearchParams } from '@/lib/utils';
+
 import { ChartsSection, StatsSection } from './page.client';
 
 export async function generateMetadata(props: PageProps<'/dashboard/[org]'>): Promise<Metadata> {

@@ -1,4 +1,5 @@
 import { Stripe } from 'stripe';
+
 import type { SubscriptionStatus } from '@/lib/enums';
 import type { Money } from '@/lib/money';
 import type { Period } from '@/lib/period';

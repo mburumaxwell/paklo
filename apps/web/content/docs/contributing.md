@@ -59,8 +59,8 @@ pnpm test
 ### Formatting
 
 ```bash
-pnpm format:check        # check for formatting issues
-pnpm format              # fix formatting issues
+pnpm format              # check for formatting issues
+pnpm format:fix          # fix formatting issues
 ```
 
 ### Spelling

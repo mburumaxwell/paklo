@@ -4,6 +4,7 @@ import { Menu } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
 import * as React from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -26,7 +27,7 @@ export function MobileMenuSheet({ links }: { links: HeaderLink[] }) {
             <Link
               key={link.name}
               href={link.href}
-              className='text-muted-foreground text-sm transition-colors hover:text-foreground'
+              className='text-sm text-muted-foreground transition-colors hover:text-foreground'
               onClick={() => setOpen(false)}
             >
               {link.name}

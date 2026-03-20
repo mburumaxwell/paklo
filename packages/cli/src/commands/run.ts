@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { stdin, stdout } from 'node:process';
 import readline from 'node:readline/promises';
+
 import {
   AZDO_PULL_REQUEST_MERGE_STRATEGIES,
   AzdoPullRequestMergeStrategySchema,
@@ -21,6 +22,7 @@ import { logger } from '@paklo/core/logger';
 import { AzureLocalJobsRunner, type AzureLocalJobsRunnerOptions } from '@paklo/runner/local/azure';
 import { Command, Option } from 'commander';
 import { z } from 'zod';
+
 import { type HandlerOptions, handlerOptions } from './base';
 
 const schema = z.object({
@@ -88,7 +90,7 @@ async function handler({ options, error }: HandlerOptions<Options>) {
     }
   }
 
-  function secretMasker(secret: string) {
+  function secretMasker(_secret: string) {
     // hide from logs, (clueless how to do this with pino without being global)
   }
 

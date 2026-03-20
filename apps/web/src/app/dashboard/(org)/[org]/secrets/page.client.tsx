@@ -3,10 +3,11 @@
 import { Eye, EyeOff, Key, NotepadText, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+
 import {
+  type OrganizationSecretSafe,
   createSecret,
   deleteSecret,
-  type OrganizationSecretSafe,
   updateSecret,
   validateSecretName,
 } from '@/actions/organizations';
@@ -195,7 +196,7 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
         <div className='mx-auto w-full max-w-5xl space-y-6 p-6'>
           <div className='grid grid-cols-1 items-center justify-center gap-4 md:grid-cols-3'>
             <div className='md:col-span-2'>
-              <h1 className='mb-2 font-semibold text-3xl'>Organization Secrets</h1>
+              <h1 className='mb-2 text-3xl font-semibold'>Organization Secrets</h1>
               <p className='text-muted-foreground'>
                 Manage organization secrets that can be used in your workflows. Values are securely stored and cannot be
                 read back except during job runs.
@@ -223,7 +224,7 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
               <TableBody>
                 {secrets.map((secret) => (
                   <TableRow key={secret.id} className='group'>
-                    <TableCell className='font-medium font-mono'>
+                    <TableCell className='font-mono font-medium'>
                       <div className='flex items-center gap-2'>
                         {secret.name}
                         {secret.description && (
@@ -255,7 +256,7 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
                             <Button
                               variant='ghost'
                               size='sm'
-                              className='size-8 cursor-pointer p-0 opacity-60 transition-opacity hover:text-destructive group-hover:opacity-100'
+                              className='size-8 cursor-pointer p-0 opacity-60 transition-opacity group-hover:opacity-100 hover:text-destructive'
                             >
                               <Trash2 className='size-4' />
                               <span className='sr-only'>Delete secret</span>
@@ -273,7 +274,7 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => handleDeleteSecret(secret)}
-                                className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+                                className='text-destructive-foreground bg-destructive hover:bg-destructive/90'
                               >
                                 Delete Secret
                               </AlertDialogAction>

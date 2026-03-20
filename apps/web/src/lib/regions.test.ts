@@ -1,16 +1,17 @@
 import { describe, expect, it } from 'vitest';
+
 import {
+  REGIONS,
+  RegionCodeSchema,
   fromAzureLocation,
   fromExternalRegion,
   fromVercelRegion,
   isValidRegionCode,
-  REGIONS,
-  RegionCodeSchema,
   toAzureLocation,
   toVercelRegion,
 } from './regions';
 
-// biome-ignore format: the array should not be formatted
+// prettier-ignore
 const EXPECTED_CODES = [
   'arn', 'bom', 'cdg', 'cle', 'cpt',
   'dub', 'dxb', 'fra', 'gru', 'hkg',

@@ -1,7 +1,9 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { type ZodType, z } from 'zod';
+
 import { logger } from '@/logger';
+
 import type { DependabotCredential, DependabotJobConfig } from './job';
 import {
   DependabotClosePullRequestSchema,
@@ -195,7 +197,7 @@ export function createApiServerApp({
       async (context) => {
         const { id } = context.req.valid('param');
         const { data } = context.req.valid('json') as { data: z.infer<typeof schema> };
-        // biome-ignore lint/suspicious/noExplicitAny: generic
+        // oxlint-disable-next-line typescript/no-explicit-any -- generic
         const success: boolean = await handle(id, { type, data: data as any });
         return context.body(null, success ? 204 : 400);
       },

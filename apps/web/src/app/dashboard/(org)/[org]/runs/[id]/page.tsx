@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import { prisma } from '@/lib/prisma';
+
 import { InfoSection, LogsSection } from './page.client';
 
 export async function generateMetadata(props: PageProps<'/dashboard/[org]/runs/[id]'>): Promise<Metadata> {

@@ -2,6 +2,7 @@ import { PackageEcosystemSchema } from '@paklo/core/dependabot';
 import { UsageTelemetryRequestDataSchema } from '@paklo/core/usage';
 import { type Document, MongoClient } from 'mongodb';
 import { z } from 'zod';
+
 import { RegionCodeSchema } from '@/lib/regions';
 
 const url = process.env.MONGO_URL!;

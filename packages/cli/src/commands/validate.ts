@@ -3,6 +3,7 @@ import type { DependabotConfig } from '@paklo/core/dependabot';
 import { logger } from '@paklo/core/logger';
 import { Command, Option } from 'commander';
 import { z } from 'zod';
+
 import { type HandlerOptions, handlerOptions } from './base';
 
 const schema = z.object({

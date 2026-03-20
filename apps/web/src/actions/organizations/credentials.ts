@@ -4,11 +4,12 @@ import { ANONYMOUS_USER_ID, type AzureDevOpsOrganizationUrl, extractOrganization
 import { createGitHubClient } from '@paklo/core/github';
 import { RequestError } from 'octokit';
 import { z } from 'zod';
+
 import { createAzdoClient } from '@/integrations';
 import { setKeyVaultSecret } from '@/lib/azure';
 import { OrganizationTypeSchema } from '@/lib/enums';
 import { prisma } from '@/lib/prisma';
-import { createServerAction, ServerActionValidationError } from '@/lib/server-action';
+import { ServerActionValidationError, createServerAction } from '@/lib/server-action';
 
 export const validateOrganizationCredentials = createServerAction({
   input: z.object({
@@ -24,7 +25,7 @@ export const validateOrganizationCredentials = createServerAction({
     let url: AzureDevOpsOrganizationUrl;
     try {
       url = extractOrganizationUrl({ organizationUrl: inputUrl });
-    } catch (_error) {
+    } catch {
       throw new ServerActionValidationError('Invalid URL format');
     }
 
@@ -37,7 +38,7 @@ export const validateOrganizationCredentials = createServerAction({
       if (!userId || userId === ANONYMOUS_USER_ID) {
         throw new ServerActionValidationError('Invalid credentials provided');
       }
-    } catch (_error) {
+    } catch {
       throw new ServerActionValidationError(
         'Failed to connect to Azure DevOps with provided credentials. Please check your URL.',
       );

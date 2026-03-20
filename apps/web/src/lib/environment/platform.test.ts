@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+
 import { getPlatform } from './platform';
 
 test('getPlatform should return "azure_container_apps" when CONTAINER_APP_ENV_DNS_SUFFIX is set', () => {

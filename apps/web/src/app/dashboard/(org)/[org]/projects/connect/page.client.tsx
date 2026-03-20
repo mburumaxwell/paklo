@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+
 import { connectProjects } from '@/actions/projects';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -78,10 +79,10 @@ export function ConnectProjectsView({ organization, projects }: ProjectViewProps
             <CardDescription>Projects from your {orgTypeInfo.name} organization</CardDescription>
           </div>
           <div className='text-right'>
-            <p className='font-medium text-sm'>
+            <p className='text-sm font-medium'>
               {totalCount} of {projects.length} projects
             </p>
-            <p className='text-muted-foreground text-xs'>
+            <p className='text-xs text-muted-foreground'>
               {projects.length - totalCount} project{projects.length - totalCount !== 1 ? 's' : ''} available
             </p>
           </div>
@@ -104,7 +105,7 @@ export function ConnectProjectsView({ organization, projects }: ProjectViewProps
                   </div>
                   <div>
                     <p className='font-medium'>{project.name}</p>
-                    <p className='text-muted-foreground text-sm'>{project.url}</p>
+                    <p className='text-sm text-muted-foreground'>{project.url}</p>
                   </div>
                 </Label>
               </div>

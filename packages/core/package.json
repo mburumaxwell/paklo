@@ -42,7 +42,6 @@
     "dev": "tsdown --watch",
     "typecheck": "tsc",
     "build": "tsdown",
-    "lint": "biome check",
     "test": "vitest",
     "clean": "rimraf .turbo dist"
   },

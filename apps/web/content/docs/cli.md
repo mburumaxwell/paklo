@@ -109,26 +109,26 @@ paklo run [options]
 
 **Optional Options:**
 
-| Option | Description | Default |
-| ------ | ----------- | ------- |
-| `--github-token <TOKEN>` | GitHub token to avoid rate limiting | - |
-| `--out-dir <DIR>` | Working directory for updates | `work` |
-| `--auto-approve` | Automatically approve pull requests | `false` |
-| `--auto-approve-token <TOKEN>` | Token for auto-approve (if different from git-token) | - |
-| `--set-auto-complete` | Auto-complete PRs when policies are met | `false` |
-| `--merge-strategy <STRATEGY>` | Merge strategy: `squash`, `rebase`, `merge` | `squash` |
-| `--auto-complete-ignore-config-ids <IDS>` | Config IDs to ignore for auto-complete | - |
-| `--author-name <NAME>` | Git author name | `dependabot[bot]` |
-| `--author-email <EMAIL>` | Git author email | `noreply@github.com` |
-| `--target-update-ids <IDS>` | Specific update IDs to run (comma-separated) | All |
-| `--security-advisories-file <FILE>` | Path to custom security advisories JSON file | - |
-| `--experiments <EXPERIMENTS>` | Comma-separated experiments to enable | - |
-| `--updater-image <IMAGE>` | Custom Dependabot updater Docker image | - |
-| `--command <COMMAND>` | Dependabot command: `update`, `security-update` | - |
-| `--inspect` | Write API requests to `./inspections` for troubleshooting | `false` |
-| `--port <PORT>` | Port for internal API server | Random |
-| `--debug` | Enable debug logging | `false` |
-| `--dry-run` | Run without making changes | `false` |
+| Option                                    | Description                                               | Default              |
+| ----------------------------------------- | --------------------------------------------------------- | -------------------- |
+| `--github-token <TOKEN>`                  | GitHub token to avoid rate limiting                       | -                    |
+| `--out-dir <DIR>`                         | Working directory for updates                             | `work`               |
+| `--auto-approve`                          | Automatically approve pull requests                       | `false`              |
+| `--auto-approve-token <TOKEN>`            | Token for auto-approve (if different from git-token)      | -                    |
+| `--set-auto-complete`                     | Auto-complete PRs when policies are met                   | `false`              |
+| `--merge-strategy <STRATEGY>`             | Merge strategy: `squash`, `rebase`, `merge`               | `squash`             |
+| `--auto-complete-ignore-config-ids <IDS>` | Config IDs to ignore for auto-complete                    | -                    |
+| `--author-name <NAME>`                    | Git author name                                           | `dependabot[bot]`    |
+| `--author-email <EMAIL>`                  | Git author email                                          | `noreply@github.com` |
+| `--target-update-ids <IDS>`               | Specific update IDs to run (comma-separated)              | All                  |
+| `--security-advisories-file <FILE>`       | Path to custom security advisories JSON file              | -                    |
+| `--experiments <EXPERIMENTS>`             | Comma-separated experiments to enable                     | -                    |
+| `--updater-image <IMAGE>`                 | Custom Dependabot updater Docker image                    | -                    |
+| `--command <COMMAND>`                     | Dependabot command: `update`, `security-update`           | -                    |
+| `--inspect`                               | Write API requests to `./inspections` for troubleshooting | `false`              |
+| `--port <PORT>`                           | Port for internal API server                              | Random               |
+| `--debug`                                 | Enable debug logging                                      | `false`              |
+| `--dry-run`                               | Run without making changes                                | `false`              |
 
 **Example:**
 

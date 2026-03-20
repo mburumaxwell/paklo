@@ -1,4 +1,5 @@
 import type { SecurityVulnerability } from '@/github';
+
 import type {
   DependabotAllowCondition,
   DependabotConfig,
@@ -27,8 +28,8 @@ import type {
 } from './job';
 
 export type DependabotSourceInfo = {
-  provider: DependabotSourceProvider;
-  hostname: string;
+  'provider': DependabotSourceProvider;
+  'hostname': string;
   'api-endpoint': string;
   'repository-slug': string;
 };
@@ -94,30 +95,30 @@ export class DependabotJobBuilder {
   public forDependenciesList({ id }: { id: string }): DependabotJobBuilderOutput {
     return {
       job: {
-        id: id,
-        command: 'update',
+        'id': id,
+        'command': 'update',
         'package-manager': this.packageManager,
         'updating-a-pull-request': false,
-        dependencies: null,
+        'dependencies': null,
         'allowed-updates': [{ 'dependency-type': 'direct', 'update-type': 'all' }],
         'ignore-conditions': [{ 'dependency-name': '*' }],
         'security-updates-only': false,
         'security-advisories': [],
-        source: this.source,
+        'source': this.source,
         'update-subdependencies': false,
         'existing-pull-requests': [],
         'existing-group-pull-requests': [],
-        experiments: mapExperiments(this.experiments),
+        'experiments': mapExperiments(this.experiments),
         'requirements-update-strategy': null,
         'lockfile-only': false,
         'commit-message-options': {
-          prefix: null,
+          'prefix': null,
           'prefix-development': null,
           'include-scope': null,
         },
         'vendor-dependencies': false,
         'repo-private': true,
-        debug: this.debug,
+        'debug': this.debug,
       },
       credentials: this.credentials,
     };
@@ -173,13 +174,13 @@ export class DependabotJobBuilder {
 
     return {
       job: {
-        id: id,
-        command: command,
+        'id': id,
+        'command': command,
         'package-manager': this.packageManager,
         'updating-a-pull-request': updatingPullRequest || false,
         'dependency-group-to-refresh': updateDependencyGroupName,
         'dependency-groups': mapGroupsFromDependabotConfigToJobConfig(this.update.groups),
-        dependencies: updateDependencyNames,
+        'dependencies': updateDependencyNames,
         'allowed-updates': mapAllowedUpdatesFromDependabotConfigToJobConfig(this.update.allow, securityOnlyUpdate),
         'ignore-conditions': mapIgnoreConditionsFromDependabotConfigToJobConfig(this.update.ignore),
         'security-updates-only': securityOnlyUpdate,
@@ -189,13 +190,13 @@ export class DependabotJobBuilder {
         'existing-pull-requests': existingPullRequests.filter((pr) => !('dependency-group-name' in pr)),
         'existing-group-pull-requests': existingPullRequests.filter((pr) => 'dependency-group-name' in pr),
         'commit-message-options': {
-          prefix: this.update['commit-message']?.prefix ?? null,
+          'prefix': this.update['commit-message']?.prefix ?? null,
           'prefix-development': this.update['commit-message']?.['prefix-development'] ?? null,
           'include-scope':
             this.update['commit-message']?.include?.toLocaleLowerCase()?.trim() === 'scope' ? true : null,
         },
-        cooldown: this.update.cooldown,
-        experiments: mapExperiments(this.experiments),
+        'cooldown': this.update.cooldown,
+        'experiments': mapExperiments(this.experiments),
         'reject-external-code':
           this.update['insecure-external-code-execution']?.toLocaleLowerCase()?.trim() === 'allow',
         'requirements-update-strategy': mapVersionStrategyToRequirementsUpdateStrategy(
@@ -204,7 +205,7 @@ export class DependabotJobBuilder {
         'lockfile-only': this.update['versioning-strategy'] === 'lockfile-only',
         'vendor-dependencies': this.update.vendor ?? false,
         'repo-private': true,
-        debug: this.debug,
+        'debug': this.debug,
         'proxy-log-response-body-on-auth-failure': true,
         'max-updater-run-time': 2700,
         'enable-beta-ecosystems': this.config['enable-beta-ecosystems'] || false,
@@ -265,14 +266,14 @@ export function mapSourceFromDependabotConfigToJobConfig(
   update: DependabotUpdate,
 ): DependabotSource {
   return {
-    provider: source.provider,
+    'provider': source.provider,
     'api-endpoint': source['api-endpoint'],
-    hostname: source.hostname,
-    repo: source['repository-slug'],
-    branch: update['target-branch'],
-    commit: null, // use latest commit of target branch
-    directory: update.directory,
-    directories: update.directories,
+    'hostname': source.hostname,
+    'repo': source['repository-slug'],
+    'branch': update['target-branch'],
+    'commit': null, // use latest commit of target branch
+    'directory': update.directory,
+    'directories': update.directories,
   };
 }
 
@@ -303,10 +304,10 @@ export function mapGroupsFromDependabotConfigToJobConfig(
     .map((name) => {
       const group = dependencyGroups[name]!;
       return {
-        name: name,
+        'name': name,
         'applies-to': group['applies-to'],
-        rules: {
-          patterns: group.patterns?.length ? group.patterns : ['*'],
+        'rules': {
+          'patterns': group.patterns?.length ? group.patterns : ['*'],
           'exclude-patterns': group['exclude-patterns'],
           'dependency-type': group['dependency-type'],
           'update-types': group['update-types'],
@@ -345,7 +346,7 @@ export function mapIgnoreConditionsFromDependabotConfigToJobConfig(
   if (!ignoreConditions) return [];
   return ignoreConditions.map((ignore) => {
     return {
-      source: ignore.source,
+      'source': ignore.source,
       'updated-at': ignore['updated-at'],
       'dependency-name': ignore['dependency-name'] ?? '*',
       'update-types': ignore['update-types'],

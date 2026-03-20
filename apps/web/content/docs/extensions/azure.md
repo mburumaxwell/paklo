@@ -55,9 +55,10 @@ steps:
     displayName: 'Install Node.js 24'
     inputs:
       version: '24.x'
-  
+
   - task: dependabot@2
 ```
+
 :::
 
 ### Configuration File
@@ -67,10 +68,10 @@ Create a `dependabot.yml` file at `.github/dependabot.yml` or `.azuredevops/depe
 ```yaml
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
 ```
 
 See [Configuration](/docs/configuration) for all options.
@@ -79,21 +80,21 @@ See [Configuration](/docs/configuration) for all options.
 
 ### Basic Parameters
 
-| Input | Description | Default |
-| ----- | ----------- | ------- |
-| `dryRun` | Test logic without creating/updating PRs | `false` |
-| `setAutoComplete` | Enable auto-complete on created PRs | `false` |
-| `mergeStrategy` | Merge strategy: `squash`, `rebase`, `merge` | `squash` |
-| `autoApprove` | Automatically approve created PRs | `false` |
+| Input             | Description                                 | Default  |
+| ----------------- | ------------------------------------------- | -------- |
+| `dryRun`          | Test logic without creating/updating PRs    | `false`  |
+| `setAutoComplete` | Enable auto-complete on created PRs         | `false`  |
+| `mergeStrategy`   | Merge strategy: `squash`, `rebase`, `merge` | `squash` |
+| `autoApprove`     | Automatically approve created PRs           | `false`  |
 
 ### Authentication Parameters
 
-| Input | Description |
-| ----- | ----------- |
-| `azureDevOpsServiceConnection` | Service connection for Azure DevOps access |
-| `azureDevOpsAccessToken` | PAT for Azure DevOps (alternative to service connection) |
-| `gitHubConnection` | GitHub service connection for rate limiting/security advisories |
-| `gitHubAccessToken` | GitHub PAT (alternative to GitHub connection) |
+| Input                          | Description                                                     |
+| ------------------------------ | --------------------------------------------------------------- |
+| `azureDevOpsServiceConnection` | Service connection for Azure DevOps access                      |
+| `azureDevOpsAccessToken`       | PAT for Azure DevOps (alternative to service connection)        |
+| `gitHubConnection`             | GitHub service connection for rate limiting/security advisories |
+| `gitHubAccessToken`            | GitHub PAT (alternative to GitHub connection)                   |
 
 Required permissions for Azure DevOps PAT:
 
@@ -103,23 +104,23 @@ Required permissions for Azure DevOps PAT:
 
 ### Customization Parameters
 
-| Input | Description | Default |
-| ----- | ----------- | ------- |
-| `authorEmail` | Email for commit author | `noreply@github.com` |
-| `authorName` | Name for commit author | `dependabot[bot]` |
-| `autoCompleteIgnoreConfigIds` | Policy IDs to ignore for auto-complete | - |
-| `autoApproveUserToken` | PAT for auto-approval (different user) | - |
+| Input                         | Description                            | Default              |
+| ----------------------------- | -------------------------------------- | -------------------- |
+| `authorEmail`                 | Email for commit author                | `noreply@github.com` |
+| `authorName`                  | Name for commit author                 | `dependabot[bot]`    |
+| `autoCompleteIgnoreConfigIds` | Policy IDs to ignore for auto-complete | -                    |
+| `autoApproveUserToken`        | PAT for auto-approval (different user) | -                    |
 
 ### Advanced Parameters
 
-| Input | Description |
-| ----- | ----------- |
-| `targetProjectName` | Target project (for multi-project pipelines) |
-| `targetRepositoryName` | Target repository (for multi-repo pipelines) |
-| `targetUpdateIds` | Semicolon-separated update IDs to run |
-| `experiments` | Comma-separated Dependabot experiments |
-| `dependabotUpdaterImage` | Custom updater Docker image |
-| `dependabotCliApiListeningPort` | Fixed port for Dependabot CLI API |
+| Input                           | Description                                  |
+| ------------------------------- | -------------------------------------------- |
+| `targetProjectName`             | Target project (for multi-project pipelines) |
+| `targetRepositoryName`          | Target repository (for multi-repo pipelines) |
+| `targetUpdateIds`               | Semicolon-separated update IDs to run        |
+| `experiments`                   | Comma-separated Dependabot experiments       |
+| `dependabotUpdaterImage`        | Custom updater Docker image                  |
+| `dependabotCliApiListeningPort` | Fixed port for Dependabot CLI API            |
 
 ### Examples
 
@@ -130,7 +131,7 @@ Required permissions for Azure DevOps PAT:
   inputs:
     setAutoComplete: true
     mergeStrategy: 'squash'
-    autoCompleteIgnoreConfigIds: '1,2'  # Ignore optional policies
+    autoCompleteIgnoreConfigIds: '1,2' # Ignore optional policies
 ```
 
 #### Auto-Approve with Different User
@@ -182,7 +183,7 @@ steps:
     inputs:
       targetProjectName: 'my-project'
       targetRepositoryName: 'repo-1'
-  
+
   - task: dependabot@2
     displayName: 'Update repo-2'
     inputs:

@@ -1,10 +1,11 @@
 import type { DependabotPackageManager } from '@paklo/core/dependabot';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getDateFromTimeRange, type TimeRange } from '@/lib/aggregation';
-import type { UpdateJobStatus, UpdateJobTrigger } from '@/lib/enums';
-import { unwrapWithAll, type WithAll } from '@/lib/enums';
+
+import { type TimeRange, getDateFromTimeRange } from '@/lib/aggregation';
+import { type UpdateJobStatus, type UpdateJobTrigger, type WithAll, unwrapWithAll } from '@/lib/enums';
 import { prisma } from '@/lib/prisma';
+
 import RunsView from './page.client';
 
 export async function generateMetadata(props: PageProps<'/dashboard/[org]/runs'>): Promise<Metadata> {
@@ -75,7 +76,7 @@ export default async function RunsPage(props: PageProps<'/dashboard/[org]/runs'>
   return (
     <div className='mx-auto w-full max-w-5xl space-y-6 p-6'>
       <div>
-        <h1 className='mb-2 font-semibold text-3xl'>Update Jobs</h1>
+        <h1 className='mb-2 text-3xl font-semibold'>Update Jobs</h1>
         <p className='text-muted-foreground'>Monitor and track dependency update jobs across your repositories</p>
       </div>
       <RunsView organization={organization} projects={projects} jobs={jobs} />

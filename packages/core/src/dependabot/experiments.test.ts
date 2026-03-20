@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+
 import { setExperiment } from './experiments';
 import type { DependabotExperiments } from './job';
 
@@ -14,7 +15,7 @@ describe('setExperiment', () => {
   test('sets string value', () => {
     const base = { existing: true };
     expect(setExperiment(base, 'new-value', 'v1.2.3')).toEqual({
-      existing: true,
+      'existing': true,
       'new-value': 'v1.2.3',
     });
   });

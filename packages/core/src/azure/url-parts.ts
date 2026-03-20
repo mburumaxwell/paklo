@@ -1,15 +1,15 @@
 export type AzureDevOpsOrganizationUrl = {
   /** URL of the organization. This may lack the project name */
-  value: URL;
+  'value': URL;
 
   /** Organization URL hostname */
-  hostname: string;
+  'hostname': string;
 
   /** Organization API endpoint URL */
   'api-endpoint': string;
 
   /** Organization name/slug */
-  organization: string;
+  'organization': string;
 
   /** Virtual directory if present (on-premises only) */
   'virtual-directory'?: string;
@@ -26,12 +26,12 @@ export type AzureDevOpsRepositoryUrl = AzureDevOpsOrganizationUrl & {
    * Project ID or Name.
    * This value is not URL-encoded, clients must encode it when constructing URLs.
    */
-  project: string;
+  'project': string;
   /**
    * Repository ID or Name.
    * This value is not URL-encoded, clients must encode it when constructing URLs.
    */
-  repository: string;
+  'repository': string;
 
   /** Slug of the repository e.g. `contoso/prj1/_git/repo1`, `tfs/contoso/prj1/_git/repo1` */
   'repository-slug': string;

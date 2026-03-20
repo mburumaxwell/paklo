@@ -2,11 +2,13 @@ import type { DependabotPackageManager } from '@paklo/core/dependabot';
 import type { Metadata } from 'next';
 import { headers as requestHeaders } from 'next/headers';
 import { forbidden, unauthorized } from 'next/navigation';
-import { getDateFromTimeRange, type TimeRange } from '@/lib/aggregation';
+
+import { type TimeRange, getDateFromTimeRange } from '@/lib/aggregation';
 import { auth, userHasPermission } from '@/lib/auth';
-import { unwrapWithAll, type WithAll } from '@/lib/enums';
-import { type Filter, getMongoCollection, type UsageTelemetry } from '@/lib/mongodb';
+import { type WithAll, unwrapWithAll } from '@/lib/enums';
+import { type Filter, type UsageTelemetry, getMongoCollection } from '@/lib/mongodb';
 import type { RegionCode } from '@/lib/regions';
+
 import { type SlimTelemetry, TelemetryDashboard } from './page.client';
 
 export const metadata: Metadata = {
@@ -50,12 +52,12 @@ export default async function Page(props: PageProps<'/dashboard/usage'>) {
     .find(query)
     .sort({ started: -1 })
     .project<SlimTelemetry>({
-      _id: 1,
-      region: 1,
+      '_id': 1,
+      'region': 1,
       'package-manager': 1,
-      started: 1,
-      success: 1,
-      duration: 1,
+      'started': 1,
+      'success': 1,
+      'duration': 1,
     })
     .toArray();
 

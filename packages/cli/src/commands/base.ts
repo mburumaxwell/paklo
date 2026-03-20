@@ -21,13 +21,13 @@ export type HandlerOptions<T> = {
   error: (options: string | HandlerErrorOptions) => void;
 };
 
-// biome-ignore-start lint/suspicious/noExplicitAny: generic
+/* oxlint-disable typescript/no-explicit-any */
 export type CreateHandlerOptions<T> = {
   schema: ZodType<T>;
   input: Record<string, any>;
   command: any;
 };
-// biome-ignore-end lint/suspicious/noExplicitAny: generic
+/* oxlint-enable typescript/no-explicit-any */
 
 export async function handlerOptions<T>({
   schema,

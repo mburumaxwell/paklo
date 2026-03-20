@@ -1,5 +1,3 @@
-// biome-ignore-all lint/suspicious/noShadowRestrictedNames: Proxy is okay
-
 import type {
   DependabotCredential,
   DependabotJobConfig,
@@ -7,6 +5,7 @@ import type {
   FileUpdaterInput,
 } from '@paklo/core/dependabot';
 import Docker, { type Container } from 'dockerode';
+
 import { ContainerService } from './container-service';
 import type { JobParameters } from './params';
 import { type Proxy, ProxyBuilder } from './proxy';
@@ -61,7 +60,7 @@ export class Updater {
         continue;
       }
 
-      // biome-ignore lint/suspicious/noExplicitAny: necessary
+      // oxlint-disable-next-line typescript/no-explicit-any -- necessary
       const obj: any = { type: credential.type };
       if (credential.host !== undefined) {
         obj.host = credential.host;

@@ -1,4 +1,5 @@
 import { fileURLToPath } from 'url';
+
 import { loadEnv } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { configDefaults, defineConfig } from 'vitest/config';

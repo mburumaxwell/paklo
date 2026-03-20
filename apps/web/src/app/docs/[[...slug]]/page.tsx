@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import { storeFeedback } from '@/actions/feedback';
 import { CopyMarkdownButton, DocsBody, DocsPage, EditOnGitHub, Feedback, PageLastUpdate } from '@/components/docs';
 import { Markdown } from '@/components/markdown';
@@ -42,8 +43,8 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
 
   return (
     <DocsPage toc={doc.data.toc} full={doc.data.full} tableOfContent={{ style: 'clerk' }}>
-      <h1 className='font-semibold text-3xl'>{doc.data.title}</h1>
-      <p className='mb-2 text-fd-muted-foreground text-lg'>{doc.data.description}</p>
+      <h1 className='text-3xl font-semibold'>{doc.data.title}</h1>
+      <p className='mb-2 text-lg text-fd-muted-foreground'>{doc.data.description}</p>
       <div className='flex flex-row flex-wrap items-center gap-2'>
         <CopyMarkdownButton url={rawUrl} />
         <EditOnGitHub href={`${config.github.repo_url}/blob/main/apps/web/content/docs/${doc.path}`} />

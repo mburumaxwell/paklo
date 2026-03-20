@@ -1,6 +1,7 @@
 import { cleanup } from '@paklo/runner';
 import { Command } from 'commander';
 import { z } from 'zod';
+
 import { type HandlerOptions, handlerOptions } from './base';
 
 const TimeUnitsSchema = z.enum(['ms', 's', 'm', 'h', 'd', 'w', 'y']);
@@ -11,7 +12,7 @@ const schema = z.object({
 });
 type Options = z.infer<typeof schema>;
 
-async function handler({ options, error }: HandlerOptions<Options>) {
+async function handler({ options, error: _error }: HandlerOptions<Options>) {
   const { cutoff } = options;
   cleanup(cutoff);
 }

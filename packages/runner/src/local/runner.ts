@@ -1,5 +1,6 @@
 import type { DependabotCommand, DependabotConfig, DependabotExperiments } from '@paklo/core/dependabot';
 import { Keygen } from '@paklo/core/keygen';
+
 import type { SecretMasker } from '../api-client';
 
 export type RunJobsResult = { id: string; success: boolean; message?: string; affectedPrs: number[] }[];

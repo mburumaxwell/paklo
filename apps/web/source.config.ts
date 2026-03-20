@@ -8,7 +8,6 @@ import { defineCollections, defineConfig, defineDocs, frontmatterSchema, metaSch
 import lastModified from 'fumadocs-mdx/plugins/last-modified';
 import remarkDirective from 'remark-directive';
 import remarkEmoji from 'remark-emoji';
-
 import { z } from 'zod';
 
 export const legal = defineCollections({

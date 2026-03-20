@@ -1,8 +1,10 @@
 import { FatalError } from 'workflow';
 import { z } from 'zod';
-import { type Organization, type Project, prisma, type Repository } from '@/lib/prisma';
+
+import { type Organization, type Project, type Repository, prisma } from '@/lib/prisma';
+
 import { createSyncProvider } from './provider';
-import { Synchronizer, type SyncResult, type SyncSingleResult } from './synchronizer';
+import { type SyncResult, type SyncSingleResult, Synchronizer } from './synchronizer';
 
 export const SyncWorkflowOptionsSchema = z.object({
   organizationId: z.string(),

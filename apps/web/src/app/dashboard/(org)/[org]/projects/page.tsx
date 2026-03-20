@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import { BillingNotConfiguredView } from '@/components/billing-not-configured';
 import { prisma } from '@/lib/prisma';
+
 import { ProjectsView } from './page.client';
 
 export async function generateMetadata(props: PageProps<'/dashboard/[org]/projects/[proj]'>): Promise<Metadata> {

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import { Markdown } from '@/components/markdown';
 import { TimeAgo } from '@/components/time-ago';
 import { legal } from '@/lib/fumadocs';
@@ -26,7 +27,7 @@ export default async function LegalDocPage(props: PageProps<'/legal/[slug]'>) {
   return (
     <article>
       <div className='py-4 sm:py-8'>
-        <h1 className='mt-5 text-center font-bold font-display text-2xl leading-[1.15] sm:text-4xl sm:leading-[1.15]'>
+        <h1 className='font-display mt-5 text-center text-2xl leading-[1.15] font-bold sm:text-4xl sm:leading-[1.15]'>
           {doc.data.title}
         </h1>
         <div className='mt-5 w-full items-center justify-center gap-2 text-center md:flex'>

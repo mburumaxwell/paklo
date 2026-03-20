@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import { InviteDeclineView } from './page.client';
 
 export const metadata: Metadata = {

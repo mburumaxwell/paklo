@@ -4,7 +4,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build", "typecheck"],
-      "outputs": ["$TURBO_EXTENDS$", "tasks/**/dist/**"]
-    }
-  }
+      "outputs": ["$TURBO_EXTENDS$", "tasks/**/dist/**"],
+    },
+  },
 }

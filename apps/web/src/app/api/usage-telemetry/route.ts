@@ -3,7 +3,8 @@ import { toNextJsHandler } from '@paklo/core/hono';
 import { UsageTelemetryRequestDataSchema } from '@paklo/core/usage';
 import { geolocation } from '@vercel/functions';
 import { Hono } from 'hono';
-import { getMongoCollection, type UsageTelemetry } from '@/lib/mongodb';
+
+import { type UsageTelemetry, getMongoCollection } from '@/lib/mongodb';
 import { fromExternalRegion } from '@/lib/regions';
 
 const app = new Hono().basePath('/api/usage-telemetry');

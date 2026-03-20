@@ -21,6 +21,7 @@ import type { Route } from 'next';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -45,9 +46,9 @@ import {
   SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { authClient, type Organization, type Session } from '@/lib/auth-client';
+import { type Organization, type Session, authClient } from '@/lib/auth-client';
 import { getOrganizationTypeInfo } from '@/lib/organizations';
-import { cn, getInitials, type InitialsType } from '@/lib/utils';
+import { type InitialsType, cn, getInitials } from '@/lib/utils';
 
 type MenuItem = { label: string; href: Route<`/dashboard/${string}`> | Route; icon: LucideIcon };
 type MenuGroup = { label: string; items?: MenuItem[] };
@@ -275,7 +276,7 @@ function OrganizationSwitcher({
             side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}
           >
-            <DropdownMenuLabel className='text-muted-foreground text-xs'>Organizations</DropdownMenuLabel>
+            <DropdownMenuLabel className='text-xs text-muted-foreground'>Organizations</DropdownMenuLabel>
             {organizations.map((organization) => (
               <DropdownMenuItem
                 key={organization.name}

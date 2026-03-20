@@ -1,8 +1,8 @@
 import * as path from 'node:path';
+
 import { z } from 'zod';
 
 import {
-  areEqual,
   type DependabotCreatePullRequest,
   type DependabotExistingGroupPr,
   type DependabotExistingPr,
@@ -10,8 +10,10 @@ import {
   type DependabotPersistedPr,
   DependabotPersistedPrSchema,
   type DependabotUpdatePullRequest,
+  areEqual,
   getDependencyNames,
 } from '@/dependabot';
+
 import { PR_PROPERTY_DEPENDABOT_DEPENDENCIES, PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER } from './constants';
 import type { AzdoFileChange, AzdoPrExtractedWithProperties, AzdoVersionControlChangeType } from './types';
 
@@ -36,7 +38,7 @@ export function parsePullRequestProps(
     JSON.parse(pr.properties!.find((p) => p.name === PR_PROPERTY_DEPENDABOT_DEPENDENCIES)!.value),
   );
   if (Array.isArray(parsed)) {
-    return { 'pr-number': pr.pullRequestId, dependencies: parsed };
+    return { 'pr-number': pr.pullRequestId, 'dependencies': parsed };
   } else {
     return { 'pr-number': pr.pullRequestId, ...parsed };
   }

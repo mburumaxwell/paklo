@@ -15,7 +15,7 @@ describe('makeDirectoryKey', () => {
   it('should create key with package-ecosystem naming convention', () => {
     const result = makeDirectoryKey({
       'package-ecosystem': 'bundler',
-      directory: '/app',
+      'directory': '/app',
     });
 
     expect(result).toBe('bundler::/app');
