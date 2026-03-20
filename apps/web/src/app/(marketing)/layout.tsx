@@ -1,5 +1,6 @@
 import type { Route } from 'next';
 import Link from 'next/link';
+import { HelpScoutBeacon } from '@/components/help-scout-beacon';
 import { GitHubLogo, LinkedInLogo, PakloIcon, TwitterLogo } from '@/components/logos';
 import { ThemeToggle } from '@/components/theme';
 import { Button } from '@/components/ui/button';
@@ -19,6 +20,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
       <Header />
       {children}
       <Footer />
+      <HelpScoutBeacon />
     </div>
   );
 }

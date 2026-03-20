@@ -7,7 +7,12 @@
     },
     "build": {
       "dependsOn": ["^build", "codegen"],
-      "env": ["$TURBO_EXTENDS$", "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY", "NEXT_RUNTIME"],
+      "env": [
+        "$TURBO_EXTENDS$",
+        "NEXT_PUBLIC_HELP_SCOUT_BEACON_ID",
+        "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+        "NEXT_RUNTIME"
+      ],
       "passThroughEnv": [
         "$TURBO_EXTENDS$",
         "AZURE_TENANT_ID",

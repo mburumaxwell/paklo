@@ -1,4 +1,5 @@
 import { DocsLayout, RootProvider } from '@/components/docs';
+import { HelpScoutBeacon } from '@/components/help-scout-beacon';
 import { PakloIcon } from '@/components/logos';
 import { docs } from '@/lib/fumadocs';
 import { config } from '@/site-config';
@@ -24,6 +25,7 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
           {children}
         </DocsLayout>
       </RootProvider>
+      <HelpScoutBeacon />
     </div>
   );
 }

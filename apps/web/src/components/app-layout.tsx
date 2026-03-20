@@ -2,6 +2,7 @@ import type { cookies } from 'next/headers';
 import { Suspense } from 'react';
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
 import { AppSidebar } from '@/components/app-sidebar';
+import { HelpScoutBeacon } from '@/components/help-scout-beacon';
 import { ThemeSelect } from '@/components/theme';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
@@ -28,6 +29,7 @@ export async function AppLayout({
   cookies,
 }: AppLayoutProps) {
   const slugs = organizations.map((org) => org.slug);
+  const activeOrganization = organizations.find((org) => org.active);
 
   const defaultSidebarOpen = cookies ? cookies.get('sidebar_state')?.value === 'true' : undefined;
 
@@ -37,11 +39,15 @@ export async function AppLayout({
         {session && <AppSidebar session={session} organizations={organizations} pakloAdmin={pakloAdmin} />}
         <SidebarInset>
           <header className='flex h-16 shrink-0 items-center gap-2 border-b px-4'>
-            <SidebarTrigger className='-ml-1' />
-            <div>
-              <Separator orientation='vertical' className='mr-2 data-[orientation=vertical]:h-4' />
-            </div>
-            {breadcrumb && <AppBreadcrumb omit={slugs} />}
+            {session && (
+              <>
+                <SidebarTrigger className='-ml-1' />
+                <div>
+                  <Separator orientation='vertical' className='mr-2 data-[orientation=vertical]:h-4' />
+                </div>
+                {breadcrumb && <AppBreadcrumb omit={slugs} />}
+              </>
+            )}
             <div className='ml-auto'>
               <ThemeSelect />
             </div>
@@ -52,6 +58,7 @@ export async function AppLayout({
       <Suspense fallback={null}>
         <FlagValues values={await getFlagValues()} />
       </Suspense>
+      <HelpScoutBeacon session={session} organization={activeOrganization} />
     </>
   );
 }
