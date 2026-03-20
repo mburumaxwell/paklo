@@ -1,57 +1,251 @@
 ---
 name: resend
-description: Use when working with Resend email platform - routes to specific sub-skills for sending, receiving, audiences, or broadcasts.
+description: Use when working with the Resend email API — sending transactional emails (single or batch), receiving inbound emails via webhooks, managing email templates, tracking delivery events, or setting up the Resend SDK. Always use this skill when the user mentions Resend, even for simple tasks like "send an email with Resend" — the skill contains critical gotchas (idempotency keys, webhook verification, template variable syntax) that prevent common production issues.
 license: MIT
 metadata:
     author: resend
-    version: "2.2.0"
+    version: "3.0.0"
+    homepage: https://resend.com
+    source: https://github.com/resend/resend-skills
+inputs:
+    - name: RESEND_API_KEY
+      description: Resend API key for sending and receiving emails. Get yours at https://resend.com/api-keys
+      required: true
+    - name: RESEND_WEBHOOK_SECRET
+      description: Webhook signing secret for verifying event payloads. Found in the Resend dashboard under Webhooks after creating an endpoint.
+      required: false
+references:
+    - sending
+    - receiving.md
+    - templates.md
+    - webhooks.md
+    - installation.md
+    - fetch-all-templates.mjs
 ---
 
 # Resend
 
-## Overview
+## Quick Send — Node.js
 
-Resend is an email platform for developers. This skill routes to feature-specific sub-skills.
+```typescript
+import { Resend } from 'resend';
 
-## Sub-Skills
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-| Feature | Skill | Use When |
-|---------|-------|----------|
-| **Sending emails** | `send-email` | Transactional emails, notifications, batch sends |
-| **Receiving emails** | `resend-inbound` | Processing inbound emails, webhooks for received mail, attachments |
-| **AI Agent inbox** | `moltbot` | Setting up email for AI agents with security measures against prompt injection |
+const { data, error } = await resend.emails.send(
+  {
+    from: 'Acme <onboarding@resend.dev>',
+    to: ['delivered@resend.dev'],
+    subject: 'Hello World',
+    html: '<p>Email body here</p>',
+  },
+  { idempotencyKey: `welcome-email/${userId}` }
+);
 
-## Quick Routing
+if (error) {
+  console.error('Failed:', error.message);
+  return;
+}
+console.log('Sent:', data.id);
+```
 
-**Need to send emails?** Use `send-email` skill
-- Single or batch transactional emails
-- Attachments, scheduling, templates
-- Delivery webhooks (bounced, delivered, opened)
+**Key gotcha:** The Resend Node.js SDK does NOT throw exceptions — it returns `{ data, error }`. Always check `error` explicitly instead of using try/catch for API errors.
 
-**Need to receive emails?** Use `resend-inbound` skill
-- Setting up inbound domain (MX records)
-- Processing `email.received` webhooks
-- Retrieving email content and attachments
-- Forwarding received emails
+## Quick Send — Python
 
-**Setting up an AI agent inbox?** Use `moltbot` skill
-- Configuring email for Moltbot/Clawdbot or similar AI agents
-- Webhook setup with ngrok/tunneling for local development
-- Security levels to prevent prompt injection attacks
-- Trusted sender allowlists and content filtering
+```python
+import resend
+import os
+
+resend.api_key = os.environ["RESEND_API_KEY"]
+
+email = resend.Emails.send({
+    "from": "Acme <onboarding@resend.dev>",
+    "to": ["delivered@resend.dev"],
+    "subject": "Hello World",
+    "html": "<p>Email body here</p>",
+}, idempotency_key=f"welcome-email/{user_id}")
+```
+
+### Single vs Batch Decision
+
+| Choose | When |
+|--------|------|
+| **Single** (`POST /emails`) | 1 email, needs attachments, needs scheduling |
+| **Batch** (`POST /emails/batch`) | 2-100 distinct emails, no attachments, no scheduling |
+
+Batch is atomic — if one email fails validation, the entire batch fails. Always validate before sending. Batch does NOT support attachments or `scheduled_at`.
+
+### Idempotency Keys (Critical for Retries)
+
+Prevent duplicate emails when retrying failed requests:
+
+| Key Facts | |
+|-----------|---|
+| **Format (single)** | `<event-type>/<entity-id>` (e.g., `welcome-email/user-123`) |
+| **Format (batch)** | `batch-<event-type>/<batch-id>` (e.g., `batch-orders/batch-456`) |
+| **Expiration** | 24 hours |
+| **Max length** | 256 characters |
+| **Same key + same payload** | Returns original response without resending |
+| **Same key + different payload** | Returns 409 error |
+
+## Quick Receive (Node.js)
+
+```typescript
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export async function POST(req: Request) {
+  const payload = await req.text(); // Must use raw text, not req.json()
+
+  const event = resend.webhooks.verify({
+    payload,
+    headers: {
+      'svix-id': req.headers.get('svix-id'),
+      'svix-timestamp': req.headers.get('svix-timestamp'),
+      'svix-signature': req.headers.get('svix-signature'),
+    },
+    secret: process.env.RESEND_WEBHOOK_SECRET,
+  });
+
+  if (event.type === 'email.received') {
+    // Webhook has metadata only — call API for body
+    const { data: email } = await resend.emails.receiving.get(
+      event.data.email_id
+    );
+    console.log(email.text);
+  }
+
+  return new Response('OK', { status: 200 });
+}
+```
+
+**Key gotcha:** Webhook payloads do NOT contain the email body. You must call `resend.emails.receiving.get()` separately.
+
+## What Do You Need?
+
+| Task | Reference |
+|------|-----------|
+| **Send a single email** | [sending/overview.md](references/sending/overview.md) — parameters, deliverability, testing |
+| **Send batch emails** | [sending/overview.md](references/sending/overview.md) → [sending/batch-email-examples.md](references/sending/batch-email-examples.md) |
+| **Full SDK examples** (Node.js, Python, Go, cURL) | [sending/single-email-examples.md](references/sending/single-email-examples.md) |
+| **Idempotency, retries, error handling** | [sending/best-practices.md](references/sending/best-practices.md) |
+| **Receive inbound emails** | [receiving.md](references/receiving.md) — domain setup, webhooks, attachments |
+| **Manage templates** (CRUD, variables) | [templates.md](references/templates.md) — lifecycle, aliases, pagination |
+| **Set up webhooks** (all event types) | [webhooks.md](references/webhooks.md) — verification, retry schedule, IP allowlist |
+| **Install SDK** (8+ languages) | [installation.md](references/installation.md) |
+| **Set up an AI agent inbox** | Install the `agent-email-inbox` skill — covers security levels for untrusted input |
+| **Marketing emails / newsletters** | Use [Resend Broadcasts](https://resend.com/broadcasts) — not batch sending |
+
+## SDK Version Requirements
+
+Always install the latest SDK version. These are the minimum versions for full functionality (sending, receiving, webhook verification):
+
+| Language | Package | Min Version | Install |
+|----------|---------|-------------|---------|
+| Node.js | `resend` | >= 6.9.2 | `npm install resend` |
+| Python | `resend` | >= 2.21.0 | `pip install resend` |
+| Go | `resend-go/v3` | >= 3.1.0 | `go get github.com/resend/resend-go/v3` |
+| Ruby | `resend` | >= 1.0.0 | `gem install resend` |
+| PHP | `resend/resend-php` | >= 1.1.0 | `composer require resend/resend-php` |
+| Rust | `resend-rs` | >= 0.20.0 | `cargo add resend-rs` |
+| Java | `resend-java` | >= 4.11.0 | See [installation.md](references/installation.md) |
+| .NET | `Resend` | >= 0.2.1 | `dotnet add package Resend` |
+
+> **If the project already has a Resend SDK installed**, check the version and upgrade if it's below the minimum. Older SDKs may be missing `webhooks.verify()` or `emails.receiving.get()`.
+
+See [installation.md](references/installation.md) for full installation commands, language detection, and cURL fallback.
 
 ## Common Setup
 
 ### API Key
 
-Store in environment variable:
+Store in environment variable — never hardcode:
 ```bash
 export RESEND_API_KEY=re_xxxxxxxxx
 ```
 
-### SDK Installation
+Get your key at [resend.com/api-keys](https://resend.com/api-keys).
 
-See `send-email` skill for installation instructions across all supported languages.
+### Detect Project Language
+
+Check for these files: `package.json` (Node.js), `requirements.txt`/`pyproject.toml` (Python), `go.mod` (Go), `Gemfile` (Ruby), `composer.json` (PHP), `Cargo.toml` (Rust), `pom.xml`/`build.gradle` (Java), `*.csproj` (.NET).
+
+## Common Mistakes
+
+| # | Mistake | Fix |
+|---|---------|-----|
+| 1 | **Retrying without idempotency key** | Always include idempotency key — prevents duplicate sends on retry. Format: `<event-type>/<entity-id>` |
+| 2 | **Not verifying webhook signatures** | Always verify with `resend.webhooks.verify()` — unverified events can't be trusted |
+| 3 | **Template variable name mismatch** | Variable names are case-sensitive — must match the template definition exactly. Use triple mustache `{{{VAR}}}` syntax |
+| 4 | **Expecting email body in webhook payload** | Webhooks contain metadata only — call `resend.emails.receiving.get()` for body content |
+| 5 | **Using try/catch for Node.js SDK errors** | SDK returns `{ data, error }` — check `error` explicitly, don't wrap in try/catch |
+| 6 | **Using batch for emails with attachments** | Batch doesn't support attachments — use single sends instead |
+| 7 | **Testing with fake emails (test@gmail.com)** | Use `delivered@resend.dev` — fake addresses bounce and hurt reputation |
+| 8 | **Sending with draft template** | Templates must be published before sending — call `.publish()` first |
+| 9 | **`html` + `template` in same send call** | Mutually exclusive — remove `html`/`text`/`react` when using template |
+| 10 | **MX record not lowest priority for inbound** | Ensure Resend's MX has the lowest number (highest priority) or emails won't route |
+
+## Cross-Cutting Concerns
+
+### Send + Receive Together
+
+Auto-replies, email forwarding, or any receive-then-send workflow requires both capabilities:
+1. Set up inbound domain first (see [receiving.md](references/receiving.md))
+2. Set up sending (see [sending/overview.md](references/sending/overview.md))
+3. Note: batch sending does NOT support attachments or scheduling — use single sends when forwarding with attachments
+
+### AI Agent Inbox
+
+If your system processes untrusted email content and takes actions (refunds, database changes, forwarding), install the `agent-email-inbox` skill. This applies whether or not AI is involved — any system interpreting freeform email content from external senders needs security measures.
+
+### Marketing Emails
+
+The sending capabilities in this skill are for **transactional email** (receipts, confirmations, notifications). For marketing campaigns to large subscriber lists with unsubscribe links and engagement tracking, use [Resend Broadcasts](https://resend.com/broadcasts).
+
+### Domain Warm-up
+
+New domains must gradually increase sending volume. Day 1 limit: ~150 emails (new domain) or ~1,000 (existing domain). See the warm-up schedule in [sending/overview.md](references/sending/overview.md).
+
+### Testing
+
+**Never test with fake addresses at real email providers** (test@gmail.com, fake@outlook.com) — they bounce and destroy sender reputation.
+
+| Address | Result |
+|---------|--------|
+| `delivered@resend.dev` | Simulates successful delivery |
+| `bounced@resend.dev` | Simulates hard bounce |
+| `complained@resend.dev` | Simulates spam complaint |
+
+### Suppression List
+
+Resend automatically suppresses hard-bounced and spam-complained addresses. Sending to suppressed addresses fires the `email.suppressed` webhook event instead of attempting delivery. Manage in Dashboard → Suppressions.
+
+### Webhook Event Types
+
+| Event | Trigger |
+|-------|---------|
+| `email.sent` | API request successful |
+| `email.delivered` | Reached recipient's mail server |
+| `email.bounced` | Permanently rejected (hard bounce) |
+| `email.complained` | Recipient marked as spam |
+| `email.opened` / `email.clicked` | Recipient engagement |
+| `email.delivery_delayed` | Soft bounce, Resend retries |
+| `email.received` | Inbound email arrived |
+| `domain.*` / `contact.*` | Domain/contact changes |
+
+See [webhooks.md](references/webhooks.md) for full details, signature verification, and retry schedule.
+
+## Error Handling Quick Reference
+
+| Code | Action |
+|------|--------|
+| 400, 422 | Fix request parameters, don't retry |
+| 401, 403 | Check API key / verify domain, don't retry |
+| 409 | Idempotency conflict — use new key or fix payload |
+| 429 | Rate limited — retry with exponential backoff (default rate limit: 2 req/s) |
+| 500 | Server error — retry with exponential backoff |
 
 ## Resources
 

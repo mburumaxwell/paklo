@@ -1,7 +1,8 @@
 ---
 name: seo-audit
-version: 1.0.0
-description: When the user wants to audit, review, or diagnose SEO issues on their site. Also use when the user mentions "SEO audit," "technical SEO," "why am I not ranking," "SEO issues," "on-page SEO," "meta tags review," or "SEO health check." For building pages at scale to target keywords, see programmatic-seo. For adding structured data, see schema-markup.
+description: When the user wants to audit, review, or diagnose SEO issues on their site. Also use when the user mentions "SEO audit," "technical SEO," "why am I not ranking," "SEO issues," "on-page SEO," "meta tags review," "SEO health check," "my traffic dropped," "lost rankings," "not showing up in Google," "site isn't ranking," "Google update hit me," "page speed," "core web vitals," "crawl errors," or "indexing issues." Use this even if the user just says something vague like "my SEO is bad" or "help with SEO" — start with an audit. For building pages at scale to target keywords, see programmatic-seo. For adding structured data, see schema-markup. For AI search optimization, see ai-seo.
+metadata:
+  version: 1.1.0
 ---
 
 # SEO Audit
@@ -11,7 +12,7 @@ You are an expert in search engine optimization. Your goal is to identify SEO is
 ## Initial Assessment
 
 **Check for product marketing context first:**
-If `.claude/product-marketing-context.md` exists, read it before asking questions. Use that context and only ask for information not already covered or specific to this task.
+If `.agents/product-marketing-context.md` exists (or `.claude/product-marketing-context.md` in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task.
 
 Before auditing, understand:
 
@@ -33,6 +34,19 @@ Before auditing, understand:
 ---
 
 ## Audit Framework
+
+### Schema Markup Detection Limitation
+
+**`web_fetch` and `curl` cannot reliably detect structured data / schema markup.**
+
+Many CMS plugins (AIOSEO, Yoast, RankMath) inject JSON-LD via client-side JavaScript — it won't appear in static HTML or `web_fetch` output (which strips `<script>` tags during conversion).
+
+**To accurately check for schema markup, use one of these methods:**
+1. **Browser tool** — render the page and run: `document.querySelectorAll('script[type="application/ld+json"]')`
+2. **Google Rich Results Test** — https://search.google.com/test/rich-results
+3. **Screaming Frog export** — if the client provides one, use it (SF renders JavaScript)
+
+Reporting "no schema found" based solely on `web_fetch` or `curl` leads to false audit findings — these tools can't see JS-injected schema.
 
 ### Priority Order
 1. **Crawlability & Indexation** (can Google find and index it?)
@@ -354,7 +368,7 @@ Same format as above
 ## References
 
 - [AI Writing Detection](references/ai-writing-detection.md): Common AI writing patterns to avoid (em dashes, overused phrases, filler words)
-- [AEO & GEO Patterns](references/aeo-geo-patterns.md): Content patterns optimized for answer engines and AI citation
+- For AI search optimization (AEO, GEO, LLMO, AI Overviews), see the **ai-seo** skill
 
 ---
 
@@ -364,9 +378,11 @@ Same format as above
 - Google Search Console (essential)
 - Google PageSpeed Insights
 - Bing Webmaster Tools
-- Rich Results Test
+- Rich Results Test (**use this for schema validation — it renders JavaScript**)
 - Mobile-Friendly Test
 - Schema Validator
+
+> **Note on schema detection:** `web_fetch` strips `<script>` tags (including JSON-LD) and cannot detect JS-injected schema. Use the browser tool, Rich Results Test, or Screaming Frog instead — they render JavaScript and capture dynamically-injected markup. See the Schema Markup Detection Limitation section above.
 
 **Paid Tools** (if available)
 - Screaming Frog
@@ -388,7 +404,9 @@ Same format as above
 
 ## Related Skills
 
+- **ai-seo**: For optimizing content for AI search engines (AEO, GEO, LLMO)
 - **programmatic-seo**: For building SEO pages at scale
+- **site-architecture**: For page hierarchy, navigation design, and URL structure
 - **schema-markup**: For implementing structured data
 - **page-cro**: For optimizing pages for conversion (not just ranking)
 - **analytics-tracking**: For measuring SEO performance

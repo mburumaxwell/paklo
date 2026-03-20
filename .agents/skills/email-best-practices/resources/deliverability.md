@@ -105,11 +105,15 @@ Learn more: https://resend.com/docs/knowledge-base/warming-up
 
 **Emails going to spam?** Check in order:
 1. Authentication (SPF, DKIM, DMARC)
-2. Sender reputation (blacklists, complaint rates)
-3. Content
-4. Sending patterns (sudden volume spikes)
+2. List-Unsubscribe header — required by Gmail/Yahoo since Feb 2024 (see [Compliance](./compliance.md))
+3. Sender reputation (blacklists, complaint rates)
+4. Content
+5. Sending patterns (sudden volume spikes)
 
-**Diagnostic tools:** [Google Postmaster Tools](https://postmaster.google.com)
+**Diagnostic tools:**
+- [Google Postmaster Tools](https://postmaster.google.com) - Domain reputation and spam rates
+- [mail-tester.com](https://www.mail-tester.com) - Send a test email, get deliverability score
+- [MXToolbox](https://mxtoolbox.com/blacklists.aspx) - Check blacklist status
 
 ## Related
 

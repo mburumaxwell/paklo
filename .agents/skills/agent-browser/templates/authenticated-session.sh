@@ -3,6 +3,11 @@
 # Purpose: Login once, save state, reuse for subsequent runs
 # Usage: ./authenticated-session.sh <login-url> [state-file]
 #
+# RECOMMENDED: Use the auth vault instead of this template:
+#   echo "<pass>" | agent-browser auth save myapp --url <login-url> --username <user> --password-stdin
+#   agent-browser auth login myapp
+# The auth vault stores credentials securely and the LLM never sees passwords.
+#
 # Environment variables:
 #   APP_USERNAME - Login username/email
 #   APP_PASSWORD - Login password
@@ -29,17 +34,20 @@ echo "Authentication workflow: $LOGIN_URL"
 # ================================================================
 if [[ -f "$STATE_FILE" ]]; then
     echo "Loading saved state from $STATE_FILE..."
-    agent-browser state load "$STATE_FILE"
-    agent-browser open "$LOGIN_URL"
-    agent-browser wait --load networkidle
+    if agent-browser --state "$STATE_FILE" open "$LOGIN_URL" 2>/dev/null; then
+        agent-browser wait --load networkidle
 
-    CURRENT_URL=$(agent-browser get url)
-    if [[ "$CURRENT_URL" != *"login"* ]] && [[ "$CURRENT_URL" != *"signin"* ]]; then
-        echo "Session restored successfully"
-        agent-browser snapshot -i
-        exit 0
+        CURRENT_URL=$(agent-browser get url)
+        if [[ "$CURRENT_URL" != *"login"* ]] && [[ "$CURRENT_URL" != *"signin"* ]]; then
+            echo "Session restored successfully"
+            agent-browser snapshot -i
+            exit 0
+        fi
+        echo "Session expired, performing fresh login..."
+        agent-browser close 2>/dev/null || true
+    else
+        echo "Failed to load state, re-authenticating..."
     fi
-    echo "Session expired, performing fresh login..."
     rm -f "$STATE_FILE"
 fi
 

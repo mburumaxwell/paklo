@@ -27,7 +27,7 @@ Always validate server-side—client-side can be bypassed.
 - Domain has MX records
 - Optionally: disposable email detection
 
-Recommended tools: https://resend.com/blog/best-email-verification-apis 
+Recommended tools: https://resend.com/blog/best-email-verification-apis
 
 ## Double opt-in
 
@@ -113,6 +113,7 @@ Confirms address belongs to user and is deliverable.
 - Expiration time
 - Resend option
 - "I didn't request this" notice
+- Don't include OTP/2FA codes in subject line or preview text as it discourages opens
 
 **Design:**
 - Mobile-friendly

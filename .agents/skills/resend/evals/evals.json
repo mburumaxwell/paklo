@@ -1,0 +1,419 @@
+{
+  "skill_name": "resend",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to set up a system where customers email support@acme.com and get an automatic reply acknowledging their message. How should I set this up with Resend?",
+      "expected_output": "Agent navigates to BOTH receiving.md (to receive emails) AND sending/overview.md (to send auto-reply). Should set up inbound first, then sending.",
+      "files": [],
+      "expectations": [
+        "References both receiving and sending references",
+        "Specifies inbound/receiving setup before sending setup",
+        "Does not route to only one reference"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I want to build a system that receives customer emails, automatically extracts invoice numbers from the body, looks up the order in our database, and updates the status. It should also auto-reply with the current order status. What references do I need?",
+      "expected_output": "Acknowledges ambiguity — could be rule-based parsing or AI-driven. Either asks whether this is rule-based or AI, or flags that agent-email-inbox skill is needed if AI is involved.",
+      "files": [],
+      "expectations": [
+        "Acknowledges ambiguity between rule-based and AI-driven processing",
+        "Mentions agent-email-inbox skill or security implications if AI is involved",
+        "Does not confidently route to a single reference without caveats"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I need to configure my domain for Resend. How do I do that?",
+      "expected_output": "Clarifies whether user needs sending domain (DNS/SPF/DKIM/DMARC) or receiving domain (MX records), since setup differs.",
+      "files": [],
+      "expectations": [
+        "Asks for clarification or explains that domain setup differs between sending and receiving",
+        "Does not assume sending or receiving without asking"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I need to set up webhooks for Resend. Can you help?",
+      "expected_output": "Clarifies the use case — delivery status webhooks vs received email webhooks vs agent inbox webhooks.",
+      "files": [],
+      "expectations": [
+        "Asks for clarification about which type of webhook the user needs",
+        "Mentions at least two types: delivery status events and received email events",
+        "Does not assume one type of webhook without asking"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "When someone emails helpdesk@myapp.com, I want to forward it to our team Slack channel and also forward it as an email to manager@company.com with any attachments. Which Resend references do I need?",
+      "expected_output": "Both receiving.md (to receive the email) and sending/overview.md (to forward as email). Notes that forwarding with attachments requires single sends, not batch.",
+      "files": [],
+      "expectations": [
+        "References both receiving and sending",
+        "Notes that attachments require single sends (batch doesn't support attachments)",
+        "Identifies that receiving the email is a prerequisite to forwarding it"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Customers will email returns@shop.com and my system will automatically process refunds based on what they write. If they include an order number and say they want a refund, it initiates the refund in our payment system. What do you recommend?",
+      "expected_output": "Flags security concerns — untrusted external senders triggering financial actions. Recommends agent-email-inbox skill or at minimum highlights the risk.",
+      "files": [],
+      "expectations": [
+        "Flags security risk of untrusted input triggering financial actions",
+        "Recommends agent-email-inbox skill or highlights need for security measures",
+        "Does not treat this as simple email receiving plus database lookup"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "I want to send a monthly newsletter to my 10,000 subscribers with unsubscribe links and engagement tracking using Resend.",
+      "expected_output": "Notes this is a marketing/broadcast use case, not transactional sending. Recommends Resend Broadcasts.",
+      "files": [],
+      "expectations": [
+        "Identifies this as a marketing/broadcast use case",
+        "Mentions Resend Broadcasts as the appropriate feature",
+        "Does not suggest using batch sending for 10,000 newsletter emails"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "I need to send a welcome email when a user signs up. How do I do this with Resend?",
+      "expected_output": "Simple transactional send. Uses quick send example or navigates to sending/overview.md directly.",
+      "files": [],
+      "expectations": [
+        "Provides a straightforward single email send approach",
+        "Does not over-navigate to multiple references",
+        "Does not suggest batch sending or agent-email-inbox"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "I'm building a Node.js service. I need to send emails for these cases:\n\nCase A: User resets their password — send a reset link email with a PDF attachment of their account activity.\nCase B: 75 users just completed onboarding — send each a personalized welcome email.\nCase C: Send a single order confirmation to a customer, scheduled for 9am tomorrow.\nCase D: Send 2 emails — one receipt with a PDF attachment, one shipping notification without attachments. Both to the same customer.\n\nFor each case, which endpoint should I use (single or batch) and why?",
+      "expected_output": "Case A: Single (attachments not supported in batch). Case B: Batch (multiple emails, no attachments, under 100). Case C: Single (scheduling not supported in batch). Case D: Two single sends (attachment email can't be batched).",
+      "files": [],
+      "expectations": [
+        "Case A uses single send because batch doesn't support attachments",
+        "Case B uses batch send",
+        "Case C uses single send because batch doesn't support scheduling",
+        "Case D uses two single sends or explains attachment email can't be batched"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Write a Node.js function that sends a welcome email to a new user. The function may be called multiple times due to retry logic in our queue. User ID: usr_abc123. Include proper idempotency handling.",
+      "expected_output": "Idempotency key based on event type + entity ID (e.g., welcome-email/usr_abc123), passed as second argument to resend.emails.send().",
+      "files": [],
+      "expectations": [
+        "Uses a semantic idempotency key that includes the user ID",
+        "Does not use a random/UUID-based key",
+        "Passes the idempotency key correctly (not inside the email payload)"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "I sent a welcome email with idempotency key 'welcome-email/usr_abc123'. Now marketing wants to A/B test: send the SAME user a slightly different welcome email (different subject line) using the same key. What happens? What should I do?",
+      "expected_output": "Same key + different payload = 409 error. Must use a new key for the variant.",
+      "files": [],
+      "expectations": [
+        "Identifies that same key with different payload causes a 409 error",
+        "Recommends using a new/different key for the variant",
+        "Does not say it will overwrite the first email"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "A teammate wrote this Node.js code. What's wrong with it? Fix it and add proper error handling for 422 validation errors, 429 rate limits, and 500 server errors.\n\ntry {\n  const result = await resend.emails.send({\n    from: 'Acme <hi@acme.com>',\n    to: ['user@example.com'],\n    subject: 'Hello',\n    html: '<p>Hi</p>',\n  });\n  console.log('Sent:', result.id);\n} catch (error) {\n  await retry();\n}",
+      "expected_output": "Resend Node.js SDK does NOT throw exceptions — returns { data, error }. Must destructure and check error explicitly. 422: don't retry. 429/500: retry with exponential backoff.",
+      "files": [],
+      "expectations": [
+        "Identifies that the Resend SDK returns { data, error } instead of throwing",
+        "Fixes the code to destructure { data, error } and check error explicitly",
+        "Does not retry 422 validation errors",
+        "Uses exponential backoff for 429 and 500 errors"
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "I need to send personalized shipping notifications to 350 customers. Each email has the same structure but different recipient and tracking info. Write the Node.js implementation.",
+      "expected_output": "Chunks into batches of 100. Unique idempotency key per chunk. Parallel sending. Per-chunk error handling.",
+      "files": [],
+      "expectations": [
+        "Chunks into batches of 100 or fewer",
+        "Uses unique idempotency keys per chunk",
+        "Does not try to send all 350 in one batch call",
+        "Does not send 350 individual single emails"
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "I just verified a brand-new domain (registered yesterday) on Resend. My app just launched and 5,000 users signed up on day one. I need to send each a welcome email. What should I know before sending all 5,000 today?",
+      "expected_output": "New domains must warm up gradually — sending 5,000 on day 1 triggers spam filters. Day 1 max is ~150 emails. Spread over ~7 days.",
+      "files": [],
+      "expectations": [
+        "Warns about domain warm-up requirements for new domains",
+        "Mentions that sending 5,000 on day 1 will cause deliverability problems",
+        "Suggests spreading sends over multiple days"
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "I'm building a demo for my manager in 30 minutes. I need to test that emails send correctly. My RESEND_API_KEY is set up. What email address should I send test emails to?\n\nOptions:\nA) test@gmail.com\nB) delivered@resend.dev\nC) my-manager@company.com\nD) fake-user-123@outlook.com",
+      "expected_output": "B — delivered@resend.dev. Explains that A and D are dangerous because fake addresses at real providers cause bounces and reputation damage.",
+      "files": [],
+      "expectations": [
+        "Recommends delivered@resend.dev for testing",
+        "Explains why sending to fake addresses at real providers is dangerous",
+        "Does not recommend test@gmail.com or fake-user-123@outlook.com"
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "I'm sending two types of emails from acme.com: password resets (tracking should be OFF) and marketing newsletters (tracking should be ON). How do I configure click tracking to be enabled for newsletters but disabled for password resets?",
+      "expected_output": "Tracking is configured at domain level in Resend dashboard, not per-email. Solution: use separate subdomains.",
+      "files": [],
+      "expectations": [
+        "Explains that tracking is configured at the domain level, not per-email",
+        "Does not suggest passing a tracking parameter in the API call",
+        "Recommends using separate subdomains for different tracking needs"
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "A user signed up with typo@gmial.com (typo). The first welcome email hard bounced. The user contacts support, fixes their email to typo@gmail.com, and asks us to resend the welcome email. But they also want us to try typo@gmial.com again 'just in case.' What happens when we try to send to typo@gmial.com again?",
+      "expected_output": "Resend automatically adds hard-bounced addresses to a suppression list. Sending to typo@gmial.com will be silently suppressed. The email.suppressed webhook event fires.",
+      "files": [],
+      "expectations": [
+        "Mentions Resend's automatic suppression list for hard-bounced addresses",
+        "Explains that the send will be suppressed, not bounced again",
+        "Mentions the email.suppressed webhook event"
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "I'm using a Resend template (ID: tmpl_order_confirm) with variables USER_NAME, ORDER_TOTAL, DELIVERY_DATE defined in the editor. Find all the bugs in this code:\n\nconst { data, error } = await resend.emails.send({\n  from: 'Acme <orders@acme.com>',\n  to: ['customer@example.com'],\n  subject: 'Order Confirmation',\n  html: '<p>Fallback content</p>',\n  template: {\n    id: 'tmpl_order_confirm',\n    variables: {\n      user_name: 'Alice',\n      order_total: '$99',\n      delivery_date: 'Feb 15',\n    },\n  },\n});",
+      "expected_output": "Bugs: 1) Variable name case mismatch (user_name vs USER_NAME). 2) html and template are mutually exclusive. 3) No idempotency key.",
+      "files": [],
+      "expectations": [
+        "Identifies variable name case mismatch (lowercase vs UPPERCASE)",
+        "Identifies that html and template are mutually exclusive",
+        "Identifies missing idempotency key"
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "I have an array of 50 email objects to send in a batch. One of them has a missing subject field. What happens if I send this batch? What should I do before sending?",
+      "expected_output": "The entire batch fails (atomic). Must validate all emails before sending.",
+      "files": [],
+      "expectations": [
+        "Explains that the entire batch fails atomically (one invalid = all fail)",
+        "Does not say only the invalid email fails",
+        "Recommends pre-validating all emails before sending"
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "I receive this webhook payload from Resend:\n\n{\n  \"type\": \"email.received\",\n  \"created_at\": \"2024-02-22T23:41:12.126Z\",\n  \"data\": {\n    \"email_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    \"from\": \"customer@example.com\",\n    \"to\": [\"support@acme.com\"],\n    \"subject\": \"I need help with my order\",\n    \"attachments\": [{\"id\": \"att_receipt123\", \"filename\": \"receipt.pdf\", \"content_type\": \"application/pdf\"}]\n  }\n}\n\nWrite the handler to extract the email body text and download the attachment.",
+      "expected_output": "Does NOT try to read body from webhook payload. Calls resend.emails.receiving.get() for body. Calls attachments.list() for download URLs. Notes download_url expires after 1 hour.",
+      "files": [],
+      "expectations": [
+        "Does not try to access body or html from the webhook payload",
+        "Calls a separate API to get the email body content",
+        "Handles attachment download via separate API call",
+        "Mentions that download URLs expire after 1 hour"
+      ]
+    },
+    {
+      "id": 21,
+      "prompt": "My company uses Google Workspace for email at acme.com. All employees have @acme.com addresses. I want Resend to receive emails at support addresses for my app. How do I configure the domain?",
+      "expected_output": "Recommends a subdomain (e.g., support.acme.com or inbound.acme.com). Explains that setting MX on root domain would break Google Workspace.",
+      "files": [],
+      "expectations": [
+        "Recommends using a subdomain for Resend inbound",
+        "Warns that setting MX records on root domain would break existing email (Google Workspace)",
+        "Shows MX record example with correct priority"
+      ]
+    },
+    {
+      "id": 22,
+      "prompt": "Write a Next.js API route that handles the email.received webhook from Resend. Keep it minimal but production-ready.",
+      "expected_output": "Reads body as raw text (not parsed JSON). Verifies webhook signature using svix headers. Returns 200 on success, 400 on verification failure.",
+      "files": [],
+      "expectations": [
+        "Reads body as raw text before verification (not req.json())",
+        "Verifies webhook signature using svix headers",
+        "Returns appropriate HTTP status codes (200 success, 400 bad signature)",
+        "Uses RESEND_WEBHOOK_SECRET for verification"
+      ]
+    },
+    {
+      "id": 23,
+      "prompt": "My webhook handler receives an email with 3 large attachments. To avoid blocking the webhook response, I store the email_id and attachment download_urls in a job queue. A background worker picks up the job 90 minutes later and tries to download the attachments. All downloads fail. What went wrong? How do I fix it?",
+      "expected_output": "download_url expires after 1 hour. Fix: store only email_id, fetch fresh URLs at processing time.",
+      "files": [],
+      "expectations": [
+        "Identifies that download URLs expire after 1 hour",
+        "Recommends storing only email_id, not the download URLs",
+        "Suggests fetching fresh URLs at processing time via the API"
+      ]
+    },
+    {
+      "id": 24,
+      "prompt": "Build a Node.js email forwarding handler: when an email arrives at support@acme.com, forward it to team@acme.com with all attachments intact.",
+      "expected_output": "Complete flow: verify webhook -> get email content via API -> list and download attachments -> convert to base64 -> forward via single send (not batch).",
+      "files": [],
+      "expectations": [
+        "Includes webhook signature verification",
+        "Gets email content via separate API call (not from webhook payload)",
+        "Downloads attachments and converts to base64 for re-sending",
+        "Uses single send, not batch (batch doesn't support attachments)"
+      ]
+    },
+    {
+      "id": 25,
+      "prompt": "My domain has these MX records:\n\nacme.com  MX  10  aspmx.l.google.com\nacme.com  MX  20  inbound.resend.com\n\nI added Resend's MX record but emails aren't arriving at Resend. They all go to Google Workspace. What's wrong? How do I fix it?",
+      "expected_output": "Lowest priority number wins (10 < 20), so Google's MX takes all traffic. Real fix: use a subdomain for Resend inbound.",
+      "files": [],
+      "expectations": [
+        "Explains that lowest MX priority number takes precedence",
+        "Warns that changing root domain MX priority would break Google Workspace",
+        "Recommends using a subdomain for Resend inbound"
+      ]
+    },
+    {
+      "id": 26,
+      "prompt": "My domain receives emails at support@, billing@, and feedback@ addresses. All arrive at the same webhook. Handle these cases:\n\nCase A: Email sent TO support@inbound.acme.com\nCase B: Email sent TO billing@inbound.acme.com AND CC'd to support@inbound.acme.com\nCase C: Email sent TO unknown-address@inbound.acme.com\n\nWrite the routing logic.",
+      "expected_output": "Routes based on event.data.to array. Handles multiple recipients and CC. Has catch-all for unknown addresses.",
+      "files": [],
+      "expectations": [
+        "Routes based on the to array from the webhook payload",
+        "Handles the case where both to and cc contain known addresses",
+        "Includes a catch-all or default handler for unknown addresses"
+      ]
+    },
+    {
+      "id": 27,
+      "prompt": "My webhook handler successfully processes an email and creates a support ticket, but due to a network timeout Resend doesn't receive the 200 response and retries. My handler processes the same email again, creating a duplicate ticket. How do I prevent this?",
+      "expected_output": "Use event.data.email_id as an idempotency check. Track processed email_ids and skip duplicates.",
+      "files": [],
+      "expectations": [
+        "Uses email_id as an idempotency key to detect duplicates",
+        "Checks if email_id has already been processed before taking action",
+        "Stores processed email_ids in a database or cache"
+      ]
+    },
+    {
+      "id": 28,
+      "prompt": "I'm a developer who just wants to test receiving emails with Resend as quickly as possible. No DNS access, no custom domain yet. What's the fastest path?",
+      "expected_output": "Use Resend's .resend.app managed domain. No DNS configuration needed.",
+      "files": [],
+      "expectations": [
+        "Recommends the .resend.app managed domain for quick testing",
+        "Does not immediately suggest custom domain setup with MX records",
+        "Makes clear that no DNS configuration is needed"
+      ]
+    },
+    {
+      "id": 29,
+      "prompt": "I'm creating a Resend email template. The template should say: 'Hi Sarah, your order #1234 has shipped!' The variable parts are the name and order number. Write the HTML content with the correct variable syntax.",
+      "expected_output": "Uses triple mustache syntax: {{{CUSTOMER_NAME}}} and {{{ORDER_NUMBER}}}. NOT double mustache.",
+      "files": [],
+      "expectations": [
+        "Uses triple mustache syntax {{{VAR_NAME}}}",
+        "Does not use double mustache {{VAR_NAME}} or other syntax",
+        "Variable names follow capitalized convention"
+      ]
+    },
+    {
+      "id": 30,
+      "prompt": "I created a template via the API and have its ID: tmpl_abc123. I try to send an email with it immediately but it fails. What's the most likely cause?",
+      "expected_output": "Template was created but not published. Must publish before sending.",
+      "files": [],
+      "expectations": [
+        "Identifies that the template needs to be published before it can be used for sending",
+        "Mentions the draft/published distinction",
+        "Does not blame API key or wrong template ID as the primary cause"
+      ]
+    },
+    {
+      "id": 31,
+      "prompt": "Find all the bugs in this send call:\n\nconst { data, error } = await resend.emails.send({\n  from: 'Acme <hello@acme.com>',\n  to: ['user@example.com'],\n  subject: 'Welcome!',\n  html: '<p>Fallback HTML in case template fails</p>',\n  react: <WelcomeEmail />,\n  template: {\n    id: 'tmpl_welcome',\n    variables: { USER_NAME: 'Alice' }\n  }\n});",
+      "expected_output": "Bugs: html+template mutually exclusive, react+template mutually exclusive, html+react also mutually exclusive.",
+      "files": [],
+      "expectations": [
+        "Identifies that html and template are mutually exclusive",
+        "Identifies that react and template are mutually exclusive",
+        "Identifies that html and react are also mutually exclusive"
+      ]
+    },
+    {
+      "id": 32,
+      "prompt": "I'm building a template for a user profile email. I want to include the user's first name, last name, email, and a custom field called 'plan_tier'. I define these variables: FIRST_NAME, LAST_NAME, EMAIL, PLAN_TIER. Are there any problems with this variable list?",
+      "expected_output": "FIRST_NAME, LAST_NAME, and EMAIL are reserved variable names. Must rename them.",
+      "files": [],
+      "expectations": [
+        "Identifies FIRST_NAME, LAST_NAME, and EMAIL as reserved variable names",
+        "Explains that reserved variables are auto-populated from contact data",
+        "Suggests renaming to avoid conflicts (e.g., USER_FIRST_NAME)"
+      ]
+    },
+    {
+      "id": 33,
+      "prompt": "I have a template with ORDER_ID (no fallback) and CUSTOMER_NAME (fallback: 'Valued Customer'). I send an email without providing ORDER_ID, only CUSTOMER_NAME: 'Alice'. What happens?",
+      "expected_output": "The send fails — ORDER_ID has no fallback and wasn't provided. Variables without fallback values are required.",
+      "files": [],
+      "expectations": [
+        "Explains that the send fails because ORDER_ID has no fallback and was not provided",
+        "Distinguishes between variables with and without fallback values",
+        "Does not say the variable is just blank or omitted in the email"
+      ]
+    },
+    {
+      "id": 34,
+      "prompt": "I'm building a rich order confirmation template with 60 variables — 20 line items each with NAME, QTY, PRICE, plus various other fields. This won't work. Why not, and what should I do instead?",
+      "expected_output": "Resend has a 50-variable limit. Pre-render line items server-side into HTML and use fewer variables.",
+      "files": [],
+      "expectations": [
+        "Identifies the 50-variable per template limit",
+        "Suggests pre-rendering dynamic content server-side",
+        "Suggests alternatives like using html directly for highly dynamic content"
+      ]
+    },
+    {
+      "id": 35,
+      "prompt": "Walk me through creating, updating, publishing, and deleting a Resend template in Node.js. The template is named 'order-confirmation' with an ORDER_ID variable.",
+      "expected_output": "Complete CRUD workflow with correct SDK methods: create, update, publish, remove.",
+      "files": [],
+      "expectations": [
+        "Shows correct SDK method for creating a template",
+        "Shows correct SDK method for updating a template",
+        "Includes the publish step before the template can be used",
+        "Shows correct SDK method for deleting a template"
+      ]
+    },
+    {
+      "id": 36,
+      "prompt": "My team wants to reference templates by a human-readable name instead of auto-generated IDs like 'tmpl_a1b2c3'. How do I set this up with Resend?",
+      "expected_output": "Use the alias field. Set during create or update, usable anywhere a template ID is used.",
+      "files": [],
+      "expectations": [
+        "Mentions the alias feature for templates",
+        "Explains that aliases can be used anywhere template IDs are used",
+        "Does not confuse alias with template name (name is display-only)"
+      ]
+    },
+    {
+      "id": 37,
+      "prompt": "I have 200 templates in my Resend account. Write code to fetch all of them in Node.js.",
+      "expected_output": "Uses cursor-based pagination with has_more and last item's ID as 'after' parameter. Max 100 per page.",
+      "files": [],
+      "expectations": [
+        "Uses cursor-based pagination (not offset-based)",
+        "Checks has_more to determine if there are more pages",
+        "Uses the last item's ID as the after parameter",
+        "Limits to 100 per page"
+      ]
+    }
+  ]
+}

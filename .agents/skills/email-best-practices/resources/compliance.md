@@ -64,6 +64,24 @@ Legal requirements for email by jurisdiction. **Not legal advice—consult an at
 
 **Universal best practices:** Prominent link, one-click when possible, no login required, free, confirm action.
 
+### List-Unsubscribe Header (Required for Bulk Senders)
+
+Gmail, Yahoo, and Microsoft require `List-Unsubscribe` headers. Without them, bulk emails may be rejected or spam-filtered.
+
+**Required headers:**
+
+```typescript
+headers: {
+  'List-Unsubscribe': '<https://example.com/unsubscribe>',
+  'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+}
+```
+
+**Your unsubscribe endpoint must:**
+- Accept POST requests — return `200` or `202` with a blank page
+- Display standard unsubscribe page for GET requests
+- Stop sending within 48 hours of the request
+
 ## Managing preferences vs Unsubscribe from all
 
 Most legistlations require a one-click unsubscribe. `Managing preferences` is a nice-to-have and can lead to lower unsubscribe rate but doesn't replace `Unsubscribe`. If possible, offer both.
