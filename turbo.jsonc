@@ -42,7 +42,7 @@
       "cache": false,
     },
     "dev": {
-      "dependsOn": ["codegen"],
+      "dependsOn": ["^build", "codegen"],
       "cache": false,
       "persistent": true,
       "interruptible": true,
