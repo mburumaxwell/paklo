@@ -7,13 +7,21 @@ Thank you for contributing to Paklo!
 ## Quick Start
 
 1. Fork the repository
-2. Run `pnpm install`
-3. Make your changes
-4. Run `pnpm build`
-5. Run quality checks:
+2. Clone your fork and move into the project directory
+3. Use the Node version from `.nvmrc`, then install dependencies
+   ```bash
+   git clone https://github.com/<your-username>/paklo.git
+   cd paklo
+   nvm use
+   corepack enable
+   pnpm install
+   ```
+4. Make your changes
+5. Run `pnpm build`
+6. Run quality checks:
    ```bash
    pnpm lint
    pnpm test
    pnpm format:check
    ```
-6. Submit a pull request
+7. Submit a pull request

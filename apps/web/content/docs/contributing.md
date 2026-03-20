@@ -15,16 +15,22 @@ description: Guidelines for developing and submitting changes.
 
 ## Development Setup
 
-- Install [Node.js](https://nodejs.org) 24 or later
+- Use the Node version from `.nvmrc`
 - Install [pnpm](https://pnpm.io)
 - Install [Docker](https://www.docker.com) (for CLI and extension development)
+
+### Local setup
+
+Clone your fork first, then use the Node version from `.nvmrc` before installing dependencies or running scripts:
 
 ```bash
 # Clone your fork
 git clone https://github.com/mburumaxwell/paklo.git
 cd paklo
 
-# Install dependencies
+# Use the project Node version and install dependencies
+nvm use
+corepack enable
 pnpm install
 
 # Build all packages
