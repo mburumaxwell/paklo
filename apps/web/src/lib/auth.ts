@@ -20,9 +20,6 @@ import { RegionCodeSchema } from '@/lib/regions';
 import { config } from '@/site-config';
 import app from '../../package.json';
 
-const adminUserIds = process.env.BETTER_AUTH_ADMIN_USER_IDS?.split(',') ?? [];
-const adminEmails = process.env.BETTER_AUTH_ADMIN_EMAILS?.split(',') ?? [];
-
 export const auth = betterAuth({
   baseURL: config.siteUrl,
   database: prismaAdapter(prismaClient, { provider: 'postgresql' }),
@@ -71,7 +68,7 @@ export const auth = betterAuth({
     changeEmail: { enabled: false },
   },
   plugins: [
-    admin({ adminUserIds }),
+    admin({}),
     organization({
       schema: {
         organization: {
@@ -142,10 +139,6 @@ export { toNextJsHandler } from 'better-auth/next-js';
 export { APIError as BetterAuthApiError };
 
 export function isPakloAdmin(session: Session) {
-  return (
-    session.user.role === 'admin' ||
-    adminUserIds.includes(session.user.id) ||
-    // also allow by email for flexibility
-    adminEmails.includes(session.user.email)
-  );
+  // TODO: move this to permissions system
+  return session.user.role === 'admin';
 }
