@@ -60,6 +60,7 @@ export const DependabotGroupSchema = z.object({
     .optional(),
   'applies-to': z.enum(['version-updates', 'security-updates']).optional(),
   'dependency-type': z.enum(['development', 'production']).optional(),
+  'group-by': z.enum(['dependency-name']).optional(),
   'patterns': z.string().array().optional(),
   'exclude-patterns': z.string().array().optional(),
   'update-types': z.enum(['major', 'minor', 'patch']).array().optional(),

@@ -11,6 +11,8 @@ export function getBranchNameForUpdate({
   packageEcosystem,
   targetBranchName,
   directory,
+  directories,
+  changedFiles,
   dependencyGroupName,
   dependencies,
   separator = '/',
@@ -18,6 +20,8 @@ export function getBranchNameForUpdate({
   packageEcosystem: PackageEcosystem;
   targetBranchName?: string;
   directory?: string;
+  directories?: string[];
+  changedFiles?: { path: string }[];
   dependencyGroupName?: string | null;
   dependencies: DependabotExistingPrDependency[];
   separator?: string;
@@ -25,6 +29,16 @@ export function getBranchNameForUpdate({
   // Based on dependabot-core implementation:
   // https://github.com/dependabot/dependabot-core/blob/main/common/lib/dependabot/pull_request_creator/branch_namer/solo_strategy.rb
   // https://github.com/dependabot/dependabot-core/blob/main/common/lib/dependabot/pull_request_creator/branch_namer/dependency_group_strategy.rb
+  //
+  // For grouped updates across multiple directories we intentionally omit the directory segment.
+  // Those PRs span multiple manifests, so deriving the branch name from the first changed file
+  // would make the branch unstable and arbitrarily tied to one directory.
+  const resolvedDirectory =
+    directory ||
+    (dependencyGroupName && directories && directories.length > 1
+      ? undefined
+      : directories?.find((dir) => changedFiles?.[0]?.path?.startsWith(dir)));
+
   let branchName: string;
   const branchNameMightBeTooLong = dependencyGroupName || dependencies.length > 1;
   if (branchNameMightBeTooLong) {
@@ -54,8 +68,8 @@ export function getBranchNameForUpdate({
       packageEcosystem,
       targetBranchName,
       // normalize directory to remove leading/trailing slashes and replace remaining ones with the separator
-      directory
-        ? directory
+      resolvedDirectory
+        ? resolvedDirectory
             .split('/')
             .filter((part) => part.length > 0)
             .join(separator)
