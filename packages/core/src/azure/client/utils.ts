@@ -1,12 +1,9 @@
 import * as path from 'node:path';
 
-import { z } from 'zod';
-
 import {
   type DependabotCreatePullRequest,
   type DependabotExistingGroupPr,
   type DependabotExistingPr,
-  DependabotExistingPrDependencySchema,
   type DependabotPersistedPr,
   DependabotPersistedPrSchema,
   type DependabotUpdatePullRequest,
@@ -27,21 +24,11 @@ export function buildPullRequestProperties(packageManager: string, dependencies:
 export function parsePullRequestProps(
   pr: AzdoPrExtractedWithProperties,
 ): DependabotExistingPr | DependabotExistingGroupPr {
-  // TODO: remove legacy format support on or after 2026-03-26 (it would be 90 days later)
-  const WithLegacySchema = z.union([
-    DependabotPersistedPrSchema,
-    // legacy format to be removed in the future
-    DependabotExistingPrDependencySchema.array(),
-  ]);
-
-  const parsed = WithLegacySchema.parse(
+  const parsed = DependabotPersistedPrSchema.parse(
     JSON.parse(pr.properties!.find((p) => p.name === PR_PROPERTY_DEPENDABOT_DEPENDENCIES)!.value),
   );
-  if (Array.isArray(parsed)) {
-    return { 'pr-number': pr.pullRequestId, 'dependencies': parsed };
-  } else {
-    return { 'pr-number': pr.pullRequestId, ...parsed };
-  }
+
+  return { 'pr-number': pr.pullRequestId, ...parsed };
 }
 
 function filterPullRequestsByPackageManager(pr: AzdoPrExtractedWithProperties, packageManager: string) {
