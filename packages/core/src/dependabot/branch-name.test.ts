@@ -103,6 +103,31 @@ describe('getBranchNameForUpdate', () => {
 
     expect(result).toBe(`dependabot-npm-main-some-deep-path-express-4.18.2`);
   });
+
+  it('omits the directory for grouped updates across multiple directories', () => {
+    const result = getBranchNameForUpdate({
+      packageEcosystem: 'npm',
+      targetBranchName: 'main',
+      directories: ['/frontend', '/admin-panel', '/mobile-app'],
+      dependencyGroupName: 'monorepo-dependencies',
+      changedFiles: [{ path: '/admin-panel/package.json' }, { path: '/mobile-app/package.json' }],
+      dependencies: [{ 'dependency-name': 'lodash', 'dependency-version': '4.17.21' }],
+    });
+
+    expect(result).toMatch(/^dependabot\/npm\/main\/monorepo-dependencies-[a-f0-9]{10}$/);
+  });
+
+  it('uses the matching directory for non-grouped multi-directory updates', () => {
+    const result = getBranchNameForUpdate({
+      packageEcosystem: 'npm',
+      targetBranchName: 'main',
+      directories: ['/frontend', '/admin-panel', '/mobile-app'],
+      changedFiles: [{ path: '/mobile-app/package.json' }],
+      dependencies: [{ 'dependency-name': 'lodash', 'dependency-version': '4.17.21' }],
+    });
+
+    expect(result).toBe('dependabot/npm/main/mobile-app/lodash-4.17.21');
+  });
 });
 
 describe('sanitizeRef', () => {

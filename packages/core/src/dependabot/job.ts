@@ -72,6 +72,7 @@ export type DependabotGroupRuleJob = z.infer<typeof DependabotGroupRuleJobSchema
 export const DependabotGroupJobSchema = z.object({
   'name': z.string(),
   'applies-to': z.string().nullish(),
+  'group-by': z.enum(['dependency-name']).nullish(),
   'rules': DependabotGroupRuleJobSchema,
 });
 export type DependabotGroupJob = z.infer<typeof DependabotGroupJobSchema>;

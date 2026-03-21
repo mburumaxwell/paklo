@@ -106,7 +106,9 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
         const sourceBranch = getBranchNameForUpdate({
           packageEcosystem: update['package-ecosystem'],
           targetBranchName: targetBranch,
-          directory: update.directory || update.directories?.find((dir) => changedFiles[0]?.path?.startsWith(dir)),
+          directory: update.directory,
+          directories: update.directories,
+          changedFiles,
           dependencyGroupName: persisted['dependency-group-name'],
           dependencies: persisted.dependencies,
           separator: update['pull-request-branch-name']?.separator,
