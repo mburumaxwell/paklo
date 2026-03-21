@@ -71,64 +71,6 @@ describe('parsePullRequestProps', () => {
 
     expect(result).toEqual(expected);
   });
-
-  it('works for single dependency legacy format', () => {
-    const pr: AzdoPrExtractedWithProperties = {
-      pullRequestId: 123,
-      properties: [
-        { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: 'npm' },
-        {
-          name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
-          value: JSON.stringify([{ 'dependency-name': 'lodash', 'dependency-version': '4.17.21', 'directory': '/' }]),
-        },
-      ],
-    };
-
-    const result = parsePullRequestProps(pr);
-    const expected = {
-      'pr-number': 123,
-      'dependencies': [{ 'dependency-name': 'lodash', 'dependency-version': '4.17.21', 'directory': '/' }],
-    };
-
-    // Validate against the schema
-    DependabotPersistedPrSchema.parse(result);
-
-    expect(result).toEqual(expected);
-  });
-
-  it('works for group legacy format', () => {
-    const pr: AzdoPrExtractedWithProperties = {
-      pullRequestId: 123,
-      properties: [
-        { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: 'npm' },
-        {
-          name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
-          value: JSON.stringify({
-            'dependency-group-name': 'group-1',
-            'dependencies': [
-              { 'dependency-name': 'lodash', 'dependency-version': '4.17.21', 'directory': '/' },
-              { 'dependency-name': 'express', 'dependency-version': '4.17.1', 'directory': '/' },
-            ],
-          }),
-        },
-      ],
-    };
-
-    const result = parsePullRequestProps(pr);
-    const expected = {
-      'pr-number': 123,
-      'dependency-group-name': 'group-1',
-      'dependencies': [
-        { 'dependency-name': 'lodash', 'dependency-version': '4.17.21', 'directory': '/' },
-        { 'dependency-name': 'express', 'dependency-version': '4.17.1', 'directory': '/' },
-      ],
-    };
-
-    // Validate against the schema
-    DependabotPersistedPrSchema.parse(result);
-
-    expect(result).toEqual(expected);
-  });
 });
 
 describe('parsePullRequestProperties', () => {
@@ -160,7 +102,7 @@ describe('parsePullRequestProperties', () => {
           { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: 'npm_and_yarn' },
           {
             name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
-            value: JSON.stringify([{ 'dependency-name': 'express' }]),
+            value: JSON.stringify({ dependencies: [{ 'dependency-name': 'express' }] }),
           },
         ],
       },
@@ -196,7 +138,7 @@ describe('parsePullRequestProperties', () => {
 });
 
 describe('getPullRequestForDependencyNames', () => {
-  it('finds PR by matching dependency names for new format', () => {
+  it('finds PR by matching dependency names', () => {
     const prs: AzdoPrExtractedWithProperties[] = [
       {
         pullRequestId: 1,
@@ -224,26 +166,6 @@ describe('getPullRequestForDependencyNames', () => {
 
     expect(result).toBeDefined();
     expect(result!.pullRequestId).toBe(2);
-  });
-
-  it('finds PR by matching dependency names for legacy format', () => {
-    const prs: AzdoPrExtractedWithProperties[] = [
-      {
-        pullRequestId: 1,
-        properties: [
-          { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: 'npm_and_yarn' },
-          {
-            name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
-            value: JSON.stringify([{ 'dependency-name': 'lodash' }]),
-          },
-        ],
-      },
-    ];
-
-    const result = getPullRequestForDependencyNames(prs, 'npm_and_yarn', ['lodash']);
-
-    expect(result).toBeDefined();
-    expect(result!.pullRequestId).toBe(1);
   });
 
   it('finds PR with multiple dependencies', () => {
