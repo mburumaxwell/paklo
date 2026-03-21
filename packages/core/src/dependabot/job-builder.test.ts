@@ -219,6 +219,22 @@ describe('mapGroupsFromDependabotConfigToJobConfig', () => {
     ]);
   });
 
+  it('should use IDENTIFIER when present and fall back to the record key otherwise', () => {
+    const dependencyGroups: Record<string, DependabotGroup> = {
+      'prod-deps': {
+        IDENTIFIER: 'production-dependencies',
+        patterns: ['*'],
+      },
+      'dev-deps': {
+        patterns: ['dev-*'],
+      },
+    };
+
+    const result = mapGroupsFromDependabotConfigToJobConfig(dependencyGroups);
+
+    expect(result.map((g) => g.name)).toEqual(['production-dependencies', 'dev-deps']);
+  });
+
   it('should use pattern "*" if no patterns are provided', () => {
     const dependencyGroups: Record<string, DependabotGroup> = {
       group: {},

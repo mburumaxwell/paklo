@@ -304,7 +304,7 @@ export function mapGroupsFromDependabotConfigToJobConfig(
     .map((name) => {
       const group = dependencyGroups[name]!;
       return {
-        'name': name,
+        'name': group.IDENTIFIER ?? name,
         'applies-to': group['applies-to'],
         'group-by': group['group-by'],
         'rules': {
