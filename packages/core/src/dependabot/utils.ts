@@ -1,5 +1,11 @@
-import type { DependabotDependency, DependabotPersistedPr } from './job';
+import type { DependabotDependency, DependabotExistingPrDependency, DependabotPersistedPr } from './job';
 import type { DependabotClosePullRequest, DependabotCreatePullRequest } from './update';
+
+export function isDependencyRemoved(
+  dependency?: Pick<DependabotExistingPrDependency, 'removed' | 'dependency-removed'> | null,
+): boolean {
+  return dependency?.removed === true || dependency?.['dependency-removed'] === true;
+}
 
 export function normalizeFilePath(path: string): string {
   // Convert backslashes to forward slashes, convert './' => '/' and ensure the path starts with a forward slash if it doesn't already, this is how DevOps paths are formatted
@@ -191,6 +197,9 @@ export function shouldSupersede(oldPr: DependabotPersistedPr, newPr: DependabotP
     const oldDep = oldPr.dependencies.find((d) => d['dependency-name'] === dep);
     const newDep = newPr.dependencies.find((d) => d['dependency-name'] === dep);
     if (oldDep?.['dependency-version'] !== newDep?.['dependency-version']) {
+      return true;
+    }
+    if (isDependencyRemoved(oldDep) !== isDependencyRemoved(newDep)) {
       return true;
     }
   }

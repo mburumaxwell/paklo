@@ -2,6 +2,7 @@ import * as crypto from 'node:crypto';
 
 import type { PackageEcosystem } from './config';
 import type { DependabotExistingPrDependency } from './job';
+import { isDependencyRemoved } from './utils';
 
 export function getBranchNameForUpdate({
   packageEcosystem,
@@ -42,7 +43,11 @@ export function getBranchNameForUpdate({
     // e.g. dependabot/nuget/main/microsoft-3b49c54d9e
     const dependencyDigest = crypto
       .createHash('md5')
-      .update(dependencies.map((d) => `${d['dependency-name']}-${d['dependency-version']}`).join(','))
+      .update(
+        dependencies
+          .map((d) => `${d['dependency-name']}-${isDependencyRemoved(d) ? 'removed' : (d['dependency-version'] ?? '')}`)
+          .join(','),
+      )
       .digest('hex')
       .substring(0, 10);
     branchName = `${dependencyGroupName || 'multi'}-${dependencyDigest}`;
@@ -54,7 +59,7 @@ export function getBranchNameForUpdate({
       .join('-and-')
       .replace(/[:[]]/g, '-') // Replace `:` and `[]` with `-`
       .replace(/@/g, ''); // Remove `@`
-    const versionSuffix = dependencies[0]?.removed ? 'removed' : dependencies[0]?.['dependency-version'];
+    const versionSuffix = isDependencyRemoved(dependencies[0]) ? 'removed' : dependencies[0]?.['dependency-version'];
     branchName = `${dependencyNames}-${versionSuffix}`;
   }
 

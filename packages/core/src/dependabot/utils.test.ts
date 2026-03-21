@@ -242,6 +242,20 @@ describe('shouldSupersede', () => {
     expect(shouldSupersede(oldPr, newPr)).toBe(true);
   });
 
+  it('returns true when dependency-removed changes without a version change', () => {
+    const oldPr: DependabotPersistedPr = {
+      'dependency-group-name': null,
+      'dependencies': [{ 'dependency-name': 'node-fetch', 'dependency-version': null }],
+    };
+
+    const newPr: DependabotPersistedPr = {
+      'dependency-group-name': null,
+      'dependencies': [{ 'dependency-name': 'node-fetch', 'dependency-version': null, 'dependency-removed': true }],
+    };
+
+    expect(shouldSupersede(oldPr, newPr)).toBe(true);
+  });
+
   it('returns true when same group has version changes even with different dependency sets', () => {
     const oldPr: DependabotPersistedPr = {
       'dependency-group-name': 'production',

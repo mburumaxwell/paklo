@@ -23,6 +23,16 @@ describe('getBranchNameForUpdate', () => {
     expect(result).toBe('dependabot/npm/main/react-removed');
   });
 
+  it('treats dependency-removed as removed for branch naming', () => {
+    const result = getBranchNameForUpdate({
+      packageEcosystem: 'npm',
+      targetBranchName: 'main',
+      directory: '/',
+      dependencies: [{ 'dependency-name': 'react', 'dependency-removed': true }],
+    });
+    expect(result).toBe('dependabot/npm/main/react-removed');
+  });
+
   it('generates correct branch name for a grouped update (with group name)', () => {
     const result = getBranchNameForUpdate({
       packageEcosystem: 'nuget',
@@ -115,6 +125,26 @@ describe('getBranchNameForUpdate', () => {
     });
 
     expect(result).toMatch(/^dependabot\/npm\/main\/monorepo-dependencies-[a-f0-9]{10}$/);
+  });
+
+  it('changes the grouped dependency digest when dependency-removed is present', () => {
+    const existingResult = getBranchNameForUpdate({
+      packageEcosystem: 'npm',
+      targetBranchName: 'main',
+      directory: '/',
+      dependencyGroupName: 'production',
+      dependencies: [{ 'dependency-name': 'node-fetch', 'dependency-version': '3.3.2' }],
+    });
+
+    const removedResult = getBranchNameForUpdate({
+      packageEcosystem: 'npm',
+      targetBranchName: 'main',
+      directory: '/',
+      dependencyGroupName: 'production',
+      dependencies: [{ 'dependency-name': 'node-fetch', 'dependency-removed': true }],
+    });
+
+    expect(existingResult).not.toBe(removedResult);
   });
 
   it('uses the matching directory for non-grouped multi-directory updates', () => {
