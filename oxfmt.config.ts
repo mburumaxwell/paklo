@@ -28,7 +28,7 @@ export default defineConfig({
     'apps/web/src/app/globals.css',
 
     // special files
-    '.changeset/config.json',
+    '.changeset',
     '.vscode/settings.json',
     'extensions/azure/**/*.json',
     'packages/runner/docker/containers.json',
