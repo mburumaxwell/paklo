@@ -99,7 +99,7 @@ export function AppSidebar({ session, organizations, ...props }: AppSidebarProps
       ? ([
           {
             label: 'Admin',
-            items: [{ label: 'Usage Telemetry', href: '/dashboard/usage', icon: Combine }],
+            items: [{ label: 'Usage Telemetry', href: '/dashboard/admin/usage', icon: Combine }],
           },
         ] satisfies MenuGroup[])
       : []),

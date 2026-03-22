@@ -14,10 +14,10 @@ import { type SlimTelemetry, TelemetryDashboard } from './page.client';
 export const metadata: Metadata = {
   title: 'Usage Statistics',
   description: 'View usage statistics',
-  openGraph: { url: `/dashboard/usage` },
+  openGraph: { url: `/dashboard/admin/usage` },
 };
 
-export default async function Page(props: PageProps<'/dashboard/usage'>) {
+export default async function Page(props: PageProps<'/dashboard/admin/usage'>) {
   const headers = await requestHeaders();
   const session = await auth.api.getSession({ headers });
   if (!session) return unauthorized();
