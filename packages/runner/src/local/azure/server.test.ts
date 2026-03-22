@@ -187,7 +187,7 @@ describe('AzureLocalDependabotServer', () => {
         pullRequestId: 1,
         properties: [
           { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: packageManager },
-          { name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES, value: '[]' },
+          { name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES, value: JSON.stringify({ dependencies: [] }) },
         ],
       } as AzdoPrExtractedWithProperties);
 
@@ -305,7 +305,7 @@ describe('AzureLocalDependabotServer', () => {
           { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: 'npm_and_yarn' },
           {
             name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
-            value: JSON.stringify([{ 'dependency-name': 'dependency1' }]),
+            value: JSON.stringify({ dependencies: [{ 'dependency-name': 'dependency1' }] }),
           },
         ],
       });
@@ -379,7 +379,7 @@ describe('AzureLocalDependabotServer', () => {
           { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: 'npm_and_yarn' },
           {
             name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
-            value: JSON.stringify([{ 'dependency-name': 'dependency1' }]),
+            value: JSON.stringify({ dependencies: [{ 'dependency-name': 'dependency1' }] }),
           },
         ],
       });

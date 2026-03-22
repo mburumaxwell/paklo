@@ -258,7 +258,7 @@ describe('AzureLocalJobsRunner', () => {
             },
             {
               name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
-              value: JSON.stringify([{ 'dependency-name': 'dependency1' }]),
+              value: JSON.stringify({ dependencies: [{ 'dependency-name': 'dependency1' }] }),
             },
           ],
         },
@@ -331,7 +331,7 @@ describe('AzureLocalJobsRunner', () => {
             },
             {
               name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
-              value: JSON.stringify([{ 'dependency-name': 'dependency1' }]),
+              value: JSON.stringify({ dependencies: [{ 'dependency-name': 'dependency1' }] }),
             },
           ],
         },
@@ -442,7 +442,7 @@ describe('AzureLocalJobsRunner', () => {
             },
             {
               name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
-              value: JSON.stringify([{ 'dependency-name': 'dependency1' }]),
+              value: JSON.stringify({ dependencies: [{ 'dependency-name': 'dependency1' }] }),
             },
           ],
         },
