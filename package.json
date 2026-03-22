@@ -27,6 +27,7 @@
     "codegen": "turbo run codegen",
     "build": "turbo run build",
     "test": "turbo run test",
+    "test:affected": "turbo run test --affected",
     "package": "turbo run package",
     "clean": "turbo run clean && rimraf .turbo"
   },
