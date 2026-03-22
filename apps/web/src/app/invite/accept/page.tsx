@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import { notFound, unauthorized } from 'next/navigation';
 import { headers as requestHeaders } from 'next/headers';
+import { notFound, unauthorized } from 'next/navigation';
+
+import { auth } from '@/lib/auth';
 
 import { InviteAcceptView } from './page.client';
-import { auth } from '@/lib/auth';
 
 export const metadata: Metadata = {
   title: 'Accept Invitation',
