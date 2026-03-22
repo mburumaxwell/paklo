@@ -5,8 +5,8 @@
   "author": "mburumaxwell",
   "private": true,
   "scripts": {
-    "ui-diff": "pnpm exec shadcn diff",
-    "ui-gen": "pnpm exec shadcn add --overwrite accordion alert alert-dialog avatar badge breadcrumb button-group dialog card chart checkbox collapsible dropdown-menu empty field input-group item navigation-menu progress radio-group scroll-area select separator sheet sidebar skeleton sonner spinner table tabs textarea toggle toggle-group tooltip",
+    "ui-gen": "pnpm exec shadcn add --overwrite accordion alert alert-dialog avatar badge breadcrumb button-group dialog card chart checkbox collapsible dropdown-menu empty field input-group item navigation-menu progress radio-group scroll-area select separator sheet sidebar skeleton sonner spinner table tabs textarea toggle toggle-group tooltip --overwrite",
+    "ui-diff": "pnpm run ui-gen-base --diff",
     "prisma": "pnpm exec prisma",
     "prisma-gen": "pnpm exec prisma generate --no-hints",
     "prisma-push": "pnpm exec prisma db push",
