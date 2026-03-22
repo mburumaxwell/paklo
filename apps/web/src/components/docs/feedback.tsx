@@ -2,7 +2,7 @@
 
 import { Handshake, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { type SyntheticEvent, useEffect, useState, useTransition } from 'react';
+import { type SyntheticEvent, useState, useTransition } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
@@ -23,15 +23,18 @@ const feedbackResult = SubmitFeedbackSchema.extend({
 
 function useSubmissionStorage<Result>(id: string, validate: (v: unknown) => Result | null) {
   const storageKey = `docs-feedback-${id}`;
-  const [value, setValue] = useState<Result | null>(null);
+  const [value, setValue] = useState<Result | null>(() => {
+    if (typeof window === 'undefined') {
+      return null;
+    }
 
-  useEffect(() => {
     const item = localStorage.getItem(storageKey);
-    if (item === null) return;
-    const validated = validate(JSON.parse(item));
+    if (item === null) {
+      return null;
+    }
 
-    if (validated !== null) setValue(validated);
-  }, [storageKey, validate]);
+    return validate(JSON.parse(item));
+  });
 
   return {
     previous: value,

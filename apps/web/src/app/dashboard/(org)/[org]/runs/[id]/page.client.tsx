@@ -3,7 +3,8 @@
 import { AlertCircle, Calendar, Download, GitBranch, MapPinHouse, PlayCircle, Timer } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import useSWR from 'swr';
 
 import { EcosystemIcon, type Icon, UpdateJobStatusIcon, UpdateJobTriggerIcon } from '@/components/icons';
 import { TimeAgo } from '@/components/time-ago';
@@ -29,11 +30,12 @@ type SlimUpdateJob = Pick<
   | 'finishedAt'
   | 'duration'
 >;
-export function InfoSection({ job }: { job: SlimUpdateJob }) {
-  function RegionLabel({ code }: { code: RegionCode }) {
-    return <span title={code}>{getRegionInfo(code)?.label ?? code}</span>;
-  }
 
+function RegionLabel({ code }: { code: RegionCode }) {
+  return <span title={code}>{getRegionInfo(code)?.label ?? code}</span>;
+}
+
+export function InfoSection({ job }: { job: SlimUpdateJob }) {
   const parts: {
     label: string;
     value: React.ReactNode | string;
@@ -70,51 +72,26 @@ export function InfoSection({ job }: { job: SlimUpdateJob }) {
 
 export function LogsSection({ organization, job }: { organization: SlimOrganization; job: SlimUpdateJob }) {
   const url = `/dashboard/${organization.slug}/runs/${job.id}/logs` as Route;
-  const [logs, setLogs] = useState<string>('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    const controller = new AbortController();
-
-    const fetchLogs = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await fetch(url, { signal: controller.signal });
-        if (cancelled) return;
-
-        if (response.status === 404) {
-          setError('Logs not found');
-          setLogs('');
-        } else if (!response.ok) {
-          throw new Error(`Failed to fetch logs: ${response.statusText}`);
-        } else {
-          const logText = await response.text();
-          if (cancelled) return;
-          setLogs(logText);
-        }
-      } catch (error) {
-        if (cancelled) return;
-        if (error instanceof Error && error.name === 'AbortError') return;
-        console.error('[v0] Error fetching logs:', error);
-        setError(error instanceof Error ? error.message : 'Failed to load logs');
-        setLogs('');
+  const { data, error, isLoading } = useSWR(
+    url,
+    async (logsUrl: string) => {
+      const response = await fetch(logsUrl);
+      if (response.status === 404) {
+        throw new Error('Logs not found');
       }
-
-      if (!cancelled) {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch logs: ${response.statusText}`);
       }
-    };
+      return response.text();
+    },
+    {
+      revalidateOnFocus: false,
+      shouldRetryOnError: false,
+    },
+  );
 
-    fetchLogs();
-    return () => {
-      cancelled = true;
-      controller.abort();
-    };
-  }, [url]);
+  const logs = data ?? '';
+  const errorMessage = error instanceof Error ? error.message : null;
 
   return (
     <Item variant='outline'>
@@ -123,14 +100,14 @@ export function LogsSection({ organization, job }: { organization: SlimOrganizat
         <ItemDescription>Logs collected from the update job</ItemDescription>
       </ItemContent>
       <ItemActions>
-        <Button variant='secondary' asChild disabled={loading || !!error || logs.length === 0}>
+        <Button variant='secondary' asChild disabled={isLoading || !!errorMessage || logs.length === 0}>
           <Link href={url} className='flex' target='_blank' rel='noopener noreferrer'>
             <Download className='mr-2 size-4' />
             Download Logs
           </Link>
         </Button>
       </ItemActions>
-      {loading && (
+      {isLoading && (
         <div className='flex h-125 w-full items-center justify-center rounded-md border bg-muted/50'>
           <div className='flex flex-col items-center gap-3'>
             <Spinner className='size-8 text-muted-foreground' />
@@ -138,15 +115,15 @@ export function LogsSection({ organization, job }: { organization: SlimOrganizat
           </div>
         </div>
       )}
-      {error && (
+      {errorMessage && (
         <div className='flex h-125 w-full items-center justify-center rounded-md border bg-muted/50'>
           <div className='flex flex-col items-center gap-3'>
             <AlertCircle className='size-8 text-muted-foreground' />
-            <p className='text-sm text-muted-foreground'>{error}</p>
+            <p className='text-sm text-muted-foreground'>{errorMessage}</p>
           </div>
         </div>
       )}
-      {!loading && !error && (
+      {!isLoading && !errorMessage && (
         <ScrollArea className='h-125 w-full border bg-muted/50 p-4'>
           <pre className='font-mono text-xs leading-relaxed whitespace-pre-wrap'>{logs}</pre>
         </ScrollArea>

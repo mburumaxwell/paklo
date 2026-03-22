@@ -4,7 +4,7 @@ import { Fingerprint, Mail } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { toast } from 'sonner';
 
 import { LastUsedIndicator } from '@/components/last-used-indicator';
@@ -26,10 +26,12 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const router = useRouter();
-
-  useEffect(() => setIsMounted(true), []);
 
   // Preload passkey authentication for conditional UI
   useEffect(() => {

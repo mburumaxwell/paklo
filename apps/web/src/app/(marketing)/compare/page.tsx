@@ -16,13 +16,6 @@ export const metadata = {
 };
 
 export default function ComparePage() {
-  function FeatureTableCell({ value, managed }: { value: boolean | React.ReactNode; managed?: boolean }) {
-    if (typeof value === 'boolean') {
-      return value ? <CircleCheck className='inline size-5' /> : <CircleX className='inline size-5 text-red-900' />;
-    }
-    return <span className={cn('text-sm', !managed && 'text-muted-foreground')}>{value}</span>;
-  }
-
   return (
     <>
       <div className='py-12 lg:py-20'>
@@ -136,4 +129,11 @@ export default function ComparePage() {
       </div>
     </>
   );
+}
+
+function FeatureTableCell({ value, managed }: { value: boolean | React.ReactNode; managed?: boolean }) {
+  if (typeof value === 'boolean') {
+    return value ? <CircleCheck className='inline size-5' /> : <CircleX className='inline size-5 text-red-900' />;
+  }
+  return <span className={cn('text-sm', !managed && 'text-muted-foreground')}>{value}</span>;
 }
