@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, unauthorized } from 'next/navigation';
+import { headers as requestHeaders } from 'next/headers';
 
 import { InviteAcceptView } from './page.client';
+import { auth } from '@/lib/auth';
 
 export const metadata: Metadata = {
   title: 'Accept Invitation',
@@ -10,6 +12,10 @@ export const metadata: Metadata = {
 };
 
 export default async function OrgInviteAcceptPage(props: PageProps<'/invite/accept'>) {
+  const headers = await requestHeaders();
+  const session = await auth.api.getSession({ headers });
+  if (!session) return unauthorized();
+
   const { id } = await props.searchParams;
   const invitationId = Array.isArray(id) ? id[0] : id;
   if (!invitationId) return notFound();
