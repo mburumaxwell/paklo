@@ -16,6 +16,11 @@ const config: NextConfig = {
     authInterrupts: true, // needed to use forbidden() and unauthorized()
   },
   async headers() {
+    // In development, we need to allow 'unsafe-eval' for React Fast Refresh
+    // and 'wasm-unsafe-eval' for WebAssembly debugging.
+    // In production, we omit these for better security.
+    const scriptEvalDirectives = process.env.NODE_ENV === 'development' ? " 'unsafe-eval' 'wasm-unsafe-eval'" : '';
+
     return [
       // security headers
       {
@@ -30,7 +35,7 @@ const config: NextConfig = {
             value: `
               default-src 'self';
               img-src 'self' data: https: https://*.gravatar.com https://beacon-v2.helpscout.net https://d33v4339jhl8k0.cloudfront.net https://chatapi-prod.s3.amazonaws.com;
-              script-src 'self' 'unsafe-inline' https://*.vercel-scripts.com https://vercel.live https://*.js.stripe.com https://js.stripe.com https://maps.googleapis.com https://beacon-v2.helpscout.net;
+              script-src 'self' 'unsafe-inline'${scriptEvalDirectives} https://*.vercel-scripts.com https://vercel.live https://*.js.stripe.com https://js.stripe.com https://maps.googleapis.com https://beacon-v2.helpscout.net;
               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://beacon-v2.helpscout.net;
               font-src 'self' data: https://fonts.gstatic.com https://beacon-v2.helpscout.net;
               connect-src 'self' https://*.vercel-scripts.com https://api.stripe.com https://maps.googleapis.com https://beaconapi.helpscout.net https://chatapi.helpscout.net https://d3hb14vkzrxvla.cloudfront.net https://sockjs-helpscout.pusher.com wss://*.pusher.com;
