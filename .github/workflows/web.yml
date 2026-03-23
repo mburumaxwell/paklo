@@ -77,7 +77,8 @@ jobs:
         working-directory: '${{ github.workspace }}/apps/web'
 
       - name: Test
-        run: pnpm turbo run test --affected
+        run: pnpm turbo run test
+        working-directory: '${{ github.workspace }}/apps/web'
 
       # Using Vercel for now (much faster) but we need the workflow to
       # validate builds especially for dependabot PRs

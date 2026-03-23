@@ -59,4 +59,5 @@ jobs:
         working-directory: '${{ github.workspace }}/packages/cli'
 
       - name: Test
-        run: pnpm turbo run test --affected
+        run: pnpm turbo run test
+        working-directory: '${{ github.workspace }}/packages/cli'

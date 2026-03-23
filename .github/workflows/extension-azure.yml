@@ -62,7 +62,8 @@ jobs:
         working-directory: '${{ github.workspace }}/extensions/azure'
 
       - name: Test
-        run: pnpm turbo run test --affected
+        run: pnpm turbo run test
+        working-directory: '${{ github.workspace }}/extensions/azure'
 
       - name: Update Dev Version
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
