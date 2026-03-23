@@ -33,6 +33,7 @@
       "outputs": ["dist/**"],
     },
     "test": {
+      "dependsOn": ["^test"],
       "cache": false,
     },
     "clean": {
