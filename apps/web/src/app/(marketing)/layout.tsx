@@ -43,21 +43,21 @@ function Header() {
               <PakloIcon className='size-6' />
               Paklo
             </Link>
-            <NavigationMenu className='hidden md:flex' viewport={false}>
+            <NavigationMenu className='hidden md:flex'>
               <NavigationMenuList className='gap-6'>
                 {links.map((link) => (
                   <NavigationMenuItem key={link.name}>
                     <NavigationMenuLink
-                      asChild
                       // these styles are so that it looks like before instead of a button but perhaps we should remove them
                       className='p-0 hover:bg-inherit'
+                      render={
+                        <Link
+                          href={link.href}
+                          className='text-sm text-muted-foreground transition-colors hover:text-foreground'
+                        />
+                      }
                     >
-                      <Link
-                        href={link.href}
-                        className='text-sm text-muted-foreground transition-colors hover:text-foreground'
-                      >
-                        {link.name}
-                      </Link>
+                      {link.name}
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 ))}

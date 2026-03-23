@@ -243,10 +243,11 @@ export function PasskeysSection({ passkeys: initialPasskeys }: { passkeys: Passk
                       <Pencil className='size-4' />
                     </Button>
                     <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant='ghost' size='icon' disabled={isModifyingPasskeys}>
-                          <Trash2 className='size-4 text-destructive' />
-                        </Button>
+                      <AlertDialogTrigger
+                        disabled={isModifyingPasskeys}
+                        render={<Button variant='ghost' size='icon' />}
+                      >
+                        <Trash2 className='size-4 text-destructive' />
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
@@ -388,10 +389,8 @@ export function SessionsSection({
                 <ItemActions>
                   {!isCurrent && (
                     <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant='ghost' size='sm' disabled={isModifyingSessions}>
-                          Revoke
-                        </Button>
+                      <AlertDialogTrigger disabled={isModifyingSessions} render={<Button variant='ghost' size='sm' />}>
+                        Revoke
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
@@ -498,10 +497,8 @@ export function OrganizationsSection({ organizations: initialOrganizations }: { 
                   </ItemContent>
                   <ItemActions>
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant='ghost' size='icon'>
-                          <MoreVertical className='size-4' />
-                        </Button>
+                      <DropdownMenuTrigger render={<Button variant='ghost' size='icon' />}>
+                        <MoreVertical className='size-4' />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align='end'>
                         <DropdownMenuItem onClick={() => router.push(`/dashboard/${org.slug}`)}>

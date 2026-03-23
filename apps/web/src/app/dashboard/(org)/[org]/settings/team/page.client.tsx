@@ -167,7 +167,7 @@ export function MembersSection({
                   onKeyDown={(e) => e.key === 'Enter' && handleSendInvite()}
                   aria-label='Email address'
                 />
-                <Select value={inviteRole} onValueChange={(value: MemberRole) => setInviteRole(value)}>
+                <Select value={inviteRole} onValueChange={(value) => setInviteRole(value!)}>
                   <SelectTrigger className='w-full' aria-label='Role'>
                     <SelectValue />
                   </SelectTrigger>
@@ -306,7 +306,7 @@ export function MembersSection({
                     <>
                       <Select
                         value={member.role}
-                        onValueChange={(value) => handleChangeRole(member, value as MemberRole)}
+                        onValueChange={(value) => handleChangeRole(member, value!)}
                         disabled={loadingStates[`role-${member.id}`] || loadingStates[`remove-${member.id}`]}
                       >
                         <SelectTrigger className='h-9 w-30'>
@@ -381,17 +381,18 @@ export function DangerSection({ organizationId }: { organizationId: string }) {
             </p>
           </div>
           <AlertDialog>
-            <AlertDialogTrigger asChild disabled={isDeletingOrg}>
-              <Button variant='destructive' className='mt-4 md:w-full lg:mt-0 lg:w-auto lg:justify-self-end'>
-                {isDeletingOrg ? (
-                  <>
-                    <Spinner className='mr-2' />
-                    Deleting...
-                  </>
-                ) : (
-                  'Delete organization'
-                )}
-              </Button>
+            <AlertDialogTrigger
+              disabled={isDeletingOrg}
+              render={<Button variant='destructive' className='mt-4 md:w-full lg:mt-0 lg:w-auto lg:justify-self-end' />}
+            >
+              {isDeletingOrg ? (
+                <>
+                  <Spinner className='mr-2' />
+                  Deleting...
+                </>
+              ) : (
+                'Delete organization'
+              )}
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

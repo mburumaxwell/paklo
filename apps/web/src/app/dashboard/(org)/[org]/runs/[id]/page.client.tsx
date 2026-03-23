@@ -100,11 +100,13 @@ export function LogsSection({ organization, job }: { organization: SlimOrganizat
         <ItemDescription>Logs collected from the update job</ItemDescription>
       </ItemContent>
       <ItemActions>
-        <Button variant='secondary' asChild disabled={isLoading || !!errorMessage || logs.length === 0}>
-          <Link href={url} className='flex' target='_blank' rel='noopener noreferrer'>
-            <Download className='mr-2 size-4' />
-            Download Logs
-          </Link>
+        <Button
+          variant='secondary'
+          disabled={isLoading || !!errorMessage || logs.length === 0}
+          render={<Link href={url} className='flex' target='_blank' rel='noopener noreferrer' />}
+        >
+          <Download className='mr-2 size-4' />
+          Download Logs
         </Button>
       </ItemActions>
       {isLoading && (

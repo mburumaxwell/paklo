@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
@@ -132,20 +133,21 @@ export function UpdateJobsView({
                   </a>
                   {update.files.length > 1 && (
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant='ghost' size='icon'>
-                          <MoreHorizontal className='size-4' />
-                        </Button>
+                      <DropdownMenuTrigger render={<Button variant='ghost' size='icon' />}>
+                        <MoreHorizontal className='size-4' />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuLabel className='text-xs font-light'>Monitored files</DropdownMenuLabel>
-                        {update.files.slice(1).map((file) => (
-                          <DropdownMenuItem key={file} asChild>
-                            <a href={fileLinks.get(file)} target='_blank' rel='noreferrer'>
+                        <DropdownMenuGroup>
+                          <DropdownMenuLabel className='text-xs font-light'>Monitored files</DropdownMenuLabel>
+                          {update.files.slice(1).map((file) => (
+                            <DropdownMenuItem
+                              key={file}
+                              render={<a href={fileLinks.get(file)} target='_blank' rel='noreferrer' />}
+                            >
                               {trimLeadingSlash(file)}
-                            </a>
-                          </DropdownMenuItem>
-                        ))}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuGroup>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   )}
@@ -219,20 +221,21 @@ export function UpdateJobsView({
                             {' and '}
                             {job.affectedPrIds.length - 1} more
                             <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant='ghost' size='icon-sm'>
-                                  <MoreHorizontal className='size-4' />
-                                </Button>
+                              <DropdownMenuTrigger render={<Button variant='ghost' size='icon-sm' />}>
+                                <MoreHorizontal className='size-4' />
                               </DropdownMenuTrigger>
                               <DropdownMenuContent>
-                                <DropdownMenuLabel className='text-xs font-light'>PRs Affected</DropdownMenuLabel>
-                                {job.affectedPrIds.slice(1).map((prId) => (
-                                  <DropdownMenuItem key={prId} asChild>
-                                    <a href={prLinks.get(prId)} target='_blank' rel='noreferrer'>
+                                <DropdownMenuGroup>
+                                  <DropdownMenuLabel className='text-xs font-light'>PRs Affected</DropdownMenuLabel>
+                                  {job.affectedPrIds.slice(1).map((prId) => (
+                                    <DropdownMenuItem
+                                      key={prId}
+                                      render={<a href={prLinks.get(prId)} target='_blank' rel='noreferrer' />}
+                                    >
                                       #{prId}
-                                    </a>
-                                  </DropdownMenuItem>
-                                ))}
+                                    </DropdownMenuItem>
+                                  ))}
+                                </DropdownMenuGroup>
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </>

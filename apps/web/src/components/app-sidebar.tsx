@@ -131,11 +131,13 @@ export function AppSidebar({ session, organizations, ...props }: AppSidebarProps
               <SidebarMenu>
                 {group.items?.map((item) => (
                   <SidebarMenuItem key={item.label}>
-                    <SidebarMenuButton tooltip={item.label} isActive={isActive(item.href)} asChild>
-                      <Link href={item.href}>
-                        {item.icon && <item.icon />}
-                        <span>{item.label}</span>
-                      </Link>
+                    <SidebarMenuButton
+                      tooltip={item.label}
+                      isActive={isActive(item.href)}
+                      render={<Link href={item.href} />}
+                    >
+                      {item.icon && <item.icon />}
+                      <span>{item.label}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -148,26 +150,30 @@ export function AppSidebar({ session, organizations, ...props }: AppSidebarProps
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size='lg'
-                  className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
-                >
-                  <UserAvatarSnippet session={session} />
-                  <ChevronsUpDown className='ml-auto size-4' />
-                </SidebarMenuButton>
+              <DropdownMenuTrigger
+                render={
+                  <SidebarMenuButton
+                    size='lg'
+                    className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
+                  />
+                }
+              >
+                <UserAvatarSnippet session={session} />
+                <ChevronsUpDown className='ml-auto size-4' />
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className='w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg'
+                className='w-(--anchor-width) min-w-56 rounded-lg'
                 side={isMobile ? 'bottom' : 'right'}
                 align='end'
                 sideOffset={4}
               >
-                <DropdownMenuLabel className='p-0 font-normal'>
-                  <div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
-                    <UserAvatarSnippet session={session} />
-                  </div>
-                </DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className='p-0 font-normal'>
+                    <div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
+                      <UserAvatarSnippet session={session} />
+                    </div>
+                  </DropdownMenuLabel>
+                </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem onClick={() => router.push('/dashboard/account')}>
@@ -176,10 +182,12 @@ export function AppSidebar({ session, organizations, ...props }: AppSidebarProps
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
-                  <LogOut />
-                  Log out
-                </DropdownMenuItem>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut />
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
@@ -256,51 +264,57 @@ function OrganizationSwitcher({
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size='lg'
-              className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
-            >
-              <AvatarSnippetHeader
-                title={current.name || 'Organization'}
-                subtitle={currentOrgTypeInfo?.name}
-                image={current.logo}
+          <DropdownMenuTrigger
+            render={
+              <SidebarMenuButton
+                size='lg'
+                className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
               />
-              <AvatarSnippetFooter title={current.name || 'Organization'} subtitle={currentOrgTypeInfo?.name} />
-              <ChevronsUpDown className='ml-auto' />
-            </SidebarMenuButton>
+            }
+          >
+            <AvatarSnippetHeader
+              title={current.name || 'Organization'}
+              subtitle={currentOrgTypeInfo?.name}
+              image={current.logo}
+            />
+            <AvatarSnippetFooter title={current.name || 'Organization'} subtitle={currentOrgTypeInfo?.name} />
+            <ChevronsUpDown className='ml-auto' />
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className='w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg'
+            className='w-(--anchor-width) min-w-56 rounded-lg'
             align='start'
             side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}
           >
-            <DropdownMenuLabel className='text-xs text-muted-foreground'>Organizations</DropdownMenuLabel>
-            {organizations.map((organization) => (
-              <DropdownMenuItem
-                key={organization.name}
-                onClick={() => handleOrgChange(organization)}
-                className='gap-2 p-2'
-              >
-                <AvatarSnippetHeader
-                  title={organization.name}
-                  subtitle={getOrganizationTypeInfo(organization.type).name}
-                  image={organization.logo}
-                  size='sm'
-                  className='shrink-0'
-                  initialsType='first'
-                />
-                {organization.name}
-              </DropdownMenuItem>
-            ))}
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className='text-xs text-muted-foreground'>Organizations</DropdownMenuLabel>
+              {organizations.map((organization) => (
+                <DropdownMenuItem
+                  key={organization.name}
+                  onClick={() => handleOrgChange(organization)}
+                  className='gap-2 p-2'
+                >
+                  <AvatarSnippetHeader
+                    title={organization.name}
+                    subtitle={getOrganizationTypeInfo(organization.type).name}
+                    image={organization.logo}
+                    size='sm'
+                    className='shrink-0'
+                    initialsType='first'
+                  />
+                  {organization.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className='gap-2 p-2' onClick={() => router.push('/dashboard/setup')}>
-              <div className='flex size-6 items-center justify-center rounded-md border bg-transparent'>
-                <Plus className='size-4' />
-              </div>
-              <div className='font-medium text-muted-foreground'>Add organization</div>
-            </DropdownMenuItem>
+            <DropdownMenuGroup>
+              <DropdownMenuItem className='gap-2 p-2' onClick={() => router.push('/dashboard/setup')}>
+                <div className='flex size-6 items-center justify-center rounded-md border bg-transparent'>
+                  <Plus className='size-4' />
+                </div>
+                <div className='font-medium text-muted-foreground'>Add organization</div>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

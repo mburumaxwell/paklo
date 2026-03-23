@@ -195,7 +195,7 @@ export default function HomePage() {
             <p className='text-xl text-muted-foreground'>Everything you need to know about Paklo</p>
           </div>
 
-          <Accordion type='single' collapsible className='space-y-2'>
+          <Accordion className='space-y-2'>
             {faqs.map((faq) => (
               <AccordionItem
                 key={faq.question}

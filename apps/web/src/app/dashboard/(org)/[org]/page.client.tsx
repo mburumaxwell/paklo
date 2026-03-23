@@ -104,11 +104,10 @@ export function ChartsSection({ data }: { data: ChartData }) {
         </CardDescription>
         <CardAction>
           <ToggleGroup
-            type='single'
-            value={timeRange}
+            value={[timeRange]}
             variant='outline'
             size='sm'
-            onValueChange={(value) => updateFilters({ timeRange: value })}
+            onValueChange={(value) => value[0] && updateFilters({ timeRange: value[0] })}
             className='hidden lg:block'
           >
             {statsTimeRangeOptions.map((option) => (
@@ -117,7 +116,7 @@ export function ChartsSection({ data }: { data: ChartData }) {
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
-          <Select value={timeRange} onValueChange={(value) => updateFilters({ timeRange: value })}>
+          <Select value={timeRange} onValueChange={(value) => updateFilters({ timeRange: value! })}>
             <SelectTrigger className='flex w-40 lg:hidden' size='sm' aria-label='Select a value'>
               <SelectValue placeholder={defaultStatsTimeRangeOption.label} />
             </SelectTrigger>

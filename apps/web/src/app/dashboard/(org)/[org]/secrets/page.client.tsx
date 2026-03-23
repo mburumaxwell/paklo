@@ -182,11 +182,9 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
             </EmptyHeader>
             <EmptyContent>
               <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button onClick={handleAddSecret}>
-                    <Plus className='size-4' />
-                    Add your first secret
-                  </Button>
+                <DialogTrigger render={<Button />} onClick={handleAddSecret}>
+                  <Plus className='size-4' />
+                  Add your first secret
                 </DialogTrigger>
               </Dialog>
             </EmptyContent>
@@ -203,11 +201,12 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
               </p>
             </div>
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button onClick={handleAddSecret} className='mt-4 md:w-full lg:mt-0 lg:w-auto lg:justify-self-end'>
-                  <Plus className='size-4' />
-                  Add Secret
-                </Button>
+              <DialogTrigger
+                render={<Button className='mt-4 md:w-full lg:mt-0 lg:w-auto lg:justify-self-end' />}
+                onClick={handleAddSecret}
+              >
+                <Plus className='size-4' />
+                Add Secret
               </DialogTrigger>
             </Dialog>
           </div>
@@ -252,15 +251,17 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
                           <span className='sr-only'>Edit secret</span>
                         </Button>
                         <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button
-                              variant='ghost'
-                              size='sm'
-                              className='size-8 cursor-pointer p-0 opacity-60 transition-opacity group-hover:opacity-100 hover:text-destructive'
-                            >
-                              <Trash2 className='size-4' />
-                              <span className='sr-only'>Delete secret</span>
-                            </Button>
+                          <AlertDialogTrigger
+                            render={
+                              <Button
+                                variant='ghost'
+                                size='sm'
+                                className='size-8 cursor-pointer p-0 opacity-60 transition-opacity group-hover:opacity-100 hover:text-destructive'
+                              />
+                            }
+                          >
+                            <Trash2 className='size-4' />
+                            <span className='sr-only'>Delete secret</span>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>

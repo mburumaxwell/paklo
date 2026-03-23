@@ -64,30 +64,32 @@ export function ProjectsView({
 
           <ItemGroup className='space-y-4'>
             {projects.map((project) => (
-              <Item key={project.id} variant='outline' asChild>
-                <Link href={`/dashboard/${organization.slug}/projects/${project.id}`}>
-                  <ItemMedia variant='icon'>
-                    <FolderGit2 className='size-5' />
-                  </ItemMedia>
-                  <ItemContent>
-                    <ItemTitle>
-                      {project.name}
-                      <SynchronizationStatusBadge status={project.synchronizationStatus} className='gap-1' />
-                    </ItemTitle>
-                    <ItemDescription>
-                      <span>{project.url}</span>
-                      {project.synchronizedAt && (
-                        <span className='flex items-center gap-1'>
-                          <Calendar className='size-3' />
-                          Last synchronized: <TimeAgo value={project.synchronizedAt} />
-                        </span>
-                      )}
-                    </ItemDescription>
-                  </ItemContent>
-                  <ItemActions>
-                    <ChevronRightIcon className='size-4' />
-                  </ItemActions>
-                </Link>
+              <Item
+                key={project.id}
+                variant='outline'
+                render={<Link href={`/dashboard/${organization.slug}/projects/${project.id}`} />}
+              >
+                <ItemMedia variant='icon'>
+                  <FolderGit2 className='size-5' />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>
+                    {project.name}
+                    <SynchronizationStatusBadge status={project.synchronizationStatus} className='gap-1' />
+                  </ItemTitle>
+                  <ItemDescription>
+                    <span>{project.url}</span>
+                    {project.synchronizedAt && (
+                      <span className='flex items-center gap-1'>
+                        <Calendar className='size-3' />
+                        Last synchronized: <TimeAgo value={project.synchronizedAt} />
+                      </span>
+                    )}
+                  </ItemDescription>
+                </ItemContent>
+                <ItemActions>
+                  <ChevronRightIcon className='size-4' />
+                </ItemActions>
               </Item>
             ))}
           </ItemGroup>

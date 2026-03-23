@@ -84,7 +84,7 @@ export function TelemetryDashboard({ telemetries }: TelemetryDashboardProps) {
         </ItemMedia>
         <ItemContent>
           <div className='flex flex-wrap gap-3'>
-            <Select value={timeRange} onValueChange={(value) => updateFilters({ timeRange: value })}>
+            <Select value={timeRange} onValueChange={(value) => updateFilters({ timeRange: value! })}>
               <SelectTrigger className='w-45'>
                 <Calendar className='mr-2 size-4' />
                 <SelectValue />
@@ -98,7 +98,7 @@ export function TelemetryDashboard({ telemetries }: TelemetryDashboardProps) {
               </SelectContent>
             </Select>
 
-            <Select value={selectedRegion} onValueChange={(value) => updateFilters({ region: value })}>
+            <Select value={selectedRegion} onValueChange={(value) => updateFilters({ region: value! })}>
               <SelectTrigger className='w-50'>
                 <SelectValue placeholder='All Regions' />
               </SelectTrigger>
@@ -112,7 +112,7 @@ export function TelemetryDashboard({ telemetries }: TelemetryDashboardProps) {
               </SelectContent>
             </Select>
 
-            <Select value={selectedPackageManager} onValueChange={(value) => updateFilters({ packageManager: value })}>
+            <Select value={selectedPackageManager} onValueChange={(value) => updateFilters({ packageManager: value! })}>
               <SelectTrigger className='w-50'>
                 <SelectValue placeholder='All Package Managers' />
               </SelectTrigger>
@@ -126,7 +126,7 @@ export function TelemetryDashboard({ telemetries }: TelemetryDashboardProps) {
               </SelectContent>
             </Select>
 
-            <Select value={successFilter} onValueChange={(value) => updateFilters({ success: value })}>
+            <Select value={successFilter} onValueChange={(value) => updateFilters({ success: value! })}>
               <SelectTrigger className='w-35'>
                 <SelectValue placeholder='All Status' />
               </SelectTrigger>

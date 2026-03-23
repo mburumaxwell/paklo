@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
@@ -68,11 +69,12 @@ export function RepositoryView({
             </a>
           </p>
         </div>
-        <Button className='mt-4 md:w-full lg:mt-0 lg:w-auto lg:justify-self-end' asChild>
-          <Link href={`/dashboard/${organization.slug}/projects/${project.id}/repos/${repository.id}/sbom`}>
-            <Download className='mr-2 size-4' />
-            Export SBOM
-          </Link>
+        <Button
+          className='mt-4 md:w-full lg:mt-0 lg:w-auto lg:justify-self-end'
+          render={<Link href={`/dashboard/${organization.slug}/projects/${project.id}/repos/${repository.id}/sbom`} />}
+        >
+          <Download className='mr-2 size-4' />
+          Export SBOM
         </Button>
       </div>
       <Tabs defaultValue='updates'>
@@ -111,20 +113,21 @@ export function RepositoryView({
                         </a>
                         {update.files.length > 1 && (
                           <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant='ghost' size='icon'>
-                                <MoreHorizontal className='size-4' />
-                              </Button>
+                            <DropdownMenuTrigger render={<Button variant='ghost' size='icon' />}>
+                              <MoreHorizontal className='size-4' />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                              <DropdownMenuLabel className='text-xs font-light'>Monitored files</DropdownMenuLabel>
-                              {update.files.slice(1).map((file) => (
-                                <DropdownMenuItem key={file} asChild>
-                                  <a href={fileLinks.get(file)} target='_blank' rel='noreferrer'>
+                              <DropdownMenuGroup>
+                                <DropdownMenuLabel className='text-xs font-light'>Monitored files</DropdownMenuLabel>
+                                {update.files.slice(1).map((file) => (
+                                  <DropdownMenuItem
+                                    key={file}
+                                    render={<a href={fileLinks.get(file)} target='_blank' rel='noreferrer' />}
+                                  >
                                     {trimLeadingSlash(file)}
-                                  </a>
-                                </DropdownMenuItem>
-                              ))}
+                                  </DropdownMenuItem>
+                                ))}
+                              </DropdownMenuGroup>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         )}

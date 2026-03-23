@@ -66,7 +66,7 @@ export default function RunsView({
         </ItemMedia>
         <ItemContent>
           <div className='flex flex-wrap gap-3'>
-            <Select value={timeRange} onValueChange={(value) => updateFilters({ timeRange: value })}>
+            <Select value={timeRange} onValueChange={(value) => updateFilters({ timeRange: value! })}>
               <SelectTrigger className='w-45'>
                 <Calendar className='mr-2 size-4' />
                 <SelectValue />
@@ -80,7 +80,7 @@ export default function RunsView({
               </SelectContent>
             </Select>
 
-            <Select value={projectFilter} onValueChange={(value) => updateFilters({ project: value })}>
+            <Select value={projectFilter} onValueChange={(value) => updateFilters({ project: value! })}>
               <SelectTrigger className='w-35'>
                 <SelectValue placeholder='All Projects' />
               </SelectTrigger>
@@ -94,7 +94,7 @@ export default function RunsView({
               </SelectContent>
             </Select>
 
-            <Select value={statusFilter} onValueChange={(value) => updateFilters({ status: value })}>
+            <Select value={statusFilter} onValueChange={(value) => updateFilters({ status: value! })}>
               <SelectTrigger className='w-35'>
                 <SelectValue placeholder='All Statuses' />
               </SelectTrigger>
@@ -108,7 +108,7 @@ export default function RunsView({
               </SelectContent>
             </Select>
 
-            <Select value={triggerFilter} onValueChange={(value) => updateFilters({ trigger: value })}>
+            <Select value={triggerFilter} onValueChange={(value) => updateFilters({ trigger: value! })}>
               <SelectTrigger className='w-35'>
                 <SelectValue placeholder='All Triggers' />
               </SelectTrigger>
@@ -122,7 +122,7 @@ export default function RunsView({
               </SelectContent>
             </Select>
 
-            <Select value={selectedPackageManager} onValueChange={(value) => updateFilters({ packageManager: value })}>
+            <Select value={selectedPackageManager} onValueChange={(value) => updateFilters({ packageManager: value! })}>
               <SelectTrigger className='w-50'>
                 <SelectValue placeholder='All Package Managers' />
               </SelectTrigger>

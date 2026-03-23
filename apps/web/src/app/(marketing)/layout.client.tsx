@@ -16,10 +16,8 @@ export function MobileMenuSheet({ links }: { links: HeaderLink[] }) {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild className='md:hidden'>
-        <Button variant='ghost' size='icon'>
-          <Menu className='size-5' />
-        </Button>
+      <SheetTrigger className='md:hidden' render={<Button variant='ghost' size='icon' />}>
+        <Menu className='size-5' />
       </SheetTrigger>
       <SheetContent side='right' className='w-64 p-4'>
         <div className='mt-8 flex flex-col gap-6'>

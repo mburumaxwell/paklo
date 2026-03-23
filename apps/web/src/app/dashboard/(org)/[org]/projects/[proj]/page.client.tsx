@@ -109,10 +109,8 @@ export function RepositoriesView({
         </div>
         <ButtonGroup className='mt-4 md:w-full lg:mt-0 lg:w-auto lg:justify-self-end'>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant='outline' size='icon' aria-label='More Options'>
-                <MoreHorizontalIcon />
-              </Button>
+            <DropdownMenuTrigger render={<Button variant='outline' size='icon' aria-label='More Options' />}>
+              <MoreHorizontalIcon />
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-52'>
               <DropdownMenuGroup>
@@ -159,11 +157,7 @@ export function RepositoriesView({
               </DialogHeader>
               <FieldGroup className='py-3'>
                 <Field orientation='horizontal'>
-                  <Checkbox
-                    id='trigger'
-                    checked={triggerUpdateJobs}
-                    onCheckedChange={(v) => v !== 'indeterminate' && setTriggerUpdateJobs(v)}
-                  />
+                  <Checkbox id='trigger' checked={triggerUpdateJobs} onCheckedChange={setTriggerUpdateJobs} />
                   <FieldContent>
                     <FieldLabel htmlFor='trigger'>Trigger update jobs after synchronization</FieldLabel>
                     <FieldDescription>
@@ -174,8 +168,8 @@ export function RepositoriesView({
                 </Field>
               </FieldGroup>
               <DialogFooter>
-                <DialogClose asChild disabled={isRequestingSync}>
-                  <Button variant='outline'>Cancel</Button>
+                <DialogClose render={<Button variant='outline' />} disabled={isRequestingSync}>
+                  Cancel
                 </DialogClose>
                 <Button onClick={() => handleSync(project)} disabled={isRequestingSync}>
                   {isRequestingSync ? (

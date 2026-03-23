@@ -130,17 +130,15 @@ export function ManageSection({ organization, projects }: { organization: Simple
               )}
             </Button>
             <AlertDialog>
-              <AlertDialogTrigger asChild disabled={isHandling}>
-                <Button variant='destructive' size='sm'>
-                  {isHandlingCancel ? (
-                    <>
-                      <Spinner className='mr-2' />
-                      Cancelling...
-                    </>
-                  ) : (
-                    'Cancel'
-                  )}
-                </Button>
+              <AlertDialogTrigger disabled={isHandling} render={<Button variant='destructive' size='sm' />}>
+                {isHandlingCancel ? (
+                  <>
+                    <Spinner className='mr-2' />
+                    Cancelling...
+                  </>
+                ) : (
+                  'Cancel'
+                )}
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
@@ -276,17 +274,18 @@ export function RegionSection({ organization: initialOrganization }: { organizat
         />
         <div className='flex justify-end'>
           <AlertDialog>
-            <AlertDialogTrigger asChild disabled={isSavingRegion || selectedRegion === organization.region}>
-              <Button size='sm'>
-                {isSavingRegion ? (
-                  <>
-                    <Spinner className='mr-2' />
-                    Saving...
-                  </>
-                ) : (
-                  'Save changes'
-                )}
-              </Button>
+            <AlertDialogTrigger
+              disabled={isSavingRegion || selectedRegion === organization.region}
+              render={<Button size='sm' />}
+            >
+              {isSavingRegion ? (
+                <>
+                  <Spinner className='mr-2' />
+                  Saving...
+                </>
+              ) : (
+                'Save changes'
+              )}
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

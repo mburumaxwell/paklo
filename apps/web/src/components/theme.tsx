@@ -53,7 +53,7 @@ export function ThemeSelect() {
   }
 
   return (
-    <Select value={theme} onValueChange={setTheme}>
+    <Select value={theme} onValueChange={(value) => setTheme(value ?? 'system')}>
       <SelectTrigger className='w-fit'>
         <SelectValue>
           {theme === 'light' && <Sun className='size-4' />}
@@ -125,7 +125,12 @@ export function ThemeToggle() {
   }
 
   return (
-    <ToggleGroup type='single' variant='outline' size='sm' value={theme} onValueChange={setTheme}>
+    <ToggleGroup
+      variant='outline'
+      size='sm'
+      value={theme ? [theme] : []}
+      onValueChange={(value) => setTheme(value[0] ?? 'system')}
+    >
       <ToggleGroupItem value='light' aria-label='Light'>
         <Sun />
       </ToggleGroupItem>
