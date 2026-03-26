@@ -11,6 +11,7 @@ CREATE TABLE "user" (
     "banned" BOOLEAN DEFAULT false,
     "banReason" TEXT,
     "banExpires" TIMESTAMP(3),
+    "sequenceNumber" BIGINT NOT NULL,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
@@ -280,6 +281,9 @@ CREATE TABLE "update_job_secret" (
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "user_sequenceNumber_key" ON "user"("sequenceNumber");
+
+-- CreateIndex
 CREATE INDEX "session_userId_idx" ON "session"("userId");
 
 -- CreateIndex
@@ -434,3 +438,4 @@ ALTER TABLE "repository_pull_request" ADD CONSTRAINT "repository_pull_request_re
 
 -- AddForeignKey
 ALTER TABLE "update_job_secret" ADD CONSTRAINT "update_job_secret_id_fkey" FOREIGN KEY ("id") REFERENCES "update_job"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+

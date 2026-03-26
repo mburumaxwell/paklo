@@ -19,24 +19,26 @@ generator json {
 }
 
 model User {
-  id            String       @id
-  name          String
-  email         String
-  emailVerified Boolean      @default(false)
-  image         String?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  role          String?
-  banned        Boolean?     @default(false)
-  banReason     String?
-  banExpires    DateTime?
-  sessions      Session[]
-  accounts      Account[]
-  members       Member[]
-  invitations   Invitation[]
-  passkeys      Passkey[]
+  id             String       @id
+  name           String
+  email          String
+  emailVerified  Boolean      @default(false)
+  image          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  role           String?
+  banned         Boolean?     @default(false)
+  banReason      String?
+  banExpires     DateTime?
+  sequenceNumber BigInt
+  sessions       Session[]
+  accounts       Account[]
+  members        Member[]
+  invitations    Invitation[]
+  passkeys       Passkey[]
 
   @@unique([email])
+  @@unique([sequenceNumber])
   @@map("user")
 }
 

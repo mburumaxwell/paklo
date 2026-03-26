@@ -15,7 +15,7 @@ import {
 import { accessControl, admin as adminRole, user as userRole } from '@/lib/auth-permissions';
 import { OrganizationTypeSchema } from '@/lib/enums';
 import { environment } from '@/lib/environment';
-import { PakloId } from '@/lib/ids';
+import { PakloId, SequenceNumber } from '@/lib/ids';
 import { logger } from '@/lib/logger';
 import { prisma as prismaClient } from '@/lib/prisma';
 import { RegionCodeSchema } from '@/lib/regions';
@@ -68,6 +68,17 @@ export const auth = betterAuth({
       },
     },
     changeEmail: { enabled: false },
+    additionalFields: {
+      sequenceNumber: {
+        type: 'number',
+        bigint: true,
+        input: false,
+        required: true,
+        unique: true,
+        returned: false,
+        defaultValue: () => SequenceNumber.generate().value as unknown as number,
+      },
+    },
   },
   plugins: [
     admin({
@@ -143,8 +154,8 @@ export type Invitation = typeof auth.$Infer.Invitation;
 export type Member = typeof auth.$Infer.Member;
 export type MemberRole = Member['role'];
 export type { Passkey } from '@better-auth/passkey';
-export { toNextJsHandler } from 'better-auth/next-js';
 export { APIError as BetterAuthApiError };
+export { toNextJsHandler } from 'better-auth/next-js';
 
 export type UserHasPermissionParams = {
   headers: Headers;
