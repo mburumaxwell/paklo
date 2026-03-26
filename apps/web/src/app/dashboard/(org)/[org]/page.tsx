@@ -1,17 +1,16 @@
 import type { Metadata } from 'next';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 
 import {
-  type DateTimeRangePair,
   type TimeRange,
-  defaultStatsTimeRangeOption,
+  TimeRangeCodec,
   getDateFromTimeRange,
   getStatsGranularity,
   granularityToMilliseconds,
-  statsTimeRangeOptions,
 } from '@/lib/aggregation';
+import { createLoader, enumFilter } from '@/lib/nuqs';
+import type { Period } from '@/lib/period';
 import { prisma } from '@/lib/prisma';
-import { updateSearchParams } from '@/lib/utils';
 
 import { ChartsSection, StatsSection } from './page.client';
 
@@ -30,19 +29,11 @@ export async function generateMetadata(props: PageProps<'/dashboard/[org]'>): Pr
 export default async function ActivityPage(props: PageProps<'/dashboard/[org]'>) {
   const { org } = await props.params;
 
-  const searchParams = (await props.searchParams) as {
-    timeRange?: TimeRange;
+  const filterSearchParams = {
+    timeRange: enumFilter(TimeRangeCodec).withDefault('7d'),
   };
-  const { timeRange = '7d' } = searchParams;
-
-  // if some options are invalid, redirect to default
-  const searchParamsUpdates: Record<string, string> = {};
-  if (!statsTimeRangeOptions.find((option) => option.value === timeRange)) {
-    searchParamsUpdates.timeRange = defaultStatsTimeRangeOption.value;
-  }
-  if (Object.keys(searchParamsUpdates).length > 0) {
-    return redirect(`/dashboard/${org}?${updateSearchParams(searchParams, searchParamsUpdates).toString()}`);
-  }
+  const searchParamsLoader = createLoader(filterSearchParams);
+  const { timeRange } = searchParamsLoader(await props.searchParams);
 
   const organization = await getOrganization(org);
   if (!organization) return notFound();
@@ -62,7 +53,7 @@ export default async function ActivityPage(props: PageProps<'/dashboard/[org]'>)
 }
 
 async function fetchStats(organizationId: string, timeRange: TimeRange) {
-  async function getData(organizationId: string, { start, end }: DateTimeRangePair) {
+  async function getData(organizationId: string, { start, end }: Period) {
     const where = { organizationId, createdAt: { gte: start, lt: end } };
     const [count, succeeded, durationAgg, running] = await Promise.all([
       prisma.updateJob.count({ where }),
@@ -87,8 +78,8 @@ async function fetchStats(organizationId: string, timeRange: TimeRange) {
 
   // compute the date ranges
   const end = new Date();
-  const primary: DateTimeRangePair = getDateFromTimeRange(timeRange, { end });
-  const compare: DateTimeRangePair = getDateFromTimeRange(timeRange, { end: primary.start });
+  const primary: Period = getDateFromTimeRange(timeRange, { end });
+  const compare: Period = getDateFromTimeRange(timeRange, { end: primary.start });
 
   // fetch stats for both ranges in parallel
   const [current, previous] = await Promise.all([getData(organizationId, primary), getData(organizationId, compare)]);
@@ -101,7 +92,7 @@ async function fetchChartData(organizationId: string, timeRange: TimeRange) {
 
   type Row = { createdAt: Date; duration: number | null };
 
-  function bucketizeMinutes(rows: Row[], range: DateTimeRangePair, bucketMs: number): Map<string, number> {
+  function bucketizeMinutes(rows: Row[], range: Period, bucketMs: number): Map<string, number> {
     const map = new Map<string, number>();
 
     // initialise all buckets to 0 so the chart is stable
@@ -128,7 +119,7 @@ async function fetchChartData(organizationId: string, timeRange: TimeRange) {
     return shifted;
   }
 
-  async function getData(organizationId: string, { start, end }: DateTimeRangePair) {
+  async function getData(organizationId: string, { start, end }: Period) {
     return await prisma.updateJob.findMany({
       where: {
         organizationId,
@@ -144,8 +135,8 @@ async function fetchChartData(organizationId: string, timeRange: TimeRange) {
 
   // freeze and align "now" once for consistent buckets
   const end = floorToBucket(new Date(), bucketMs);
-  const primary: DateTimeRangePair = getDateFromTimeRange(timeRange, { end });
-  const compare: DateTimeRangePair = getDateFromTimeRange(timeRange, { end: primary.start });
+  const primary: Period = getDateFromTimeRange(timeRange, { end });
+  const compare: Period = getDateFromTimeRange(timeRange, { end: primary.start });
 
   const [currentRows, compareRows] = await Promise.all([
     getData(organizationId, primary),

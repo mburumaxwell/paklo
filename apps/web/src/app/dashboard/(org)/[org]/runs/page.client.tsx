@@ -1,26 +1,24 @@
 'use client';
 
-import type { DependabotPackageManager } from '@paklo/core/dependabot';
-import { Calendar, Funnel, FunnelX } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { Funnel } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
+import { DataTableToolbar, type DataTableToolbarOptions, makeToolbarOptionsFacet } from '@/components/data-table';
 import { EcosystemIcon, UpdateJobStatusBadge, UpdateJobTriggerIcon } from '@/components/icons';
 import { TimeAgo } from '@/components/time-ago';
-import { Button } from '@/components/ui/button';
-import { Item, ItemActions, ItemContent, ItemMedia } from '@/components/ui/item';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { type TimeRange, timeRangeOptions } from '@/lib/aggregation';
+import { TimeRangeCodec, timeRangeOptions } from '@/lib/aggregation';
 import {
-  type UpdateJobStatus,
-  type UpdateJobTrigger,
-  type WithAll,
+  DependabotPackageManagerCodec,
+  UpdateJobStatusCodec,
+  UpdateJobTriggerCodec,
   packageManagerOptions,
   updateJobStatusOptions,
   updateJobTriggerOptions,
 } from '@/lib/enums';
+import { useEnumArrayQueryFilterState, useEnumQueryFilterState, useTextQueryState } from '@/lib/nuqs';
 import type { Organization, Project, UpdateJob } from '@/lib/prisma';
-import { formatDuration, updateFiltersInSearchParams } from '@/lib/utils';
+import { formatDuration } from '@/lib/utils';
 
 type SimpleOrganization = Pick<Organization, 'id' | 'slug'>;
 type SlimProject = Pick<Project, 'id' | 'name'>;
@@ -45,116 +43,65 @@ export default function RunsView({
   projects: SlimProject[];
   jobs: SlimUpdateJob[];
 }) {
+  const [timeRange, setTimeRange] = useEnumQueryFilterState('timeRange', TimeRangeCodec);
+  const [project, setProject] = useTextQueryState('project');
+  const [status, setStatus] = useEnumArrayQueryFilterState('status', UpdateJobStatusCodec);
+  const [trigger, setTrigger] = useEnumArrayQueryFilterState('trigger', UpdateJobTriggerCodec);
+  const [packageManager, setPackageManager] = useEnumArrayQueryFilterState(
+    'packageManager',
+    DependabotPackageManagerCodec,
+  );
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const timeRange = (searchParams.get('timeRange') as TimeRange) ?? '24h';
-  const projectFilter = (searchParams.get('project') as WithAll<string>) ?? 'all';
-  const statusFilter = (searchParams.get('status') as WithAll<UpdateJobStatus>) ?? 'all';
-  const triggerFilter = (searchParams.get('trigger') as WithAll<UpdateJobTrigger>) ?? 'all';
-  const selectedPackageManager = (searchParams.get('packageManager') as WithAll<DependabotPackageManager>) ?? 'all';
-
-  const updateFilters = (updates: Record<string, string>, clear: boolean = false) =>
-    updateFiltersInSearchParams(router, searchParams, updates, clear);
+  const projectOptions = projects.map((project) => ({ label: project.name, value: project.id }));
+  const toolbar: DataTableToolbarOptions = {
+    filters: {
+      facets: [
+        makeToolbarOptionsFacet({
+          column: 'timeRange',
+          title: 'Time Range',
+          options: timeRangeOptions,
+          value: timeRange,
+          onChange: setTimeRange,
+        }),
+        makeToolbarOptionsFacet({
+          column: 'project',
+          title: 'Project',
+          options: projectOptions,
+          value: project,
+          onChange: setProject,
+        }),
+        makeToolbarOptionsFacet({
+          multiple: true,
+          column: 'status',
+          title: 'Status',
+          options: updateJobStatusOptions,
+          value: status,
+          onChange: setStatus,
+        }),
+        makeToolbarOptionsFacet({
+          multiple: true,
+          column: 'trigger',
+          title: 'Trigger',
+          options: updateJobTriggerOptions,
+          value: trigger,
+          onChange: setTrigger,
+        }),
+        makeToolbarOptionsFacet({
+          multiple: true,
+          column: 'packageManager',
+          title: 'Package Manager',
+          options: packageManagerOptions,
+          value: packageManager,
+          onChange: setPackageManager,
+        }),
+      ],
+    },
+  };
 
   return (
     <>
       {/* Filters */}
-      <Item variant='outline'>
-        <ItemMedia variant='icon'>
-          <Funnel />
-        </ItemMedia>
-        <ItemContent>
-          <div className='flex flex-wrap gap-3'>
-            <Select value={timeRange} onValueChange={(value) => updateFilters({ timeRange: value! })}>
-              <SelectTrigger className='w-45'>
-                <Calendar className='mr-2 size-4' />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {timeRangeOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={projectFilter} onValueChange={(value) => updateFilters({ project: value! })}>
-              <SelectTrigger className='w-35'>
-                <SelectValue placeholder='All Projects' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='all'>All Projects</SelectItem>
-                {projects.map((project) => (
-                  <SelectItem key={project.id} value={project.id}>
-                    {project.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={statusFilter} onValueChange={(value) => updateFilters({ status: value! })}>
-              <SelectTrigger className='w-35'>
-                <SelectValue placeholder='All Statuses' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='all'>All Statuses</SelectItem>
-                {updateJobStatusOptions.map((status) => (
-                  <SelectItem key={status.value} value={status.value}>
-                    {status.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={triggerFilter} onValueChange={(value) => updateFilters({ trigger: value! })}>
-              <SelectTrigger className='w-35'>
-                <SelectValue placeholder='All Triggers' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='all'>All Triggers</SelectItem>
-                {updateJobTriggerOptions.map((trigger) => (
-                  <SelectItem key={trigger.value} value={trigger.value}>
-                    {trigger.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={selectedPackageManager} onValueChange={(value) => updateFilters({ packageManager: value! })}>
-              <SelectTrigger className='w-50'>
-                <SelectValue placeholder='All Package Managers' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='all'>All Package Managers</SelectItem>
-                {packageManagerOptions.map((pm) => (
-                  <SelectItem key={pm.value} value={pm.value}>
-                    {pm.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </ItemContent>
-        <ItemActions>
-          <Button
-            variant='ghost'
-            size='icon-sm'
-            onClick={() => updateFilters({}, true)}
-            disabled={
-              !(
-                projectFilter !== 'all' ||
-                statusFilter !== 'all' ||
-                triggerFilter !== 'all' ||
-                selectedPackageManager !== 'all'
-              )
-            }
-          >
-            <FunnelX />
-          </Button>
-        </ItemActions>
-      </Item>
+      <DataTableToolbar {...toolbar} />
 
       {/* Data Table */}
       <div className='rounded-md border'>

@@ -1,7 +1,6 @@
 'use client';
 
 import { Activity, CheckCircle2, CircleDotDashed, Clock } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
 
 import { MetricCard, getMetricDirection } from '@/components/metric-card';
@@ -13,11 +12,12 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import {
   type Granularity,
   type TimeRange,
-  defaultStatsTimeRangeOption,
+  TimeRangeCodec,
   getCompareLabels,
   statsTimeRangeOptions,
+  timeRangeOptions,
 } from '@/lib/aggregation';
-import { updateFiltersInSearchParams } from '@/lib/utils';
+import { useEnumQueryFilterState } from '@/lib/nuqs';
 
 type StatsDataInner = {
   count: number;
@@ -80,15 +80,11 @@ export function StatsSection({ data }: { data: StatsData }) {
 }
 
 export function ChartsSection({ data }: { data: ChartData }) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const [timeRangeRaw, setTimeRange] = useEnumQueryFilterState('timeRange', TimeRangeCodec);
   const isMobile = useIsMobile();
 
-  const timeRange = (searchParams.get('timeRange') as TimeRange) ?? defaultStatsTimeRangeOption.value;
+  const timeRange = timeRangeRaw || '7d';
   const { currentLabel, previousLabel } = getCompareLabels(timeRange);
-
-  const updateFilters = (updates: Record<string, string>, clear: boolean = false) =>
-    updateFiltersInSearchParams(router, searchParams, updates, clear);
 
   const chartConfig = {
     minutes: { label: 'Minutes Used' },
@@ -100,14 +96,14 @@ export function ChartsSection({ data }: { data: ChartData }) {
       <CardHeader>
         <CardTitle>Minutes Used</CardTitle>
         <CardDescription>
-          <span>{defaultStatsTimeRangeOption.label}</span>
+          <span>{timeRangeOptions.find((o) => o.value === timeRange)?.label || timeRange}</span>
         </CardDescription>
         <CardAction>
           <ToggleGroup
             value={[timeRange]}
             variant='outline'
             size='sm'
-            onValueChange={(value) => value[0] && updateFilters({ timeRange: value[0] })}
+            onValueChange={(value) => setTimeRange(value[0] as TimeRange)}
             className='hidden lg:block'
           >
             {statsTimeRangeOptions.map((option) => (
@@ -116,9 +112,11 @@ export function ChartsSection({ data }: { data: ChartData }) {
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
-          <Select value={timeRange} onValueChange={(value) => updateFilters({ timeRange: value! })}>
+          <Select value={timeRange} onValueChange={(value) => setTimeRange(value)}>
             <SelectTrigger className='flex w-40 lg:hidden' size='sm' aria-label='Select a value'>
-              <SelectValue placeholder={defaultStatsTimeRangeOption.label} />
+              <SelectValue placeholder='Select a value'>
+                {timeRange && (statsTimeRangeOptions.find((o) => o.value === timeRange)?.label || timeRange)}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent className='rounded-xl'>
               {statsTimeRangeOptions.map((option) => (

@@ -1,9 +1,9 @@
-import type { DependabotPackageManager } from '@paklo/core/dependabot';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import { type TimeRange, getDateFromTimeRange } from '@/lib/aggregation';
-import { type UpdateJobStatus, type UpdateJobTrigger, type WithAll, unwrapWithAll } from '@/lib/enums';
+import { TimeRangeCodec, getDateFromTimeRange } from '@/lib/aggregation';
+import { DependabotPackageManagerCodec, UpdateJobStatusCodec, UpdateJobTriggerCodec } from '@/lib/enums';
+import { createLoader, enumArrayFilter, enumFilter, textFilter } from '@/lib/nuqs';
 import { prisma } from '@/lib/prisma';
 
 import RunsView from './page.client';
@@ -20,26 +20,17 @@ export async function generateMetadata(props: PageProps<'/dashboard/[org]/runs'>
 export default async function RunsPage(props: PageProps<'/dashboard/[org]/runs'>) {
   const { org: organizationSlug } = await props.params;
 
-  const searchParams = (await props.searchParams) as {
-    timeRange?: TimeRange;
-    project?: WithAll<string>;
-    status?: WithAll<UpdateJobStatus>;
-    trigger?: WithAll<UpdateJobTrigger>;
-    packageManager?: WithAll<DependabotPackageManager>;
+  const filterSearchParams = {
+    timeRange: enumFilter(TimeRangeCodec).withDefault('24h'),
+    project: textFilter(),
+    status: enumArrayFilter(UpdateJobStatusCodec),
+    trigger: enumArrayFilter(UpdateJobTriggerCodec),
+    packageManager: enumArrayFilter(DependabotPackageManagerCodec),
   };
-  const {
-    timeRange = '24h',
-    project: selectedProject,
-    status: selectedStatus,
-    trigger: selectedTrigger,
-    packageManager: selectedPackageManager,
-  } = searchParams;
+  const searchParamsLoader = createLoader(filterSearchParams);
+  const { timeRange, project, status, trigger, packageManager } = searchParamsLoader(await props.searchParams);
   const { start, end } = getDateFromTimeRange(timeRange);
 
-  const project = unwrapWithAll(selectedProject);
-  const status = unwrapWithAll(selectedStatus);
-  const trigger = unwrapWithAll(selectedTrigger);
-  const packageManager = unwrapWithAll(selectedPackageManager);
   const organization = await prisma.organization.findUnique({
     where: { slug: organizationSlug },
   });
@@ -54,10 +45,10 @@ export default async function RunsPage(props: PageProps<'/dashboard/[org]/runs'>
     where: {
       organizationId: organization.id, // must belong to the active organization
       createdAt: { gte: start, lte: end },
-      ...(project ? { projectId: project } : {}),
-      ...(status ? { status } : {}),
-      ...(trigger ? { trigger } : {}),
-      ...(packageManager ? { packageManager } : {}),
+      ...(project.length ? { projectId: project } : {}),
+      ...(status.length ? { status: { in: status } } : {}),
+      ...(trigger.length ? { trigger: { in: trigger } } : {}),
+      ...(packageManager.length ? { packageManager: { in: packageManager } } : {}),
     },
     orderBy: { createdAt: 'desc' },
     select: {

@@ -1,4 +1,5 @@
 import type { LabelMappingValue, LabelOption } from '@/lib/enums';
+import type { Period } from '@/lib/period';
 import { z } from '@/lib/zod';
 
 // Time Range
@@ -31,11 +32,10 @@ const TIME_RANGES_MAP: Record<TimeRange, number> = {
   '90d': 90 * 24 * 60 * 60 * 1000,
   '12M': 12 * 30 * 24 * 60 * 60 * 1000,
 };
-export type DateTimeRangePair = { start: Date; end: Date };
 export function getDateFromTimeRange(
   value: TimeRange,
   options: { start: Date } | { end: Date } = { end: new Date() },
-): DateTimeRangePair {
+): Period {
   const duration = TIME_RANGES_MAP[value];
   if (!duration) throw new Error(`Unsupported time range: ${value}`);
 
@@ -60,6 +60,12 @@ export function getCompareLabels(range: TimeRange) {
   // "Last 7 Days" -> "Previous 7 Days"
   const previousLabel = `Previous ${currentLabel.slice(5)}`;
   return { currentLabel, previousLabel };
+}
+export function getDateTimeRange(value: TimeRange): Period {
+  const end = new Date();
+  const duration = TIME_RANGES_MAP[value];
+  if (!duration) throw new Error(`Unsupported time range: ${value}`);
+  return { start: new Date(end.getTime() - duration), end };
 }
 
 // Granularity
@@ -100,7 +106,6 @@ export function granularityToMilliseconds(value: Granularity): number {
   return ms;
 }
 export const statsTimeRangeOptions = timeRangeOptions.filter((o) => ['7d', '30d', '90d'].includes(o.value));
-export const defaultStatsTimeRangeOption = statsTimeRangeOptions[0]!;
 export function getStatsGranularity(range: TimeRange): Granularity {
   switch (range) {
     case '7d':

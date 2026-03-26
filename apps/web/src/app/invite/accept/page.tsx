@@ -3,6 +3,7 @@ import { headers as requestHeaders } from 'next/headers';
 import { notFound, unauthorized } from 'next/navigation';
 
 import { auth } from '@/lib/auth';
+import { createLoader, textFilter } from '@/lib/nuqs';
 
 import { InviteAcceptView } from './page.client';
 
@@ -17,7 +18,12 @@ export default async function OrgInviteAcceptPage(props: PageProps<'/invite/acce
   const session = await auth.api.getSession({ headers });
   if (!session) return unauthorized();
 
-  const { id } = await props.searchParams;
+  const filterSearchParams = {
+    id: textFilter(),
+  };
+  const searchParamsLoader = createLoader(filterSearchParams);
+  const { id } = searchParamsLoader(await props.searchParams);
+
   const invitationId = Array.isArray(id) ? id[0] : id;
   if (!invitationId) return notFound();
 

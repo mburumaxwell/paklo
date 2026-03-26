@@ -204,7 +204,7 @@ function RunsChart({ telemetries, timeRange }: RunsChartProps) {
     }
   };
 
-  const tooltipLabelFormatter = (value: string) => {
+  const tooltipLabelFormatter = (value: Date | string | number) => {
     if (isHourlyRange(timeRange)) {
       return new Date(value).toLocaleString(undefined, {
         month: 'short',

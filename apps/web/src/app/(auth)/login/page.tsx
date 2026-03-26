@@ -1,8 +1,9 @@
-import type { Metadata, Route } from 'next';
+import type { Metadata } from 'next';
 import { headers as requestHeaders } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { auth } from '@/lib/auth';
+import { createLoader, redirectToParam } from '@/lib/nuqs';
 
 import { LoginForm } from './page.client';
 
@@ -18,10 +19,11 @@ export default async function LoginPage(props: PageProps<'/login'>) {
   const session = await auth.api.getSession({ headers });
   if (session) return redirect('/dashboard');
 
-  const searchParams = (await props.searchParams) as {
-    redirectTo?: Route;
+  const filterSearchParams = {
+    redirectTo: redirectToParam(),
   };
-  const { redirectTo = '/dashboard' } = searchParams;
+  const searchParamsLoader = createLoader(filterSearchParams);
+  const { redirectTo } = searchParamsLoader(await props.searchParams);
 
   return <LoginForm redirectTo={redirectTo} />;
 }

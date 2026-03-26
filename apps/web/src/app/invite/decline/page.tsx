@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import { createLoader, textFilter } from '@/lib/nuqs';
+
 import { InviteDeclineView } from './page.client';
 
 export const metadata: Metadata = {
@@ -10,7 +12,11 @@ export const metadata: Metadata = {
 };
 
 export default async function OrgInviteDeclinePage(props: PageProps<'/invite/decline'>) {
-  const { id } = await props.searchParams;
+  const filterSearchParams = {
+    id: textFilter(),
+  };
+  const searchParamsLoader = createLoader(filterSearchParams);
+  const { id } = searchParamsLoader(await props.searchParams);
   const invitationId = Array.isArray(id) ? id[0] : id;
   if (!invitationId) return notFound();
 

@@ -1,5 +1,4 @@
 import { type ClassValue, clsx } from 'clsx';
-import type { useRouter } from 'next/navigation';
 import prettyMs from 'pretty-ms';
 import { twMerge } from 'tailwind-merge';
 
@@ -45,44 +44,4 @@ export async function streamToString(readable: NodeJS.ReadableStream | undefined
  */
 export function formatDuration(value: number, compact: boolean = false): string {
   return prettyMs(value, { unitCount: 2, compact });
-}
-
-/**
- * Updates search parameters based on the provided updates.
- * @param original The original search parameters.
- * @param updates An object containing key-value pairs to update.
- * @param clear Whether to clear existing parameters before applying updates.
- * @returns A new `URLSearchParams` object with the updates applied.
- */
-export function updateSearchParams(
-  original: URLSearchParams | Record<string, string>,
-  updates: Record<string, string>,
-  clear: boolean = false,
-) {
-  const params = new URLSearchParams(clear ? '' : new URLSearchParams(original).toString());
-  Object.entries(updates).forEach(([key, value]) => {
-    if (value && value !== 'all') {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
-  });
-  return params;
-}
-
-/**
- * Updates filters in the search parameters and navigates to the updated URL.
- * @param router The Next.js App router instance.
- * @param searchParams The current search parameters.
- * @param updates An object containing key-value pairs to update.
- * @param clear Whether to clear existing parameters before applying updates.
- * @returns A promise that resolves when the navigation is complete.
- */
-export function updateFiltersInSearchParams(
-  router: ReturnType<typeof useRouter>,
-  searchParams: URLSearchParams,
-  updates: Record<string, string>,
-  clear: boolean = false,
-) {
-  return router.push(`?${updateSearchParams(searchParams, updates, clear).toString()}`);
 }
