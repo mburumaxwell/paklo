@@ -4,12 +4,32 @@
     "agent-browser": {
       "source": "vercel-labs/agent-browser",
       "sourceType": "github",
-      "computedHash": "9dcf7342a0a051445137a279855f6ed9b1fb342e46291b799c344ac20e34d409"
+      "computedHash": "1fdc3ae39490000d36b242168c64db00c1654fe1a0e45a1b12e93b38cc21e32c"
+    },
+    "better-auth-best-practices": {
+      "source": "better-auth/skills",
+      "sourceType": "github",
+      "computedHash": "a4c830509e85557b59339d8d93a4e243e9e59c686e7678854d39230e12c2a6dc"
+    },
+    "better-auth-security-best-practices": {
+      "source": "better-auth/skills",
+      "sourceType": "github",
+      "computedHash": "5717187bba9c22030c7174c74012f01c359f21e2ce87e0eb80e24244d8b8c915"
+    },
+    "create-auth-skill": {
+      "source": "better-auth/skills",
+      "sourceType": "github",
+      "computedHash": "31c027d02dbf1faa37f58191f574b9443143042fb2b684fe32df53ab0270487c"
     },
     "email-best-practices": {
       "source": "resend/email-best-practices",
       "sourceType": "github",
       "computedHash": "7e6c8d495e66e88a20dc45d17d24b445d6c5c9072855c78d8800fff994bc813f"
+    },
+    "flags-sdk": {
+      "source": "vercel/flags",
+      "sourceType": "github",
+      "computedHash": "df739e9a3e56aad569707c7cbeac5c5a76a21a7946afa3551e3424f1cea68417"
     },
     "next-best-practices": {
       "source": "vercel-labs/next-skills",
@@ -25,6 +45,11 @@
       "source": "vercel-labs/next-skills",
       "sourceType": "github",
       "computedHash": "be6bbf6ab1dc2cc6f2505cea52d497920c04f5b532c0846ee201f6029b803fb0"
+    },
+    "organization-best-practices": {
+      "source": "better-auth/skills",
+      "sourceType": "github",
+      "computedHash": "79a5a85b43d10e9fe37582b3506b051a33a991817b938f349099baa5ddba21aa"
     },
     "prisma-cli": {
       "source": "prisma/skills",
@@ -81,10 +106,20 @@
       "sourceType": "github",
       "computedHash": "507f011a70e8b3ae242bdc0bb5b39fd91a1d4049a0f3c281991ccf84973d591c"
     },
+    "stripe-best-practices": {
+      "source": "stripe/ai",
+      "sourceType": "github",
+      "computedHash": "7b886129e39257cd1c3b885cb7e5bdcb04973598acc421fb7418c32fb1690dc2"
+    },
     "turborepo": {
       "source": "vercel/turborepo",
       "sourceType": "github",
       "computedHash": "9f5095588ad368e23ebff66249200d13cdc836dc65c8ce9db7d7b84199e87e6f"
+    },
+    "upgrade-stripe": {
+      "source": "stripe/ai",
+      "sourceType": "github",
+      "computedHash": "32fe96a1d9933d2d0a1bb99c8328b01284b018dcbae850f069556c82c07b8c7e"
     },
     "vercel-composition-patterns": {
       "source": "vercel-labs/agent-skills",
@@ -94,12 +129,22 @@
     "vercel-react-best-practices": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
-      "computedHash": "c858d2d9023e73edb4e5504868cb0e36313e58fd56af12ef888b43c5634a3c17"
+      "computedHash": "bbc31a48537b473ff4feea6360ef0de3bfdcbef26c14f4967a5deefe8ca801d3"
     },
     "web-design-guidelines": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
       "computedHash": "a6a44d5498f7e8f68289902f3dedfc6f38ae0cee1e96527c80724cf27f727c2a"
+    },
+    "workflow": {
+      "source": "vercel/workflow",
+      "sourceType": "github",
+      "computedHash": "dfb59009ebfb21747e6dc89fd4c683c052c459ae2592b3b966c120e2a7fb7601"
+    },
+    "workflow-init": {
+      "source": "vercel/workflow",
+      "sourceType": "github",
+      "computedHash": "6daea9d2b91c25b924a868435da7b3ae0ad10691cd08ad39cff0060524cfaf2b"
     }
   }
 }
