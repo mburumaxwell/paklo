@@ -71,59 +71,59 @@ export type UpdateJobStatus = z.infer<typeof UpdateJobStatusSchema>;
 export const UpdateJobTriggerSchema = z.enum(['synchronization', 'scheduled', 'conflicts', 'comment', 'manual']);
 export type UpdateJobTrigger = z.infer<typeof UpdateJobTriggerSchema>;
 
-const updateJobStatusLabelMap: Record<UpdateJobStatus, string> = {
-  scheduled: 'Scheduled',
-  running: 'Running',
-  succeeded: 'Succeeded',
-  failed: 'Failed',
+const updateJobStatusLabelMap: Record<UpdateJobStatus, LabelMappingValue> = {
+  scheduled: { label: 'Scheduled' },
+  running: { label: 'Running' },
+  succeeded: { label: 'Succeeded' },
+  failed: { label: 'Failed' },
 };
-export const updateJobStatusOptions: { value: UpdateJobStatus; label: string }[] = Object.entries(
-  updateJobStatusLabelMap,
-).map(([value, label]) => ({ value: value as UpdateJobStatus, label }));
+export const updateJobStatusOptions: LabelOption<UpdateJobStatus>[] = Object.entries(updateJobStatusLabelMap).map(
+  ([value, props]) => ({ value: value as UpdateJobStatus, ...props }),
+);
 
-const updateJobTriggerLabelMap: Record<UpdateJobTrigger, string> = {
-  scheduled: 'Scheduled',
-  synchronization: 'Synchronization',
-  comment: 'Comment',
-  conflicts: 'Conflicts',
-  manual: 'Manual',
+const updateJobTriggerLabelMap: Record<UpdateJobTrigger, LabelMappingValue> = {
+  scheduled: { label: 'Scheduled' },
+  synchronization: { label: 'Synchronization' },
+  comment: { label: 'Comment' },
+  conflicts: { label: 'Conflicts' },
+  manual: { label: 'Manual' },
 };
-export const updateJobTriggerOptions: { value: UpdateJobTrigger; label: string }[] = Object.entries(
-  updateJobTriggerLabelMap,
-).map(([value, label]) => ({ value: value as UpdateJobTrigger, label }));
+export const updateJobTriggerOptions: LabelOption<UpdateJobTrigger>[] = Object.entries(updateJobTriggerLabelMap).map(
+  ([value, props]) => ({ value: value as UpdateJobTrigger, ...props }),
+);
 
-const packageManagerLabelMap: Record<DependabotPackageManager, string> = {
-  bundler: 'Bundler',
-  cargo: 'Cargo',
-  composer: 'Composer',
-  conda: 'Conda',
-  pub: 'Pub',
-  docker: 'Docker',
-  elm: 'Elm',
-  github_actions: 'GitHub Actions',
-  submodules: 'Git Submodules',
-  go_modules: 'Go Modules',
-  gradle: 'Gradle',
-  maven: 'Maven',
-  hex: 'Hex',
-  nuget: 'NuGet',
-  npm_and_yarn: 'npm & Yarn',
-  pip: 'Pip',
-  rust_toolchain: 'Rust Toolchain',
-  swift: 'Swift',
-  terraform: 'Terraform',
-  devcontainers: 'Devcontainers',
-  dotnet_sdk: '.NET SDK',
-  bun: 'Bun',
-  docker_compose: 'Docker Compose',
-  uv: 'uv',
-  vcpkg: 'vcpkg',
-  helm: 'Helm',
-  julia: 'Julia',
-  bazel: 'Bazel',
-  opentofu: 'OpenTofu',
-  pre_commit: 'Pre-commit',
+const packageManagerLabelMap: Record<DependabotPackageManager, LabelMappingValue> = {
+  bundler: { label: 'Bundler' },
+  cargo: { label: 'Cargo' },
+  composer: { label: 'Composer' },
+  conda: { label: 'Conda' },
+  pub: { label: 'Pub' },
+  docker: { label: 'Docker' },
+  elm: { label: 'Elm' },
+  github_actions: { label: 'GitHub Actions' },
+  submodules: { label: 'Git Submodules' },
+  go_modules: { label: 'Go Modules' },
+  gradle: { label: 'Gradle' },
+  maven: { label: 'Maven' },
+  hex: { label: 'Hex' },
+  nuget: { label: 'NuGet' },
+  npm_and_yarn: { label: 'npm & Yarn' },
+  pip: { label: 'Pip' },
+  rust_toolchain: { label: 'Rust Toolchain' },
+  swift: { label: 'Swift' },
+  terraform: { label: 'Terraform' },
+  devcontainers: { label: 'Devcontainers' },
+  dotnet_sdk: { label: '.NET SDK' },
+  bun: { label: 'Bun' },
+  docker_compose: { label: 'Docker Compose' },
+  uv: { label: 'uv' },
+  vcpkg: { label: 'vcpkg' },
+  helm: { label: 'Helm' },
+  julia: { label: 'Julia' },
+  bazel: { label: 'Bazel' },
+  opentofu: { label: 'OpenTofu' },
+  pre_commit: { label: 'Pre-commit' },
 };
-export const packageManagerOptions: { value: DependabotPackageManager; label: string }[] = Object.entries(
+export const packageManagerOptions: LabelOption<DependabotPackageManager>[] = Object.entries(
   packageManagerLabelMap,
-).map(([value, label]) => ({ value: value as DependabotPackageManager, label }));
+).map(([value, props]) => ({ value: value as DependabotPackageManager, ...props }));
