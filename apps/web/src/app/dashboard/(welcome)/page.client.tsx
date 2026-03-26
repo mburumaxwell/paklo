@@ -3,7 +3,7 @@
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 
 import { PakloIcon } from '@/components/logos';
 import { Button } from '@/components/ui/button';
@@ -42,15 +42,13 @@ export function NoOrganizationsView() {
 export function SelectOrganizationView({ organizations }: { organizations: Organization[] }) {
   const router = useRouter();
   const [selectedOrg, setSelectedOrg] = useState<Organization | undefined>(undefined);
-  const [navigating, setNavigating] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  async function handleNavigating() {
+  function handleNavigating() {
     if (!selectedOrg) return;
 
-    setNavigating(true);
-
     // redirect to dashboard activity page
-    router.push(`/dashboard/${selectedOrg.slug}`);
+    startTransition(() => router.push(`/dashboard/${selectedOrg.slug}`));
   }
 
   return (
@@ -69,7 +67,9 @@ export function SelectOrganizationView({ organizations }: { organizations: Organ
             onValueChange={(id) => setSelectedOrg(organizations.find((org) => org.id === id))}
           >
             <SelectTrigger id='org-select' className='w-full'>
-              <SelectValue placeholder='Select an organization' />
+              <SelectValue placeholder='Select an organization'>
+                {selectedOrg && `${selectedOrg.name} (${getOrganizationTypeInfo(selectedOrg.type)!.name})`}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {organizations.map((org) => (
@@ -80,8 +80,8 @@ export function SelectOrganizationView({ organizations }: { organizations: Organ
             </SelectContent>
           </Select>
         </div>
-        <Button onClick={handleNavigating} disabled={!selectedOrg || navigating} className='w-full' size='lg'>
-          {navigating ? (
+        <Button onClick={handleNavigating} disabled={!selectedOrg || isPending} className='w-full' size='lg'>
+          {isPending ? (
             <>
               <Spinner className='mr-2' />
               Navigating...
