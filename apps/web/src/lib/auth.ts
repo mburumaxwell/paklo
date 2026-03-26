@@ -165,6 +165,8 @@ export type Invitation = typeof auth.$Infer.Invitation;
 export type Member = typeof auth.$Infer.Member;
 export type MemberRole = Member['role'];
 export type { Passkey } from '@better-auth/passkey';
+export type Account = Awaited<ReturnType<typeof auth.api.listUserAccounts>>[number];
+
 export { APIError as BetterAuthApiError };
 export { toNextJsHandler } from 'better-auth/next-js';
 

@@ -34,7 +34,7 @@ export const authClient = createAuthClient({
 export type Session = typeof authClient.$Infer.Session;
 export type Invitation = typeof authClient.$Infer.Invitation;
 export type Member = typeof authClient.$Infer.Member;
-export type { MemberRole, Organization, Passkey } from '@/lib/auth';
+export type { MemberRole, Organization, Passkey, Account } from '@/lib/auth';
 
 export async function magicLinkLogin({
   email,

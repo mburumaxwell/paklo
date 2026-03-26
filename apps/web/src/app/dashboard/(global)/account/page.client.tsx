@@ -3,23 +3,28 @@
 import {
   Building2,
   Check,
-  Fingerprint,
+  ChevronsUpDown,
+  ExternalLink,
   Home,
   LogOut,
+  MailIcon,
   Monitor,
+  MoreHorizontalIcon,
   MoreVertical,
   Pencil,
-  Plus,
   Settings,
   Smartphone,
   Trash2,
+  UserKeyIcon,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import * as React from 'react';
 import { toast } from 'sonner';
 import { UAParser } from 'ua-parser-js';
 
 import { storeFeedback } from '@/actions/feedback';
+import { providers } from '@/components/auth-buttons';
+import { Controller, useForm, zodResolver } from '@/components/rhf';
 import { TimeAgo } from '@/components/time-ago';
 import {
   AlertDialog,
@@ -35,6 +40,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   Dialog,
   DialogContent,
@@ -50,28 +56,44 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { Field, FieldError, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from '@/components/ui/item';
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemSeparator,
+  ItemTitle,
+} from '@/components/ui/item';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
-import { type Organization, type Passkey, type Session, authClient } from '@/lib/auth-client';
+import { type Account, type Organization, type Passkey, type Session, authClient } from '@/lib/auth-client';
+import { z } from '@/lib/zod';
 
-export function ProfileSection({ user }: { user: { id: string; name: string; email: string } }) {
-  const [name, setName] = useState(user.name);
-  const [isNameSaving, setIsNameSaving] = useState(false);
+type SessionUser = Session['user'];
 
-  async function handleSave() {
-    setIsNameSaving(true);
-    const { data, error } = await authClient.updateUser({ name });
-    setIsNameSaving(false);
+export function ProfileSection({ user: initialUser }: { user: SessionUser }) {
+  const [user, setUser] = React.useState(initialUser);
+  const formSchema = z.object({
+    name: z.string().min(1, 'Name is required'),
+  });
+  const form = useForm({ resolver: zodResolver(formSchema), defaultValues: user });
 
-    if (error || !data?.status) {
+  async function handleSave(data: z.infer<typeof formSchema>) {
+    const { data: result, error } = await authClient.updateUser({ name: data.name });
+
+    if (error || !result?.status) {
       toast.error('Failed to update profile.', { description: error?.message });
       return;
     }
+
+    setUser((prev) => ({ ...prev, ...data }));
+    form.reset(data); // Reset form with new values to clear isDirty flag
   }
 
   return (
@@ -81,50 +103,82 @@ export function ProfileSection({ user }: { user: { id: string; name: string; ema
         <CardDescription>Update your personal information</CardDescription>
       </CardHeader>
       <CardContent>
-        <FieldSet>
-          <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor='name'>Name</FieldLabel>
-              <Input id='name' value={name} onChange={(e) => setName(e.target.value)} />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor='email'>Email</FieldLabel>
-              <Input id='email' value={user.email} disabled className='bg-muted' />
-              <FieldDescription>Email cannot be changed</FieldDescription>
-            </Field>
-            <Field orientation='horizontal'>
-              <Button onClick={handleSave} disabled={isNameSaving || !name || name === user.name}>
-                {isNameSaving ? (
-                  <>
-                    <Spinner className='mr-2' />
-                    Saving...
-                  </>
-                ) : (
-                  'Save changes'
+        <form onSubmit={form.handleSubmit(handleSave)}>
+          <FieldSet>
+            <FieldGroup>
+              <Controller
+                name='name'
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor='name'>Name</FieldLabel>
+                    <Input {...field} id='name' autoComplete='name' />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
                 )}
-              </Button>
-            </Field>
-          </FieldGroup>
-        </FieldSet>
+              />
+
+              <Field orientation='horizontal'>
+                <Button type='submit' disabled={form.formState.isSubmitting || !form.formState.isDirty}>
+                  {form.formState.isSubmitting ? (
+                    <>
+                      <Spinner />
+                      Saving...
+                    </>
+                  ) : (
+                    'Save'
+                  )}
+                </Button>
+              </Field>
+            </FieldGroup>
+          </FieldSet>
+        </form>
       </CardContent>
     </Card>
   );
 }
 
-export function PasskeysSection({ passkeys: initialPasskeys }: { passkeys: Passkey[] }) {
-  const [isModifyingPasskeys, setIsModifyingPasskeys] = useState(false);
-  const [passkeys, setPasskeys] = useState(initialPasskeys);
-  const [editingPasskey, setEditingPasskey] = useState<Passkey | null>(null);
-  const [editedPasskeyName, setEditedPasskeyName] = useState<string | undefined>(undefined);
-  const [isSavingPasskey, setIsSavingPasskey] = useState(false);
+interface SecuritySectionProps {
+  user: Session['user'];
+  passkeys: Passkey[];
+  accounts: Account[];
+}
+export function SecuritySection({ user, passkeys: initialPasskeys, accounts: initialAccounts }: SecuritySectionProps) {
+  const [passkeys, setPasskeys] = React.useState(initialPasskeys);
+  const [accounts, setAccounts] = React.useState(initialAccounts);
+  return (
+    <>
+      <LoginSection
+        user={user}
+        passkeys={passkeys}
+        onPasskeysChanged={setPasskeys}
+        accounts={accounts}
+        onAccountsChanged={setAccounts}
+      />
+      {/* <TwoFactorSection user={user} passkeys={passkeys} /> */}
+    </>
+  );
+}
+
+interface LoginSectionProps extends SecuritySectionProps {
+  onPasskeysChanged: (passkeys: Passkey[]) => void;
+  onAccountsChanged: (accounts: Account[]) => void;
+}
+function LoginSection({ user, passkeys, onPasskeysChanged, accounts, onAccountsChanged }: LoginSectionProps) {
+  const [editingPasskey, setEditingPasskey] = React.useState<Passkey | null>(null);
+  const [processing, setProcessing] = React.useState(false);
+  const pathname = usePathname();
+
+  const editPassKeyFormSchema = z.object({ name: z.string().min(1, 'Passkey name is required') });
+  const editPasskeyForm = useForm({ resolver: zodResolver(editPassKeyFormSchema), defaultValues: { name: '' } });
 
   async function handleAddPasskey() {
-    setIsModifyingPasskeys(true);
+    setProcessing(true);
     const { data, error } = await authClient.passkey.addPasskey({
       // Not setting name, as it overrides the default (email) which makes it look awkward
       // in password managers. Instead, we'll let the user edit it afterwards.
     });
-    setIsModifyingPasskeys(false);
+    setProcessing(false);
     if (error) {
       // ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY is from @simplewebauthn/browser
       const cancellationCodes = ['AUTH_CANCELLED', 'ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY'];
@@ -133,179 +187,305 @@ export function PasskeysSection({ passkeys: initialPasskeys }: { passkeys: Passk
       return;
     }
 
-    setPasskeys((prev) => [...prev, data]);
+    onPasskeysChanged([...passkeys, data]);
   }
 
   async function handleDeletePasskey(id: string) {
-    setIsModifyingPasskeys(true);
+    setProcessing(true);
     const { error } = await authClient.passkey.deletePasskey({ id });
-    setIsModifyingPasskeys(false);
+    setProcessing(false);
     if (error) {
       toast.error('Failed to delete passkey.', { description: error.message });
       return;
     }
 
-    setPasskeys((prev) => prev.filter((p) => p.id !== id));
+    onPasskeysChanged(passkeys.filter((p) => p.id !== id));
   }
 
-  function handleEditPasskey(passkey: Passkey) {
-    setEditingPasskey(passkey);
-    setEditedPasskeyName(passkey.name);
-  }
+  async function handleSavePasskey(data: z.infer<typeof editPassKeyFormSchema>) {
+    if (!editingPasskey) return;
 
-  async function handleSavePasskeyName() {
-    if (!editingPasskey || !editedPasskeyName?.trim()) return;
-
-    setIsSavingPasskey(true);
     const { error } = await authClient.passkey.updatePasskey({
       id: editingPasskey.id,
-      name: editedPasskeyName,
+      name: data.name,
     });
-    setIsSavingPasskey(false);
     setEditingPasskey(null);
-    setEditedPasskeyName(undefined);
+    editPasskeyForm.reset();
 
     if (error) {
       toast.error('Failed to update passkey name.', { description: error.message });
       return;
     }
 
-    setPasskeys((prev) => prev.map((p) => (p.id === editingPasskey.id ? { ...p, name: editedPasskeyName } : p)));
+    onPasskeysChanged(passkeys.map((p) => (p.id === editingPasskey.id ? { ...p, name: data.name } : p)));
+  }
+
+  function handleEditPasskey(passkey: Passkey) {
+    editPasskeyForm.reset({ name: passkey.name ?? '' });
+    setEditingPasskey(passkey);
+  }
+
+  async function handleSocialConnect(provider: string) {
+    setProcessing(true);
+    const { error } = await authClient.linkSocial({ provider, callbackURL: pathname });
+    setProcessing(false);
+    if (error) {
+      toast.error('Failed to connect account.', { description: error.message || 'Unknown error' });
+      return;
+    }
+
+    // since this works by redirect, the whole page will reload when it comes back, so
+    // we don't need to manually update the accounts state here
+  }
+
+  async function handleSocialDisconnect({ providerId, accountId }: Account) {
+    setProcessing(true);
+    const { error } = await authClient.unlinkAccount({ providerId, accountId });
+    setProcessing(false);
+    if (error) {
+      toast.error('Failed to disconnect account.', { description: error.message || 'Unknown error' });
+      return;
+    }
+
+    onAccountsChanged(accounts.filter((a) => a.id !== accountId));
   }
 
   return (
     <>
       <Card>
-        {passkeys.length === 0 ? null : (
-          <CardHeader>
-            <div className='grid grid-cols-1 items-center justify-center md:grid-cols-3'>
-              <div className='flex flex-col gap-2 md:col-span-2'>
-                <CardTitle>Passkeys</CardTitle>
-                <CardDescription>Manage your passkeys for secure authentication</CardDescription>
-              </div>
-              <Button
-                onClick={handleAddPasskey}
-                disabled={isModifyingPasskeys}
-                className='mt-4 md:w-full lg:mt-0 lg:w-auto lg:justify-self-end'
-              >
-                {isModifyingPasskeys ? (
-                  <Spinner />
-                ) : (
-                  <>
-                    <Plus className='mr-2 size-4' />
-                    Add passkey
-                  </>
-                )}
-              </Button>
-            </div>
-          </CardHeader>
-        )}
+        <CardHeader>
+          <CardTitle>Sign-in Methods</CardTitle>
+          <CardDescription>
+            Customize how you access your account. Link your external accounts and set up passkeys for seamless, secure
+            authentication.
+          </CardDescription>
+        </CardHeader>
         <CardContent>
-          {passkeys.length === 0 ? (
-            <Empty>
-              <EmptyHeader>
-                <EmptyMedia variant='icon'>
-                  <Fingerprint />
-                </EmptyMedia>
-                <EmptyTitle>No passkeys yet</EmptyTitle>
-                <EmptyDescription>Add a passkey to enable secure, passwordless authentication</EmptyDescription>
-              </EmptyHeader>
-              <EmptyContent>
-                <Button onClick={handleAddPasskey} disabled={isModifyingPasskeys} size='sm'>
-                  {isModifyingPasskeys ? (
-                    <Spinner />
-                  ) : (
-                    <>
-                      <Plus className='mr-2 size-4' />
-                      Add your first passkey
-                    </>
-                  )}
+          <>
+            {/* Email */}
+            <Item size='sm'>
+              <ItemMedia variant='image'>
+                <MailIcon />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>Email</ItemTitle>
+                <ItemDescription>{user.email}</ItemDescription>
+              </ItemContent>
+              <ItemActions>
+                <Button type='button' size='sm' disabled>
+                  Change
                 </Button>
-              </EmptyContent>
-            </Empty>
-          ) : (
-            <ItemGroup className='gap-3'>
-              {passkeys.map((passkey) => (
-                <Item key={passkey.id} variant='outline'>
-                  <ItemMedia variant='icon' className='size-10 bg-primary/10'>
-                    <Fingerprint className='size-5 text-primary' />
-                  </ItemMedia>
-                  <ItemContent>
-                    <ItemTitle>{passkey.name || 'no name'}</ItemTitle>
-                    <ItemDescription>
-                      Added <TimeAgo value={passkey.createdAt} />
-                    </ItemDescription>
-                  </ItemContent>
-                  <ItemActions>
-                    <Button variant='ghost' size='icon' onClick={() => handleEditPasskey(passkey)}>
-                      <Pencil className='size-4' />
-                    </Button>
-                    <AlertDialog>
-                      <AlertDialogTrigger
-                        disabled={isModifyingPasskeys}
-                        render={<Button variant='ghost' size='icon' />}
+              </ItemActions>
+            </Item>
+            <ItemSeparator />
+
+            {/* Passkeys */}
+            <Item size='sm'>
+              <ItemMedia variant='image'>
+                <UserKeyIcon />
+              </ItemMedia>
+              <Collapsible className='gap-inherit flex flex-1 flex-wrap items-center'>
+                <ItemContent>
+                  <ItemTitle>Passkeys</ItemTitle>
+                  <ItemDescription className='flex items-center gap-1.5'>
+                    {passkeys.length} passkeys registered
+                    {passkeys.length > 0 && (
+                      <CollapsibleTrigger
+                        render={<Button variant='ghost' size='icon-xs' disabled={processing} />}
+                        aria-label='Toggle passkeys'
+                        disabled={processing}
                       >
-                        <Trash2 className='size-4 text-destructive' />
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Remove passkey?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            You will no longer be able to use this passkey to sign in. This action cannot be undone.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction className='bg-destructive' onClick={() => handleDeletePasskey(passkey.id)}>
-                            Remove
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </ItemActions>
-                </Item>
-              ))}
-            </ItemGroup>
-          )}
+                        <ChevronsUpDown className='size-4' />
+                        <span className='sr-only'>Toggle passkeys</span>
+                      </CollapsibleTrigger>
+                    )}
+                  </ItemDescription>
+                </ItemContent>
+                <ItemActions>
+                  <Button type='button' size='sm' onClick={handleAddPasskey} disabled={processing}>
+                    {processing && <Spinner />}
+                    {!processing && 'Add'}
+                  </Button>
+                </ItemActions>
+
+                {passkeys.length > 0 && (
+                  <CollapsibleContent className='mt-2 basis-full divide-y divide-border/60 border-t border-border/60 pt-2'>
+                    {passkeys.map((passkey) => (
+                      <div
+                        key={passkey.id}
+                        className='flex items-center justify-between gap-2 py-2 first:pt-0 last:pb-0'
+                      >
+                        <p className='min-w-0 truncate text-sm font-medium'>{passkey.name || 'Unnamed passkey'}</p>
+
+                        <div className='flex items-center gap-1'>
+                          <Button
+                            variant='ghost'
+                            size='icon-xs'
+                            type='button'
+                            onClick={() => handleEditPasskey(passkey)}
+                            disabled={processing}
+                          >
+                            <Pencil />
+                            <span className='sr-only'>Edit passkey</span>
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger
+                              render={<Button variant='ghost' size='icon-xs' type='button' disabled={processing} />}
+                            >
+                              <Trash2 className='text-destructive' />
+                              <span className='sr-only'>Delete passkey</span>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete passkey</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Remove {passkey.name || 'this passkey'} from your account? You will no longer be able
+                                  to sign in with it.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  className='text-destructive-foreground bg-destructive hover:bg-destructive/90'
+                                  onClick={() => handleDeletePasskey(passkey.id)}
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </div>
+                    ))}
+                  </CollapsibleContent>
+                )}
+              </Collapsible>
+            </Item>
+            <ItemSeparator />
+
+            {providers.map(({ icon: Icon, ...provider }, index) => {
+              const account = accounts.find((acc) => acc.providerId === provider.id);
+              return (
+                <React.Fragment key={provider.id}>
+                  <Item size='sm'>
+                    <ItemMedia variant='image'>
+                      <Icon />
+                    </ItemMedia>
+                    <ItemContent>
+                      <ItemTitle>{provider.label}</ItemTitle>
+                      <ItemDescription>
+                        {account && (
+                          <>
+                            Connected <TimeAgo value={account.createdAt} />
+                          </>
+                        )}
+                        {!account && `Connect your ${provider.label} account`}
+                      </ItemDescription>
+                    </ItemContent>
+                    <ItemActions>
+                      {!account && (
+                        <Button
+                          size='sm'
+                          onClick={() => handleSocialConnect(provider.id)}
+                          disabled={processing || provider.disabled}
+                        >
+                          {processing && <Spinner />}
+                          {!processing && 'Connect'}
+                        </Button>
+                      )}
+
+                      {account && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger render={<Button variant='ghost' size='icon' disabled={processing} />}>
+                            {processing ? <Spinner /> : <MoreHorizontalIcon />}
+                            <span className='sr-only'>{processing ? 'Processing' : 'Actions'}</span>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align='end' className='w-fit'>
+                            <DropdownMenuItem
+                              render={<a href={provider.manageUrl} target='_blank' rel='noopener noreferrer' />}
+                            >
+                              Manage on {provider.label}
+                              <ExternalLink className='ml-2 size-4' />
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => handleSocialDisconnect(account)}
+                              className='text-destructive'
+                              disabled={processing}
+                            >
+                              Disconnect
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
+                    </ItemActions>
+                  </Item>
+                  {index < providers.length - 1 && <ItemSeparator />}
+                </React.Fragment>
+              );
+            })}
+          </>
         </CardContent>
       </Card>
-      <Dialog open={!!editingPasskey} onOpenChange={(open) => !open && setEditingPasskey(null)}>
+
+      {/* Edit Passkey Dialog */}
+      <Dialog
+        open={!!editingPasskey}
+        onOpenChange={(open) => {
+          if (!open) {
+            setEditingPasskey(null);
+            editPasskeyForm.reset();
+          }
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit passkey</DialogTitle>
             <DialogDescription>Update the name of your passkey to help you identify it.</DialogDescription>
           </DialogHeader>
-          <div className='py-4'>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor='passkey-name'>Passkey name</FieldLabel>
-                <Input
-                  id='passkey-name'
-                  value={editedPasskeyName}
-                  onChange={(e) => setEditedPasskeyName(e.target.value)}
-                  placeholder='e.g., MacBook Pro'
+          <form onSubmit={editPasskeyForm.handleSubmit(handleSavePasskey)}>
+            <div className='py-4'>
+              <FieldGroup>
+                <Controller
+                  name='name'
+                  control={editPasskeyForm.control}
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor='passkey-name'>Passkey name</FieldLabel>
+                      <Input {...field} id='passkey-name' placeholder='e.g., MacBook Pro' />
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                    </Field>
+                  )}
                 />
-              </Field>
-            </FieldGroup>
-          </div>
-          <DialogFooter>
-            <Button variant='outline' onClick={() => setEditingPasskey(null)} disabled={isSavingPasskey}>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSavePasskeyName}
-              disabled={isSavingPasskey || !editedPasskeyName?.trim() || editedPasskeyName === editingPasskey?.name}
-            >
-              {isSavingPasskey ? (
-                <>
-                  <Spinner className='mr-2' />
-                  Saving...
-                </>
-              ) : (
-                'Save changes'
-              )}
-            </Button>
-          </DialogFooter>
+              </FieldGroup>
+            </div>
+            <DialogFooter>
+              <Button
+                variant='outline'
+                onClick={() => {
+                  setEditingPasskey(null);
+                  editPasskeyForm.reset();
+                }}
+                disabled={editPasskeyForm.formState.isSubmitting}
+                type='button'
+              >
+                Cancel
+              </Button>
+              <Button
+                type='submit'
+                disabled={editPasskeyForm.formState.isSubmitting || !editPasskeyForm.formState.isDirty}
+              >
+                {editPasskeyForm.formState.isSubmitting ? (
+                  <>
+                    <Spinner />
+                    Saving...
+                  </>
+                ) : (
+                  'Save changes'
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </>
@@ -325,8 +505,8 @@ export function SessionsSection({
     if (b.id === activeSessionId) return 1;
     return b.updatedAt.getTime() - a.updatedAt.getTime();
   });
-  const [sessions, setSessions] = useState(sortedSessions);
-  const [isModifyingSessions, setIsModifyingSessions] = useState(false);
+  const [sessions, setSessions] = React.useState(sortedSessions);
+  const [isModifyingSessions, setIsModifyingSessions] = React.useState(false);
 
   async function handleRevokeSession(token: string) {
     setIsModifyingSessions(true);
@@ -367,15 +547,15 @@ export function SessionsSection({
 
             return (
               <Item key={session.id} variant='outline'>
-                <ItemMedia variant='icon' className='size-10'>
-                  <Icon className='size-5' />
+                <ItemMedia variant='image'>
+                  <Icon />
                 </ItemMedia>
                 <ItemContent>
                   <ItemTitle>
                     {deviceName}
                     {isCurrent && (
-                      <Badge variant='secondary' className='ml-2 text-xs'>
-                        <Check className='mr-1 size-3' />
+                      <Badge variant='secondary' className='ml-2 gap-1 text-xs'>
+                        <Check />
                         Current
                       </Badge>
                     )}
@@ -387,7 +567,7 @@ export function SessionsSection({
                 <ItemActions>
                   {!isCurrent && (
                     <AlertDialog>
-                      <AlertDialogTrigger disabled={isModifyingSessions} render={<Button variant='ghost' size='sm' />}>
+                      <AlertDialogTrigger render={<Button variant='ghost' size='sm' disabled={isModifyingSessions} />}>
                         Revoke
                       </AlertDialogTrigger>
                       <AlertDialogContent>
@@ -419,10 +599,10 @@ export function SessionsSection({
 
 export function OrganizationsSection({ organizations: initialOrganizations }: { organizations: Organization[] }) {
   const router = useRouter();
-  const [organizations, setOrganizations] = useState(initialOrganizations);
-  const [orgToLeave, setOrgToLeave] = useState<Organization | null>(null);
-  const [leaveFeedback, setLeaveFeedback] = useState('');
-  const [isLeavingOrg, setIsLeavingOrg] = useState(false);
+  const [organizations, setOrganizations] = React.useState(initialOrganizations);
+  const [orgToLeave, setOrgToLeave] = React.useState<Organization | null>(null);
+  const [leaveFeedback, setLeaveFeedback] = React.useState('');
+  const [isLeavingOrg, setIsLeavingOrg] = React.useState(false);
 
   async function handleLeaveOrg() {
     if (!orgToLeave) return;
@@ -577,9 +757,9 @@ export function OrganizationsSection({ organizations: initialOrganizations }: { 
 }
 
 export function DangerSection({ userId, hasOrganizations }: { userId: string; hasOrganizations: boolean }) {
-  const [deleteFeedback, setDeleteFeedback] = useState('');
-  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteFeedback, setDeleteFeedback] = React.useState('');
+  const [isDeletingAccount, setIsDeletingAccount] = React.useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
 
   async function handleDeleteAccount() {
     setIsDeletingAccount(true);
