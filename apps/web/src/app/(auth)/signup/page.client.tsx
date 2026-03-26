@@ -3,14 +3,16 @@
 import { Mail } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
-import { useState } from 'react';
+import * as React from 'react';
 import { toast } from 'sonner';
 
+import { ExternalLoginButtons } from '@/components/auth-buttons';
 import { PakloIcon } from '@/components/logos';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
+import { useMounted } from '@/hooks/use-mounted';
 import { magicLinkLogin } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 
@@ -19,16 +21,17 @@ interface SignupFormProps extends React.ComponentProps<'div'> {
 }
 
 export function SignupForm({ className, redirectTo, ...props }: SignupFormProps) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const [name, setName] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [magicLinkSent, setMagicLinkSent] = React.useState(false);
+  const mounted = useMounted();
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
     if (!email) return;
 
-    setIsLoading(true);
+    setLoading(true);
     let error: { code?: string; message?: string } | null = null;
     let data: { status: boolean } | null = null;
     try {
@@ -37,7 +40,7 @@ export function SignupForm({ className, redirectTo, ...props }: SignupFormProps)
       error = { message: (err as Error).message };
     }
 
-    setIsLoading(false);
+    setLoading(false);
 
     if (error || !data?.status) {
       toast.error('Failed to send magic link.', { description: error?.message || 'Please try again.' });
@@ -97,7 +100,7 @@ export function SignupForm({ className, redirectTo, ...props }: SignupFormProps)
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              disabled={isLoading}
+              disabled={loading}
             />
           </Field>
           <Field>
@@ -112,12 +115,12 @@ export function SignupForm({ className, redirectTo, ...props }: SignupFormProps)
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={isLoading}
+              disabled={loading}
             />
           </Field>
           <Field>
-            <Button type='submit' disabled={isLoading || !name || !email} size='lg'>
-              {isLoading ? (
+            <Button type='submit' disabled={loading || !name || !email} size='lg'>
+              {loading ? (
                 <Spinner className='size-5' />
               ) : (
                 <>
@@ -129,6 +132,12 @@ export function SignupForm({ className, redirectTo, ...props }: SignupFormProps)
           </Field>
         </form>
       )}
+      <FieldSeparator />
+      <FieldGroup>
+        <Field className='grid md:grid-cols-2'>
+          <ExternalLoginButtons mounted={mounted} loading={loading} setLoading={setLoading} redirectTo={redirectTo} />
+        </Field>
+      </FieldGroup>
       <FieldSeparator />
       <FieldDescription className='text-center text-xs'>
         By continuing, you agree to our{' '}

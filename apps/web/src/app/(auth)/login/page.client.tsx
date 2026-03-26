@@ -1,18 +1,19 @@
 'use client';
 
-import { Fingerprint, Mail } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import * as React from 'react';
 import { toast } from 'sonner';
 
+import { ExternalLoginButtons, SignInWithPasskeyButton } from '@/components/auth-buttons';
 import { LastUsedIndicator } from '@/components/last-used-indicator';
-import { AppleLogo, GoogleLogo, PakloIcon } from '@/components/logos';
+import { PakloIcon } from '@/components/logos';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
+import { useMounted } from '@/hooks/use-mounted';
 import { authClient, magicLinkLogin } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 
@@ -21,85 +22,16 @@ interface LoginFormProps extends React.ComponentProps<'div'> {
 }
 
 export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
-  const thirdPartyLogins = false; // Might add social login but not now!
-
-  const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [magicLinkSent, setMagicLinkSent] = useState(false);
-  const isMounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
-  const router = useRouter();
-
-  // Preload passkey authentication for conditional UI
-  useEffect(() => {
-    if (!isMounted) return;
-
-    // check if WebAuthn is supported
-    if (!window.PublicKeyCredential) {
-      return;
-    }
-
-    // check if browser supports conditional UI and preload passkeys
-    if (
-      !PublicKeyCredential.isConditionalMediationAvailable ||
-      !PublicKeyCredential.isConditionalMediationAvailable()
-    ) {
-      return;
-    }
-
-    // start autofill passkey with redirect handling
-    const abortController = new AbortController();
-    authClient.signIn
-      .passkey({
-        autoFill: true,
-        fetchOptions: {
-          signal: abortController.signal,
-          onSuccess() {
-            window.location.href = redirectTo;
-          },
-          onError(context) {
-            console.error('❌ [PASSKEY] Autofill sign-in error:', context.error);
-          },
-        },
-      })
-      .catch((error) => {
-        // Silent catch for autofill errors (user might cancel or no passkey available)
-        console.log('🔍 [DEBUG] Autofill passkey silent error:', error);
-      });
-    return () => abortController.abort();
-  }, [isMounted, redirectTo]);
-
-  async function handlePasskeyLogin() {
-    setIsLoading(true);
-    let error: { code?: string; message?: string } | null = null;
-    try {
-      // no autofill for manual trigger
-      ({ error } = await authClient.signIn.passkey({ autoFill: false }));
-    } catch (err) {
-      error = { message: (err as Error).message };
-    }
-
-    setIsLoading(false);
-
-    if (error) {
-      if (error.code !== 'AUTH_CANCELLED') {
-        toast.error('Passkey sign-in failed.', { description: error.message || 'Please try again.' });
-      }
-      return;
-    }
-
-    // Redirect to dashboard or specified redirect URL after successful login
-    router.push(redirectTo);
-  }
+  const [email, setEmail] = React.useState('');
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [magicLinkSent, setMagicLinkSent] = React.useState(false);
+  const mounted = useMounted();
 
   async function handleMagicLinkLogin(e: React.FormEvent) {
     e.preventDefault();
     if (!email) return;
 
-    setIsLoading(true);
+    setLoading(true);
     let error: { code?: string; message?: string } | null = null;
     let data: { status: boolean } | null = null;
     try {
@@ -108,7 +40,7 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
       error = { message: (err as Error).message };
     }
 
-    setIsLoading(false);
+    setLoading(false);
 
     if (error || !data?.status) {
       toast.error('Failed to send magic link.', { description: error?.message || 'Please try again.' });
@@ -134,105 +66,84 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
             Don&apos;t have an account? <Link href='/signup'>Sign up</Link>
           </FieldDescription>
         </div>
-        <Field className='grid gap-4 text-center sm:grid-cols-1'>
-          <Button
-            variant='outline'
-            type='button'
-            size='lg'
-            onClick={handlePasskeyLogin}
-            disabled={isLoading}
-            className='relative flex h-12 gap-2'
-          >
-            {isLoading ? (
-              <Spinner className='size-5' />
-            ) : (
-              <>
-                <Fingerprint className='size-5' />
-                <span>Sign in with Passkey</span>
-                {isMounted && authClient.isLastUsedLoginMethod('passkey') && <LastUsedIndicator />}
-              </>
-            )}
-          </Button>
-          <FieldDescription>Use your device biometrics for instant access</FieldDescription>
-        </Field>
-        <FieldSeparator>OR</FieldSeparator>
-        {magicLinkSent ? (
+      </FieldGroup>
+      {magicLinkSent ? (
+        <div className='space-y-4 text-center'>
           <div className='space-y-4 text-center'>
-            <div className='space-y-4 text-center'>
-              <div className='flex justify-center'>
-                <div className='rounded-full bg-primary/10 p-3'>
-                  <Mail className='size-6 text-primary' />
-                </div>
+            <div className='flex justify-center'>
+              <div className='rounded-full bg-primary/10 p-3'>
+                <Mail className='size-6 text-primary' />
               </div>
             </div>
-            <FieldGroup>
-              <FieldDescription className='text-lg font-semibold'>Check your email</FieldDescription>
-              <FieldDescription>
-                We sent a magic link to <span className='font-medium'>{email}</span>. Click the link to sign in.
-              </FieldDescription>
-              <Field>
-                <Button variant='ghost' onClick={() => setMagicLinkSent(false)}>
-                  Use a different email
-                </Button>
-              </Field>
-            </FieldGroup>
           </div>
-        ) : (
-          <form className='space-y-4' onSubmit={handleMagicLinkLogin}>
+          <FieldGroup>
+            <FieldDescription className='text-lg font-semibold'>Check your email</FieldDescription>
+            <FieldDescription>
+              We sent a magic link to <span className='font-medium'>{email}</span>. Click the link to sign in.
+            </FieldDescription>
             <Field>
-              <FieldLabel htmlFor='email'>Email</FieldLabel>
-              <Input
-                id='email'
-                type='email'
-                placeholder='chris.johnson@contoso.com'
-                autoCapitalize='none'
-                autoComplete='email webauthn'
-                autoCorrect='off'
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isLoading}
-              />
-            </Field>
-            <Field>
-              <Button
-                type='submit'
-                variant='secondary'
-                disabled={isLoading || !email}
-                size='lg'
-                className='relative flex gap-2'
-              >
-                {isLoading ? (
-                  <Spinner className='size-5' />
-                ) : (
-                  <>
-                    <Mail className='size-5' />
-                    <span>Send magic link</span>
-                    {isMounted && authClient.isLastUsedLoginMethod('email') && <LastUsedIndicator />}
-                  </>
-                )}
+              <Button variant='ghost' onClick={() => setMagicLinkSent(false)}>
+                Use a different email
               </Button>
             </Field>
-          </form>
-        )}
-        {/* Might add social login but not now! */}
-        {thirdPartyLogins ? (
-          <>
-            <FieldSeparator>OR</FieldSeparator>
-            <Field className='grid gap-4 sm:grid-cols-2'>
-              <Button variant='outline' type='button' disabled className='relative flex gap-2'>
-                <AppleLogo className='size-4' />
-                <span>Continue with Apple</span>
-                {isMounted && authClient.isLastUsedLoginMethod('apple') && <LastUsedIndicator />}
-              </Button>
-              <Button variant='outline' type='button' disabled className='relative flex gap-2'>
-                <GoogleLogo className='size-4' />
-                <span>Continue with Google</span>
-                {isMounted && authClient.isLastUsedLoginMethod('google') && <LastUsedIndicator />}
-              </Button>
-            </Field>
-          </>
-        ) : null}
+          </FieldGroup>
+        </div>
+      ) : (
+        <form className='space-y-4' onSubmit={handleMagicLinkLogin}>
+          <Field>
+            <FieldLabel htmlFor='email'>Email</FieldLabel>
+            <Input
+              id='email'
+              type='email'
+              placeholder='chris.johnson@contoso.com'
+              autoCapitalize='none'
+              autoComplete='email webauthn'
+              autoCorrect='off'
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+            />
+          </Field>
+          <Field>
+            <Button
+              type='submit'
+              variant='secondary'
+              disabled={loading || !email}
+              size='lg'
+              className='relative flex gap-2'
+            >
+              {loading ? (
+                <Spinner className='size-5' />
+              ) : (
+                <>
+                  <Mail className='size-5' />
+                  <span>Send magic link</span>
+                  {mounted && authClient.isLastUsedLoginMethod('email') && <LastUsedIndicator />}
+                </>
+              )}
+            </Button>
+          </Field>
+        </form>
+      )}
+      <FieldSeparator />
+      <FieldGroup>
+        <Field className='grid md:grid-cols-2'>
+          <ExternalLoginButtons mounted={mounted} loading={loading} setLoading={setLoading} redirectTo={redirectTo} />
+        </Field>
+      </FieldGroup>
+
+      <FieldSeparator>OR</FieldSeparator>
+      <FieldGroup>
+        <Field>
+          <SignInWithPasskeyButton
+            mounted={mounted}
+            loading={loading}
+            setLoading={setLoading}
+            redirectTo={redirectTo}
+            preloadPasskeys={true}
+          />
+        </Field>
       </FieldGroup>
       <FieldSeparator />
       <FieldDescription className='text-center text-xs'>

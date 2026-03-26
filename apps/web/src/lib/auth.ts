@@ -80,6 +80,15 @@ export const auth = betterAuth({
       },
     },
   },
+  socialProviders: {
+    microsoft: {
+      tenantId: 'common', // 'common' for multi-tenant apps (remove this to restrict to company tenant)
+      clientId: process.env.ENTRAID_CLIENT_ID!,
+      clientSecret: process.env.ENTRAID_CLIENT_SECRET,
+      // force account selection (I have many account and others might too)
+      prompt: 'select_account',
+    },
+  },
   plugins: [
     admin({
       ac: accessControl,

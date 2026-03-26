@@ -3,11 +3,11 @@
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { ThemeProvider as NextThemesProvider, useTheme as useNextTheme } from 'next-themes';
 import type { ReactNode } from 'react';
-import { useSyncExternalStore } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { useMounted } from '@/hooks/use-mounted';
 
 interface ThemeProviderProps {
   children: ReactNode;
@@ -23,11 +23,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
 export function useTheme() {
   const { theme, setTheme, resolvedTheme } = useNextTheme();
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
+  const mounted = useMounted();
 
   return {
     theme,

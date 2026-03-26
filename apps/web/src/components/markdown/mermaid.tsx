@@ -1,14 +1,12 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-import { use, useId, useSyncExternalStore } from 'react';
+import { use, useId } from 'react';
+
+import { useMounted } from '@/hooks/use-mounted';
 
 export function Mermaid({ chart }: { chart: string }) {
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
+  const mounted = useMounted();
 
   if (!mounted) return;
   return <MermaidContent chart={chart} />;
