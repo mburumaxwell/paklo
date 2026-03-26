@@ -2,7 +2,7 @@ import { passkey } from '@better-auth/passkey';
 import { waitUntil } from '@vercel/functions';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { APIError } from 'better-auth/api';
-import { betterAuth } from 'better-auth/minimal';
+import { type BetterAuthOptions, betterAuth } from 'better-auth/minimal';
 import { nextCookies } from 'better-auth/next-js';
 import { admin, lastLoginMethod, magicLink, organization } from 'better-auth/plugins';
 
@@ -87,6 +87,8 @@ export const auth = betterAuth({
         user: userRole,
         admin: adminRole,
       },
+      // defaults to 1 hour
+      impersonationSessionDuration: 3600, // 1 hour
     }),
     organization({
       schema: {
@@ -146,7 +148,7 @@ export const auth = betterAuth({
     lastLoginMethod(),
     nextCookies(), // must be last to work with server actions/components
   ],
-});
+} satisfies BetterAuthOptions);
 
 export type Session = typeof auth.$Infer.Session;
 export type Organization = typeof auth.$Infer.Organization;

@@ -16,6 +16,7 @@ import {
   Plus,
   ShieldAlert,
   Users,
+  UsersRound,
 } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
@@ -99,7 +100,10 @@ export function AppSidebar({ session, organizations, ...props }: AppSidebarProps
       ? ([
           {
             label: 'Admin',
-            items: [{ label: 'Usage Telemetry', href: '/dashboard/admin/usage', icon: Combine }],
+            items: [
+              { label: 'Usage Telemetry', href: '/dashboard/admin/usage', icon: Combine },
+              { label: 'Users', href: '/dashboard/admin/users', icon: UsersRound },
+            ],
           },
         ] satisfies MenuGroup[])
       : []),
