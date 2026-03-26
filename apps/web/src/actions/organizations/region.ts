@@ -1,11 +1,10 @@
 'use server';
 
-import { z } from 'zod';
-
 import { deleteKeyVaultSecret, getKeyVaultSecret, setKeyVaultSecret } from '@/lib/azure';
 import { prisma } from '@/lib/prisma';
 import { RegionCodeSchema, getRegionInfo } from '@/lib/regions';
 import { ServerActionValidationError, createServerAction } from '@/lib/server-action';
+import { z } from '@/lib/zod';
 
 /**
  * Update an organization's region.

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from '@/lib/zod';
 
 export const TimeRangeSchema = z.enum(['1h', '4h', '6h', '12h', '24h', '7d', '30d', '90d', '12M']);
 export const GranularitySchema = z.enum(['5m', '15m', '30m', '1h', '6h', '12h', '1d', '1w', '1M']);

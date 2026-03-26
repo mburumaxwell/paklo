@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from '@/lib/zod';
 
 export const FeedbackTypeSchema = z.enum(['docs.review', 'organization.leave', 'user.delete', 'billing.cancel']);
 export type FeedbackType = z.infer<typeof FeedbackTypeSchema>;

@@ -1,10 +1,10 @@
 import { headers as headersList } from 'next/headers';
-import type { ZodType, z } from 'zod';
 
 import { type Session, auth } from '@/lib/auth';
 import { logger } from '@/lib/logger';
 import { Prisma } from '@/lib/prisma';
 import { type RateLimiterType, getRatelimiter } from '@/lib/ratelimit';
+import type { ZodType, z } from '@/lib/zod';
 
 /**
  * Custom error for validation failures in server actions.

@@ -1,11 +1,10 @@
 'use server';
 
-import { z } from 'zod';
-
 import { PRICE_LOOKUP_KEY_MANAGEMENT, PRICE_LOOKUP_KEY_USAGE, getPrices, stripe } from '@/lib/billing';
 import { environment } from '@/lib/environment';
 import { prisma } from '@/lib/prisma';
 import { ServerActionValidationError, createServerAction } from '@/lib/server-action';
+import { z } from '@/lib/zod';
 import { config } from '@/site-config';
 
 const BillingActionInputSchema = z.object({

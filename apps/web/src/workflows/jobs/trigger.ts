@@ -27,7 +27,6 @@ import {
 } from '@paklo/runner';
 import { filesize } from 'filesize';
 import { FatalError, type WorkflowMetadata, createHook, getWorkflowMetadata, sleep } from 'workflow';
-import { z } from 'zod';
 
 import { getGithubToken, getSecretValue } from '@/integrations';
 import {
@@ -47,6 +46,7 @@ import { logger } from '@/lib/logger';
 import { type UpdateJob, prisma } from '@/lib/prisma';
 import { type RegionCode, toAzureLocation } from '@/lib/regions';
 import { streamToString } from '@/lib/utils';
+import { z } from '@/lib/zod';
 import { config } from '@/site-config';
 
 import type { TriggerUpdateJobsWorkflowOptions } from './types';

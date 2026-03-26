@@ -1,8 +1,3 @@
-import { z } from 'zod';
+import type { z } from '@/lib/zod';
 
-export const periodSchema = z.object({
-  start: z.date(),
-  end: z.date(),
-});
-
-export type Period = z.infer<typeof periodSchema>;
+export type Period = z.infer<ReturnType<typeof z.period>>;

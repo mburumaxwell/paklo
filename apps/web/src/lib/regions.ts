@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from '@/lib/zod';
 
 /**
  * Codes for organization regions using IATA airport codes, similar to Vercel

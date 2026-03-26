@@ -3,13 +3,13 @@
 import { ANONYMOUS_USER_ID, type AzureDevOpsOrganizationUrl, extractOrganizationUrl } from '@paklo/core/azure';
 import { createGitHubClient } from '@paklo/core/github';
 import { RequestError } from 'octokit';
-import { z } from 'zod';
 
 import { createAzdoClient } from '@/integrations';
 import { setKeyVaultSecret } from '@/lib/azure';
 import { OrganizationTypeSchema } from '@/lib/enums';
 import { prisma } from '@/lib/prisma';
 import { ServerActionValidationError, createServerAction } from '@/lib/server-action';
+import { z } from '@/lib/zod';
 
 export const validateOrganizationCredentials = createServerAction({
   input: z.object({

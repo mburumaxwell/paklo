@@ -1,9 +1,9 @@
 // intentionally not re-exporting stuff
 
 import { start } from 'workflow/api';
-import type { z } from 'zod';
 
 import { prisma } from '@/lib/prisma';
+import type { z } from '@/lib/zod';
 import { TriggerUpdateJobsWorkflowOptionsSchema, triggerUpdateJobs } from '@/workflows/jobs';
 import { SyncWorkflowOptionsSchema, synchronizeWithProvider } from '@/workflows/sync';
 

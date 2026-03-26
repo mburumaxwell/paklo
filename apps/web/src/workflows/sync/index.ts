@@ -1,7 +1,7 @@
 import { FatalError } from 'workflow';
-import { z } from 'zod';
 
 import { type Organization, type Project, type Repository, prisma } from '@/lib/prisma';
+import { z } from '@/lib/zod';
 
 import { createSyncProvider } from './provider';
 import { type SyncResult, type SyncSingleResult, Synchronizer } from './synchronizer';

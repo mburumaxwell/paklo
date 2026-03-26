@@ -1,13 +1,12 @@
 'use server';
 
-import { z } from 'zod';
-
 import { deleteKeyVaultSecret, setKeyVaultSecret } from '@/lib/azure';
 import { PakloId } from '@/lib/ids';
 import { type OrganizationSecret, prisma } from '@/lib/prisma';
 import { RegionCodeSchema } from '@/lib/regions';
 import { validateSecretNameFormat } from '@/lib/secrets';
 import { ServerActionValidationError, createServerAction } from '@/lib/server-action';
+import { z } from '@/lib/zod';
 
 /** Validates if a secret name and its uniqueness within an organization */
 export const validateSecretName = createServerAction({

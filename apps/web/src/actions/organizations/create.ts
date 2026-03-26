@@ -2,13 +2,13 @@
 
 import { extractOrganizationUrl } from '@paklo/core/azure';
 import { Keygen } from '@paklo/core/keygen';
-import { z } from 'zod';
 
 import { type Organization, auth } from '@/lib/auth';
 import { type OrganizationType, OrganizationTypeSchema } from '@/lib/enums';
 import { prisma } from '@/lib/prisma';
 import { type RegionCode, RegionCodeSchema } from '@/lib/regions';
 import { createServerAction } from '@/lib/server-action';
+import { z } from '@/lib/zod';
 
 export type OrganizationCreateOptions = {
   name: string;

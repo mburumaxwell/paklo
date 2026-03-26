@@ -1,5 +1,6 @@
 import type { DependabotPackageManager } from '@paklo/core/dependabot';
-import { z } from 'zod';
+
+import { z } from '@/lib/zod';
 
 export type WithAll<T> = T | 'all';
 

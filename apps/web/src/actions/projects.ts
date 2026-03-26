@@ -1,13 +1,12 @@
 'use server';
 
-import { z } from 'zod';
-
 import { AvailableProjectSchema, createAzdoClient } from '@/integrations';
 import { PakloId } from '@/lib/ids';
 import { logger } from '@/lib/logger';
 import { prisma } from '@/lib/prisma';
 import { ServerActionValidationError, createServerAction } from '@/lib/server-action';
 import { HEADER_NAME_ORGANIZATION, HEADER_NAME_PROJECT, getWebhooksUrl } from '@/lib/webhooks';
+import { z } from '@/lib/zod';
 import { startSync } from '@/workflows';
 
 export const connectProjects = createServerAction({

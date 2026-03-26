@@ -1,7 +1,6 @@
-import { z } from 'zod';
-
 import type { OrganizationType } from '@/lib/enums';
 import { prisma } from '@/lib/prisma';
+import { z } from '@/lib/zod';
 
 import { createAzdoClient } from './client';
 

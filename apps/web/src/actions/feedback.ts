@@ -1,7 +1,5 @@
 'use server';
 
-import { z } from 'zod';
-
 import {
   type FeedbackType,
   FeedbackTypeSchema,
@@ -13,6 +11,7 @@ import { PakloId } from '@/lib/ids';
 import { logger } from '@/lib/logger';
 import { prisma } from '@/lib/prisma';
 import { createServerAction } from '@/lib/server-action';
+import { z } from '@/lib/zod';
 
 export type StoreFeedbackOptions = Partial<SubmitFeedback> & {
   /** Optional ID for deduplication */

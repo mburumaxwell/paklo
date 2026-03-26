@@ -1,7 +1,7 @@
 import { DependabotCommandSchema } from '@paklo/core/dependabot';
-import { z } from 'zod';
 
 import { UpdateJobTriggerSchema } from '@/lib/enums';
+import { z } from '@/lib/zod';
 
 export const TriggerUpdateJobsWorkflowOptionsSchema = z
   .object({
