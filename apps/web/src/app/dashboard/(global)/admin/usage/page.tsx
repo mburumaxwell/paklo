@@ -1,13 +1,13 @@
-import type { DependabotPackageManager } from '@paklo/core/dependabot';
 import type { Metadata } from 'next';
 import { headers as requestHeaders } from 'next/headers';
 import { forbidden, unauthorized } from 'next/navigation';
 
-import { type TimeRange, getDateFromTimeRange } from '@/lib/aggregation';
+import { TimeRangeCodec, getDateFromTimeRange } from '@/lib/aggregation';
 import { auth, userHasPermission } from '@/lib/auth';
-import { type WithAll, unwrapWithAll } from '@/lib/enums';
+import { DependabotPackageManagerCodec } from '@/lib/enums';
 import { type Filter, type UsageTelemetry, getMongoCollection } from '@/lib/mongodb';
-import type { RegionCode } from '@/lib/regions';
+import { booleanFilter, createLoader, enumArrayFilter, enumFilter } from '@/lib/nuqs';
+import { RegionCodeCodec } from '@/lib/regions';
 
 import { type SlimTelemetry, TelemetryDashboard } from './page.client';
 
@@ -23,30 +23,22 @@ export default async function Page(props: PageProps<'/dashboard/admin/usage'>) {
   if (!session) return unauthorized();
   if (!(await userHasPermission({ headers, permissions: { usage: ['view'] } }))) return forbidden();
 
-  const searchParams = (await props.searchParams) as {
-    timeRange?: TimeRange;
-    region?: WithAll<RegionCode>;
-    packageManager?: WithAll<DependabotPackageManager>;
-    success?: WithAll<'true' | 'false'>;
+  const filterSearchParams = {
+    timeRange: enumFilter(TimeRangeCodec).withDefault('24h'),
+    region: enumArrayFilter(RegionCodeCodec),
+    packageManager: enumArrayFilter(DependabotPackageManagerCodec),
+    success: booleanFilter(),
   };
-  const {
-    timeRange = '24h',
-    region: selectedRegion,
-    packageManager: selectedPackageManager,
-    success: successFilter,
-  } = searchParams;
+  const searchParamsLoader = createLoader(filterSearchParams);
+  const { timeRange, region, packageManager, success } = searchParamsLoader(await props.searchParams);
   const { start, end } = getDateFromTimeRange(timeRange);
-
-  const region = unwrapWithAll(selectedRegion);
-  const packageManager = unwrapWithAll(selectedPackageManager);
-  const success = successFilter === 'true' ? true : successFilter === 'false' ? false : undefined;
 
   const collection = await getMongoCollection('usage_telemetry');
   const query: Filter<UsageTelemetry> = {
     started: { $gte: start, $lte: end },
-    ...(region ? { region: region } : {}),
-    ...(packageManager ? { 'package-manager': packageManager } : {}),
-    ...(success !== undefined ? { success: success } : {}),
+    ...(region.length ? { region: { $in: region } } : {}),
+    ...(packageManager.length ? { 'package-manager': { $in: packageManager } } : {}),
+    ...(success !== null ? { success } : {}),
   };
   const telemetries = await collection
     .find(query)

@@ -4,7 +4,7 @@ import { forbidden, unauthorized } from 'next/navigation';
 
 import { auth, userHasPermission } from '@/lib/auth';
 import { UserRoleCodec, UserStatusCodec } from '@/lib/enums';
-import { createLoader, enumFilter, offsetFilter, textFilter } from '@/lib/nuqs';
+import { createLoader, enumArrayFilter, offsetFilter, textFilter } from '@/lib/nuqs';
 import { getPaginatedData, getTake } from '@/lib/pagination';
 import { prisma, processSearchQuery } from '@/lib/prisma';
 
@@ -22,8 +22,8 @@ export default async function UsersPage(props: PageProps<'/dashboard/admin/users
 
   const filterSearchParams = {
     q: textFilter(),
-    role: enumFilter(UserRoleCodec),
-    status: enumFilter(UserStatusCodec),
+    role: enumArrayFilter(UserRoleCodec),
+    status: enumArrayFilter(UserStatusCodec),
     offset: offsetFilter(),
   };
   const searchParamsLoader = createLoader(filterSearchParams);

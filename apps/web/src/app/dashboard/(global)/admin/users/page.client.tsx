@@ -40,7 +40,7 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { authClient } from '@/lib/auth-client';
 import { type UserRole, UserRoleCodec, UserStatusCodec, userRoleOptions, userStatusOptions } from '@/lib/enums';
-import { useEnumQueryFilterState, useOffsetQueryState, useTextQueryState } from '@/lib/nuqs';
+import { useEnumArrayQueryFilterState, useOffsetQueryState, useTextQueryState } from '@/lib/nuqs';
 import type { PaginatedData } from '@/lib/pagination';
 import type { User } from '@/lib/prisma';
 
@@ -355,8 +355,8 @@ export function UsersPageView({
   data: PaginatedData<SimpleUser>;
 }) {
   const [q, setQ] = useTextQueryState();
-  const [role, setRole] = useEnumQueryFilterState('role', UserRoleCodec);
-  const [status, setStatus] = useEnumQueryFilterState('status', UserStatusCodec);
+  const [role, setRole] = useEnumArrayQueryFilterState('role', UserRoleCodec);
+  const [status, setStatus] = useEnumArrayQueryFilterState('status', UserStatusCodec);
   const [, setOffset] = useOffsetQueryState();
 
   const toolbar: DataTableToolbarOptions = {
@@ -364,6 +364,7 @@ export function UsersPageView({
       text: { placeholder: 'Search users ...', value: q, onChange: setQ },
       facets: [
         makeToolbarOptionsFacet({
+          multiple: true,
           column: 'role',
           title: 'Role',
           options: userRoleOptions,
@@ -371,6 +372,7 @@ export function UsersPageView({
           onChange: setRole,
         }),
         makeToolbarOptionsFacet({
+          multiple: true,
           column: 'banned',
           title: 'Status',
           options: userStatusOptions,

@@ -1,36 +1,25 @@
+import type { LabelMappingValue, LabelOption } from '@/lib/enums';
 import { z } from '@/lib/zod';
 
+// Time Range
 export const TimeRangeSchema = z.enum(['1h', '4h', '6h', '12h', '24h', '7d', '30d', '90d', '12M']);
-export const GranularitySchema = z.enum(['5m', '15m', '30m', '1h', '6h', '12h', '1d', '1w', '1M']);
 export type TimeRange = z.infer<typeof TimeRangeSchema>;
-export type Granularity = z.infer<typeof GranularitySchema>;
-
-export type TimeRangeOption = { value: TimeRange; label: string };
-export const timeRangeOptions: TimeRangeOption[] = [
-  { value: '1h', label: 'Last 1 Hour' },
-  { value: '4h', label: 'Last 4 Hours' },
-  { value: '6h', label: 'Last 6 Hours' },
-  { value: '12h', label: 'Last 12 Hours' },
-  { value: '24h', label: 'Last 24 Hours' },
-  { value: '7d', label: 'Last 7 Days' },
-  { value: '30d', label: 'Last 30 Days' },
-  { value: '90d', label: 'Last 3 Months' },
-  { value: '12M', label: 'Last 12 Months' },
-];
-
-export type GranularityOption = { value: Granularity; label: string };
-export const granularityOptions: GranularityOption[] = [
-  { value: '5m', label: '5 Minutes' },
-  { value: '15m', label: '15 Minutes' },
-  { value: '30m', label: '30 Minutes' },
-  { value: '1h', label: '1 Hour' },
-  { value: '6h', label: '6 Hours' },
-  { value: '12h', label: '12 Hours' },
-  { value: '1d', label: '1 Day' },
-  { value: '1w', label: '1 Week' },
-  { value: '1M', label: '1 Month' },
-];
-
+const timeRangeLabelMap: Record<TimeRange, LabelMappingValue> = {
+  '1h': { label: 'Last 1 Hour' },
+  '4h': { label: 'Last 4 Hours' },
+  '6h': { label: 'Last 6 Hours' },
+  '12h': { label: 'Last 12 Hours' },
+  '24h': { label: 'Last 24 Hours' },
+  '7d': { label: 'Last 7 Days' },
+  '30d': { label: 'Last 30 Days' },
+  '90d': { label: 'Last 3 Months' },
+  '12M': { label: 'Last 12 Months' },
+};
+export const timeRangeOptions: LabelOption<TimeRange>[] = Object.entries(timeRangeLabelMap).map(([value, props]) => ({
+  value: value as TimeRange,
+  ...props,
+}));
+export const TimeRangeCodec = z.enumCodec(TimeRangeSchema);
 const TIME_RANGES_MAP: Record<TimeRange, number> = {
   '1h': 1 * 60 * 60 * 1000,
   '4h': 4 * 60 * 60 * 1000,
@@ -63,7 +52,37 @@ export function getDateFromTimeRange(
   const { start } = options;
   return { start, end: new Date(start.getTime() + duration) };
 }
+export function isHourlyRange(timeRange: TimeRange) {
+  return ['1h', '4h', '6h', '12h', '24h'].includes(timeRange);
+}
+export function getCompareLabels(range: TimeRange) {
+  const currentLabel = timeRangeOptions.find((o) => o.value === range)!.label;
+  // "Last 7 Days" -> "Previous 7 Days"
+  const previousLabel = `Previous ${currentLabel.slice(5)}`;
+  return { currentLabel, previousLabel };
+}
 
+// Granularity
+export const GranularitySchema = z.enum(['5m', '15m', '30m', '1h', '6h', '12h', '1d', '1w', '1M']);
+export type Granularity = z.infer<typeof GranularitySchema>;
+const granularityLabelMap: Record<Granularity, LabelMappingValue> = {
+  '5m': { label: '5 Minutes' },
+  '15m': { label: '15 Minutes' },
+  '30m': { label: '30 Minutes' },
+  '1h': { label: '1 Hour' },
+  '6h': { label: '6 Hours' },
+  '12h': { label: '12 Hours' },
+  '1d': { label: '1 Day' },
+  '1w': { label: '1 Week' },
+  '1M': { label: '1 Month' },
+};
+export const granularityOptions: LabelOption<Granularity>[] = Object.entries(granularityLabelMap).map(
+  ([value, props]) => ({
+    value: value as Granularity,
+    ...props,
+  }),
+);
+export const GranularityCodec = z.enumCodec(GranularitySchema);
 const GRANULARITIES_MAP: Record<Granularity, number> = {
   '5m': 5 * 60 * 1_000,
   '15m': 15 * 60 * 1_000,
@@ -80,21 +99,8 @@ export function granularityToMilliseconds(value: Granularity): number {
   if (!ms) throw new Error(`Unsupported granularity: ${value}`);
   return ms;
 }
-
-export function isHourlyRange(timeRange: TimeRange) {
-  return ['1h', '4h', '6h', '12h', '24h'].includes(timeRange);
-}
-
-export function getCompareLabels(range: TimeRange) {
-  const currentLabel = timeRangeOptions.find((o) => o.value === range)!.label;
-  // "Last 7 Days" -> "Previous 7 Days"
-  const previousLabel = `Previous ${currentLabel.slice(5)}`;
-  return { currentLabel, previousLabel };
-}
-
 export const statsTimeRangeOptions = timeRangeOptions.filter((o) => ['7d', '30d', '90d'].includes(o.value));
 export const defaultStatsTimeRangeOption = statsTimeRangeOptions[0]!;
-
 export function getStatsGranularity(range: TimeRange): Granularity {
   switch (range) {
     case '7d':

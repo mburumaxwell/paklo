@@ -1,3 +1,4 @@
+import type { LabelMappingValue, LabelOption } from '@/lib/enums';
 import { z } from '@/lib/zod';
 
 /**
@@ -14,6 +15,7 @@ export const RegionCodeSchema = z.enum([
   'pdx', 'sfo', 'sin', 'syd', 'yul',
 ]);
 export type RegionCode = z.infer<typeof RegionCodeSchema>;
+export const RegionCodeCodec = z.enumCodec(RegionCodeSchema);
 
 export type RegionInfo = {
   code: RegionCode;
@@ -22,6 +24,7 @@ export type RegionInfo = {
   visible: boolean; // show in UI
   available: boolean; // flip on as you enable it
   label: string; // Human label
+  disabled?: boolean;
 };
 
 /** List of supported regions with their mappings and availability */
@@ -57,6 +60,13 @@ export const REGIONS: RegionInfo[] = [
   // Australia
   { code: 'syd', vercel: 'syd1', azure: 'australiaeast',      visible: true,  available: false, label: 'Sydney (AU)' }, // Sydney, not Melbourne
 ];
+const regionsLabelMap: Record<RegionCode, LabelMappingValue> = Object.fromEntries(
+  REGIONS.map(({ code, label, disabled }) => [code, { label, disabled }]),
+) as Record<RegionCode, LabelMappingValue>;
+export const regionOptions: LabelOption<RegionCode>[] = Object.entries(regionsLabelMap).map(([value, props]) => ({
+  value: value as RegionCode,
+  ...props,
+}));
 
 export function isValidRegionCode(code: string): code is RegionCode {
   return RegionCodeSchema.safeParse(code).success;

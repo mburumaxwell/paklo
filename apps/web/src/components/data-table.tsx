@@ -17,17 +17,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import {
-  ArrowDown,
-  ArrowUp,
-  ArrowUpDown,
-  Check,
-  ChevronDownIcon,
-  EyeOff,
-  PlusCircle,
-  Settings2,
-  XIcon,
-} from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDownIcon, EyeOff, PlusCircle, Settings2, XIcon } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
 import * as React from 'react';
@@ -38,14 +28,16 @@ import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from '@/components/ui/command';
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxTrigger,
+  ComboboxValue,
+  type ComboboxValueType,
+} from '@/components/ui/combobox';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -65,30 +57,34 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useDebounce } from '@/hooks/use-debounce';
 import { cn } from '@/lib/utils';
 
-export type DataTableFacetedFilterOption = {
+export type DataTableFacetedFilterOption<TValue> = {
   label: string;
-  value: string;
+  value: TValue;
   icon?: React.ComponentType<{ className?: string }>;
   image?: React.ComponentType<{ className?: string }>;
 };
 
 export type DataTableToolbarAction = { title: string; icon?: Icon } & ({ href: Route } | { onClick: () => void });
 
-export type DataTableToolbarOptionsFacet<T> = {
-  column: string;
-  title: string;
-  options: DataTableFacetedFilterOption[];
-  value: T[];
-  onChange: (value: T[]) => void;
-};
-export function makeToolbarOptionsFacet<T>(options: DataTableToolbarOptionsFacet<T>): DataTableToolbarOptionsFacet<T> {
+export type DataTableToolbarOptionsFacet<T, Multiple extends boolean | undefined> = DataTableFacetedFilterProps<
+  T,
+  Multiple
+> & { column: string };
+export function makeToolbarOptionsFacet<T>(
+  options: DataTableToolbarOptionsFacet<T, false>,
+): DataTableToolbarOptionsFacet<T, false>;
+export function makeToolbarOptionsFacet<T>(
+  options: DataTableToolbarOptionsFacet<T, true>,
+): DataTableToolbarOptionsFacet<T, true>;
+export function makeToolbarOptionsFacet<T, Multiple extends boolean | undefined>(
+  options: DataTableToolbarOptionsFacet<T, Multiple>,
+): DataTableToolbarOptionsFacet<T, Multiple> {
   return options;
 }
 export type DataTableToolbarOptions = {
@@ -100,7 +96,7 @@ export type DataTableToolbarOptions = {
       onChange: (value: string) => void;
     };
     // oxlint-disable-next-line no-explicit-any -- can be any type
-    facets?: DataTableToolbarOptionsFacet<any>[];
+    facets?: DataTableToolbarOptionsFacet<any, boolean | undefined>[];
   };
   actions?: DataTableToolbarAction[];
 };
@@ -271,7 +267,7 @@ export function DataTable<TData, TValue = unknown>({
 }
 
 interface DataTableToolbarProps<TData> extends DataTableToolbarOptions {
-  table: TanStackTable<TData>;
+  table?: TanStackTable<TData>;
 }
 
 export function DataTableToolbar<TData>({ table, filters, actions }: DataTableToolbarProps<TData>) {
@@ -288,14 +284,16 @@ export function DataTableToolbar<TData>({ table, filters, actions }: DataTableTo
 
   // check if any controlled filters are active
   const hasTextFilter = filters?.text && filters.text.value.length > 0;
-  const hasFacetFilters = filters?.facets?.some((facet) => facet.value.length > 0);
+  const hasFacetFilters = filters?.facets?.some((facet) =>
+    Array.isArray(facet.value) ? facet.value.length > 0 : facet.value != null,
+  );
   const isFiltered = hasTextFilter || hasFacetFilters;
 
   function handleReset() {
     setLocalTextValue('');
     filters?.text?.onChange(''); // clear text filter
-    filters?.facets?.forEach((f) => f.onChange([])); // clear facet filters
-    table.resetColumnFilters(); // clear any internal table filters just in case
+    filters?.facets?.forEach((facet) => facet.onChange(facet.multiple ? [] : null)); // clear facet filters
+    table?.resetColumnFilters(); // clear any internal table filters just in case
   }
 
   return (
@@ -310,13 +308,7 @@ export function DataTableToolbar<TData>({ table, filters, actions }: DataTableTo
           />
         )}
         {filters?.facets?.map((facet) => (
-          <DataTableFacetedFilter
-            key={facet.column}
-            title={facet.title}
-            options={facet.options}
-            value={facet.value}
-            onChange={facet.onChange}
-          />
+          <DataTableFacetedFilter key={facet.column} {...facet} />
         ))}
         {isFiltered && (
           <Button variant='ghost' size='sm' onClick={handleReset}>
@@ -326,7 +318,7 @@ export function DataTableToolbar<TData>({ table, filters, actions }: DataTableTo
         )}
       </div>
       <div className='flex items-center gap-2'>
-        <DataTableViewOptions table={table} />
+        {table && <DataTableViewOptions table={table} />}
         {actions && actions.length > 0 && (
           <ButtonGroup>
             {(() => {
@@ -373,105 +365,122 @@ export function DataTableToolbar<TData>({ table, filters, actions }: DataTableTo
   );
 }
 
-interface DataTableFacetedFilterProps<TValue> {
-  title?: string;
-  options: DataTableFacetedFilterOption[];
-  value: TValue[];
-  onChange: (value: TValue[]) => void;
+interface DataTableFacetedFilterProps<TValue, Multiple extends boolean | undefined = false> {
+  /**
+   * Whether multiple items can be selected.
+   * @default false
+   */
+  multiple?: Multiple;
+  title: string;
+  options: DataTableFacetedFilterOption<TValue>[];
+  value: ComboboxValueType<TValue, Multiple> | null;
+  onChange: (value: ComboboxValueType<TValue, Multiple> | null) => void;
 }
 
-export function DataTableFacetedFilter<TValue>({
+export function DataTableFacetedFilter<TValue, Multiple extends boolean | undefined = false>({
+  multiple = false,
   title,
   options,
   value,
   onChange,
-}: DataTableFacetedFilterProps<TValue>) {
-  const selectedValues = new Set(value as string[]);
+}: DataTableFacetedFilterProps<TValue, Multiple>) {
+  const selectedOptions = options.filter((option) =>
+    Array.isArray(value)
+      ? value.some((selectedValue) => Object.is(selectedValue, option.value))
+      : value != null && Object.is(value, option.value),
+  );
+  const selected = (multiple ? selectedOptions : (selectedOptions[0] ?? null)) as ComboboxValueType<
+    DataTableFacetedFilterOption<TValue>,
+    Multiple
+  > | null;
 
   return (
-    <Popover>
-      <PopoverTrigger
-        render={
-          <Button variant='outline' size='sm' className='h-8 border-dashed'>
-            <PlusCircle />
-            {title}
-            {selectedValues?.size > 0 && (
+    <Combobox<DataTableFacetedFilterOption<TValue>, Multiple>
+      multiple={multiple as Multiple}
+      items={options}
+      itemToStringValue={(option) => String(option.value)}
+      itemToStringLabel={(option) => option.label}
+      value={selected}
+      onValueChange={(nextValue) => {
+        if (!nextValue) {
+          onChange((multiple ? [] : null) as ComboboxValueType<TValue, Multiple>);
+          return;
+        }
+
+        if (multiple && Array.isArray(nextValue)) {
+          onChange(nextValue.map((option) => option.value) as ComboboxValueType<TValue, Multiple>);
+          return;
+        }
+
+        if (!multiple && !Array.isArray(nextValue)) {
+          onChange(nextValue.value as ComboboxValueType<TValue, Multiple>);
+        }
+      }}
+    >
+      <ComboboxTrigger
+        render={<Button variant='outline' size='sm' className={cn('h-8', multiple && 'border-dashed')} />}
+      >
+        <PlusCircle />
+        {title}
+        <ComboboxValue>
+          {(selectedValue) => {
+            if (!selectedValue) {
+              return null;
+            }
+
+            if (!multiple && !Array.isArray(selectedValue)) {
+              return (
+                <>
+                  <Separator orientation='vertical' className='mx-2 h-4' />
+                  <Badge variant='secondary' className='rounded-sm px-1 font-normal'>
+                    {selectedValue.label}
+                  </Badge>
+                </>
+              );
+            }
+
+            if (!Array.isArray(selectedValue) || selectedValue.length === 0) {
+              return null;
+            }
+
+            return (
               <>
                 <Separator orientation='vertical' className='mx-2 h-4' />
                 <Badge variant='secondary' className='rounded-sm px-1 font-normal lg:hidden'>
-                  {selectedValues.size}
+                  {selectedValue.length}
                 </Badge>
                 <div className='hidden gap-1 lg:flex'>
-                  {selectedValues.size > 2 ? (
+                  {selectedValue.length > 2 ? (
                     <Badge variant='secondary' className='rounded-sm px-1 font-normal'>
-                      {selectedValues.size} selected
+                      {selectedValue.length} selected
                     </Badge>
                   ) : (
-                    options
-                      .filter((option) => selectedValues.has(option.value))
-                      .map((option) => (
-                        <Badge variant='secondary' key={option.value} className='rounded-sm px-1 font-normal'>
-                          {option.label}
-                        </Badge>
-                      ))
+                    selectedValue.map((option) => (
+                      <Badge variant='secondary' key={String(option.value)} className='rounded-sm px-1 font-normal'>
+                        {option.label}
+                      </Badge>
+                    ))
                   )}
                 </div>
               </>
-            )}
-          </Button>
-        }
-      />
-      <PopoverContent className='w-50 p-0' align='start'>
-        <Command>
-          <CommandInput placeholder={title} />
-          <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup>
-              {options.map((option) => {
-                const isSelected = selectedValues.has(option.value);
-                return (
-                  <CommandItem
-                    key={option.value}
-                    onSelect={() => {
-                      if (isSelected) {
-                        selectedValues.delete(option.value);
-                      } else {
-                        selectedValues.add(option.value);
-                      }
-                      onChange(Array.from(selectedValues) as TValue[]);
-                    }}
-                  >
-                    <div
-                      className={cn(
-                        'flex size-4 items-center justify-center rounded-lg border',
-                        isSelected
-                          ? 'border-primary bg-primary text-primary-foreground'
-                          : 'border-input [&_svg]:invisible',
-                      )}
-                    >
-                      <Check className='size-3.5 text-primary-foreground' />
-                    </div>
-                    {option.icon && <option.icon className='size-4 text-muted-foreground' />}
-                    {!option.icon && option.image && <option.image className='size-4 text-muted-foreground' />}
-                    <span>{option.label}</span>
-                  </CommandItem>
-                );
-              })}
-            </CommandGroup>
-            {selectedValues.size > 0 && (
-              <>
-                <CommandSeparator />
-                <CommandGroup>
-                  <CommandItem onSelect={() => onChange([])} className='justify-center text-center'>
-                    Clear filters
-                  </CommandItem>
-                </CommandGroup>
-              </>
-            )}
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+            );
+          }}
+        </ComboboxValue>
+      </ComboboxTrigger>
+      <ComboboxContent className='w-50'>
+        <ComboboxInput placeholder={title} showTrigger={false} showClear />
+        <ComboboxEmpty>No results found.</ComboboxEmpty>
+        <ComboboxList>
+          {(option) => (
+            <ComboboxItem key={String(option.value)} value={option}>
+              {option.icon && <option.icon className='size-4 text-muted-foreground' />}
+              {!option.icon && option.image && <option.image className='size-4 text-muted-foreground' />}
+              <span>{option.label}</span>
+            </ComboboxItem>
+          )}
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
   );
 }
 

@@ -1,4 +1,4 @@
-import type { DependabotPackageManager } from '@paklo/core/dependabot';
+import { type DependabotPackageManager, DependabotPackageManagerSchema } from '@paklo/core/dependabot';
 import type Image from 'next/image';
 
 import type { Icon } from '@/components/icons';
@@ -50,27 +50,26 @@ export const UserStatusCodec = z.enumCodec(UserStatusSchema);
 // Organization Type
 export const OrganizationTypeSchema = z.enum(['azure', 'bitbucket', 'gitlab']);
 export type OrganizationType = z.infer<typeof OrganizationTypeSchema>;
+export const OrganizationTypeCodec = z.enumCodec(OrganizationTypeSchema);
 
 // Repository Type
 export const RepositoryPullRequestStatusSchema = z.enum(['open', 'closed', 'merged']);
 export type RepositoryPullRequestStatus = z.infer<typeof RepositoryPullRequestStatusSchema>;
+export const RepositoryPullRequestStatusCodec = z.enumCodec(RepositoryPullRequestStatusSchema);
 
 // Synchronization Status
 export const SynchronizationStatusSchema = z.enum(['pending', 'success', 'failed']);
 export type SynchronizationStatus = z.infer<typeof SynchronizationStatusSchema>;
+export const SynchronizationStatusCodec = z.enumCodec(SynchronizationStatusSchema);
 
 // Verification Status
 export const SubscriptionStatusSchema = z.enum(['active', 'inactive', 'past_due', 'canceled']);
 export type SubscriptionStatus = z.infer<typeof SubscriptionStatusSchema>;
+export const SubscriptionStatusCodec = z.enumCodec(SubscriptionStatusSchema);
 
 // Update Job Status
 export const UpdateJobStatusSchema = z.enum(['scheduled', 'running', 'succeeded', 'failed']);
 export type UpdateJobStatus = z.infer<typeof UpdateJobStatusSchema>;
-
-// Update Job Trigger
-export const UpdateJobTriggerSchema = z.enum(['synchronization', 'scheduled', 'conflicts', 'comment', 'manual']);
-export type UpdateJobTrigger = z.infer<typeof UpdateJobTriggerSchema>;
-
 const updateJobStatusLabelMap: Record<UpdateJobStatus, LabelMappingValue> = {
   scheduled: { label: 'Scheduled' },
   running: { label: 'Running' },
@@ -80,7 +79,11 @@ const updateJobStatusLabelMap: Record<UpdateJobStatus, LabelMappingValue> = {
 export const updateJobStatusOptions: LabelOption<UpdateJobStatus>[] = Object.entries(updateJobStatusLabelMap).map(
   ([value, props]) => ({ value: value as UpdateJobStatus, ...props }),
 );
+export const UpdateJobStatusCodec = z.enumCodec(UpdateJobStatusSchema);
 
+// Update Job Trigger
+export const UpdateJobTriggerSchema = z.enum(['synchronization', 'scheduled', 'conflicts', 'comment', 'manual']);
+export type UpdateJobTrigger = z.infer<typeof UpdateJobTriggerSchema>;
 const updateJobTriggerLabelMap: Record<UpdateJobTrigger, LabelMappingValue> = {
   scheduled: { label: 'Scheduled' },
   synchronization: { label: 'Synchronization' },
@@ -91,6 +94,7 @@ const updateJobTriggerLabelMap: Record<UpdateJobTrigger, LabelMappingValue> = {
 export const updateJobTriggerOptions: LabelOption<UpdateJobTrigger>[] = Object.entries(updateJobTriggerLabelMap).map(
   ([value, props]) => ({ value: value as UpdateJobTrigger, ...props }),
 );
+export const UpdateJobTriggerCodec = z.enumCodec(UpdateJobTriggerSchema);
 
 const packageManagerLabelMap: Record<DependabotPackageManager, LabelMappingValue> = {
   bundler: { label: 'Bundler' },
@@ -127,3 +131,4 @@ const packageManagerLabelMap: Record<DependabotPackageManager, LabelMappingValue
 export const packageManagerOptions: LabelOption<DependabotPackageManager>[] = Object.entries(
   packageManagerLabelMap,
 ).map(([value, props]) => ({ value: value as DependabotPackageManager, ...props }));
+export const DependabotPackageManagerCodec = z.enumCodec(DependabotPackageManagerSchema);

@@ -1,41 +1,76 @@
 'use client';
 
-import type { DependabotPackageManager } from '@paklo/core/dependabot';
-import { Calendar, Funnel, FunnelX } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, XAxis } from 'recharts';
 
+import { DataTableToolbar, type DataTableToolbarOptions, makeToolbarOptionsFacet } from '@/components/data-table';
 import { MetricCard } from '@/components/metric-card';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Item, ItemActions, ItemContent, ItemMedia } from '@/components/ui/item';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { type TimeRange, isHourlyRange, timeRangeOptions } from '@/lib/aggregation';
-import { type WithAll, packageManagerOptions } from '@/lib/enums';
+import { type TimeRange, TimeRangeCodec, isHourlyRange, timeRangeOptions } from '@/lib/aggregation';
+import { DependabotPackageManagerCodec, packageManagerOptions } from '@/lib/enums';
 import type { UsageTelemetry } from '@/lib/mongodb';
-import { REGIONS, type RegionCode } from '@/lib/regions';
-import { formatDuration, updateFiltersInSearchParams } from '@/lib/utils';
+import { booleanFilter, useEnumArrayQueryFilterState, useEnumQueryFilterState, useQueryState } from '@/lib/nuqs';
+import { REGIONS, RegionCodeCodec, regionOptions } from '@/lib/regions';
+import { formatDuration } from '@/lib/utils';
 
 export type SlimTelemetry = Pick<
   UsageTelemetry,
   '_id' | 'region' | 'package-manager' | 'started' | 'success' | 'duration'
 >;
+const successOptions = [
+  { label: 'Success', value: true },
+  { label: 'Failure', value: false },
+];
+
 type TelemetryDashboardProps = {
   telemetries: SlimTelemetry[];
 };
 
 export function TelemetryDashboard({ telemetries }: TelemetryDashboardProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const [timeRange, setTimeRange] = useEnumQueryFilterState('timeRange', TimeRangeCodec);
+  const [packageManager, setPackageManager] = useEnumArrayQueryFilterState(
+    'packageManager',
+    DependabotPackageManagerCodec,
+  );
+  const [region, setRegion] = useEnumArrayQueryFilterState('region', RegionCodeCodec);
+  const [success, setSuccess] = useQueryState('success', { ...booleanFilter(), shallow: false });
 
-  const timeRange = (searchParams.get('timeRange') as TimeRange) ?? '24h';
-  const selectedRegion = (searchParams.get('region') as WithAll<RegionCode>) ?? 'all';
-  const selectedPackageManager = (searchParams.get('packageManager') as WithAll<DependabotPackageManager>) ?? 'all';
-  const successFilter = (searchParams.get('success') as WithAll<'false' | 'true'>) ?? 'all';
-
-  const updateFilters = (updates: Record<string, string>, clear: boolean = false) =>
-    updateFiltersInSearchParams(router, searchParams, updates, clear);
+  const toolbar: DataTableToolbarOptions = {
+    filters: {
+      facets: [
+        makeToolbarOptionsFacet({
+          column: 'timeRange',
+          title: 'Time Range',
+          options: timeRangeOptions,
+          value: timeRange,
+          onChange: setTimeRange,
+        }),
+        makeToolbarOptionsFacet({
+          multiple: true,
+          column: 'region',
+          title: 'Region',
+          options: regionOptions,
+          value: region,
+          onChange: setRegion,
+        }),
+        makeToolbarOptionsFacet({
+          multiple: true,
+          column: 'packageManager',
+          title: 'Package Manager',
+          options: packageManagerOptions,
+          value: packageManager,
+          onChange: setPackageManager,
+        }),
+        makeToolbarOptionsFacet({
+          column: 'success',
+          title: 'Status',
+          options: successOptions,
+          value: success,
+          onChange: setSuccess,
+        }),
+      ],
+    },
+  };
 
   const metrics = (() => {
     const totalRuns = telemetries.length;
@@ -78,77 +113,7 @@ export function TelemetryDashboard({ telemetries }: TelemetryDashboardProps) {
       </div>
 
       {/* Filters */}
-      <Item variant='outline'>
-        <ItemMedia variant='icon'>
-          <Funnel />
-        </ItemMedia>
-        <ItemContent>
-          <div className='flex flex-wrap gap-3'>
-            <Select value={timeRange} onValueChange={(value) => updateFilters({ timeRange: value! })}>
-              <SelectTrigger className='w-45'>
-                <Calendar className='mr-2 size-4' />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {timeRangeOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={selectedRegion} onValueChange={(value) => updateFilters({ region: value! })}>
-              <SelectTrigger className='w-50'>
-                <SelectValue placeholder='All Regions' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='all'>All Regions</SelectItem>
-                {REGIONS.map((region) => (
-                  <SelectItem key={region.code} value={region.code}>
-                    {region.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={selectedPackageManager} onValueChange={(value) => updateFilters({ packageManager: value! })}>
-              <SelectTrigger className='w-50'>
-                <SelectValue placeholder='All Package Managers' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='all'>All Package Managers</SelectItem>
-                {packageManagerOptions.map((pm) => (
-                  <SelectItem key={pm.value} value={pm.value}>
-                    {pm.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={successFilter} onValueChange={(value) => updateFilters({ success: value! })}>
-              <SelectTrigger className='w-35'>
-                <SelectValue placeholder='All Status' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='all'>All Status</SelectItem>
-                <SelectItem value='true'>Success Only</SelectItem>
-                <SelectItem value='false'>Failure Only</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </ItemContent>
-        <ItemActions>
-          <Button
-            variant='ghost'
-            size='icon-sm'
-            onClick={() => updateFilters({}, true)}
-            disabled={!(selectedPackageManager !== 'all' || successFilter !== 'all')}
-          >
-            <FunnelX />
-          </Button>
-        </ItemActions>
-      </Item>
+      <DataTableToolbar {...toolbar} />
 
       {/* Key Metrics */}
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5'>
@@ -179,7 +144,7 @@ export function TelemetryDashboard({ telemetries }: TelemetryDashboardProps) {
       </div>
 
       <div className='grid grid-rows-1 gap-4'>
-        <RunsChart telemetries={telemetries} timeRange={timeRange} />
+        <RunsChart telemetries={telemetries} timeRange={timeRange || '24h'} />
         <RegionChart telemetries={telemetries} />
         <PackageManagerChart telemetries={telemetries} />
       </div>
