@@ -184,7 +184,7 @@ module jobsRbac 'jobs-rbac.bicep' = {
   params: { name: name, mainRGName: resourceGroup().name }
 }
 
-output managedIdentityPrincipalId string = managedIdentity.properties.principalId
+output managedIdentityClientId string = managedIdentity.properties.clientId
 output mongoConnectionString string = replace(
   mongoCluster.properties.connectionString,
   '<user>',
