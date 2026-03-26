@@ -64,9 +64,6 @@ export function ConnectProjectsView({ organization, projects }: ProjectViewProps
       return;
     }
 
-    toast.success('Connected', {
-      description: `Successfully connected ${count} project${count > 1 ? 's' : ''}`,
-    });
     router.push(`/dashboard/${organization.slug}/projects`);
   }
 

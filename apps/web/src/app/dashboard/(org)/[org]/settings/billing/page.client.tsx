@@ -59,7 +59,6 @@ export function ManageSection({ organization, projects }: { organization: Simple
       return;
     }
 
-    toast.success('Redirecting to Stripe Checkout', { description: 'You will be redirected shortly.' });
     window.location.href = data.url;
   }
 
@@ -72,7 +71,6 @@ export function ManageSection({ organization, projects }: { organization: Simple
       return;
     }
 
-    toast.success('Redirecting to Stripe Billing Portal', { description: 'You will be redirected shortly.' });
     window.location.href = data.url;
   }
 
@@ -255,7 +253,6 @@ export function RegionSection({ organization: initialOrganization }: { organizat
       return;
     }
     setOrganization((prev) => ({ ...prev, region: selectedRegion }));
-    toast.success('Region updated', { description: 'Your data region has been updated successfully.' });
   }
 
   return (

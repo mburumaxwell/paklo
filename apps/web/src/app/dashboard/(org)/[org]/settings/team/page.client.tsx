@@ -69,7 +69,6 @@ export function MembersSection({
     setInviteEmail('');
     setInviteRole('member');
     setIsSendingInvite(false);
-    toast.success('Invite sent', { description: `Invitation sent to ${inviteEmail}` });
   }
 
   async function handleResendInvite(invite: Invitation) {
@@ -92,7 +91,6 @@ export function MembersSection({
     } else {
       setInvitations((prev) => [...prev, invite]);
     }
-    toast.success('Invite resent', { description: `Invitation resent to ${invite.email}` });
   }
 
   async function handleRevokeInvite(invite: Invitation) {
@@ -107,7 +105,6 @@ export function MembersSection({
     }
 
     setInvitations((prev) => prev.filter((inv) => inv.id !== invite.id));
-    toast.success('Invite revoked', { description: 'The invitation has been revoked.' });
   }
 
   async function handleRemoveMember(member: Member) {
@@ -123,7 +120,6 @@ export function MembersSection({
     }
 
     setMembers((prev) => prev.filter((m) => m.id !== member.id));
-    toast.success('Member removed', { description: `${member.user.name} has been removed from the organization.` });
   }
 
   async function handleChangeRole(member: Member, newRole: MemberRole) {
@@ -140,7 +136,6 @@ export function MembersSection({
     }
 
     setMembers((prev) => prev.map((m) => (m.id === member.id ? { ...m, role: newRole } : m)));
-    toast.success('Team role updated', { description: `${member.user.name}'s role has been changed to ${newRole}` });
   }
 
   return (

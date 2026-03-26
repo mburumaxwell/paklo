@@ -84,9 +84,6 @@ export function RepositoriesView({
       return;
     }
 
-    toast.success('Disconnected', {
-      description: `Successfully disconnected project "${project.name}"`,
-    });
     router.push(`/dashboard/${organization.slug}/projects`);
   }
 

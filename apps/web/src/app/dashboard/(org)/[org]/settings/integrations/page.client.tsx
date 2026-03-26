@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle2, Copy, Eye, EyeOff, Shield, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, Eye, EyeOff, Shield, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -10,6 +10,7 @@ import {
   validateGitHubToken,
   validateOrganizationCredentials,
 } from '@/actions/organizations';
+import { InputGroupCopyButton } from '@/components/copy-button';
 import { GitHubLogo } from '@/components/logos';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
@@ -63,14 +64,8 @@ export function PrimaryIntegrationSection({ organization }: { organization: Orga
       return;
     }
 
-    toast.success('Organization token saved successfully');
     setIsTokenSaved(true);
     setToken('');
-  }
-
-  function copyToClipboard(url: string): void {
-    navigator.clipboard.writeText(url);
-    toast.success('URL copied to clipboard');
   }
 
   return (
@@ -92,9 +87,7 @@ export function PrimaryIntegrationSection({ organization }: { organization: Orga
               {/* <FieldLabel>URL</FieldLabel> */}
               <InputGroup data-disabled>
                 <InputGroupInput value={organization.url} disabled className='bg-muted' />
-                <InputGroupButton onClick={() => copyToClipboard(organization.url)}>
-                  <Copy className='size-4' />
-                </InputGroupButton>
+                <InputGroupCopyButton value={organization.url} label='Organization URL' />
               </InputGroup>
             </Field>
 
@@ -200,7 +193,6 @@ export function GitHubSection({
       return;
     }
 
-    toast.success('GitHub token saved successfully');
     setIsTokenSaved(true);
     setHasToken(true);
     setToken('');

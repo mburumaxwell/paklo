@@ -120,7 +120,6 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
         return;
       }
       setSecrets((prev) => prev.map((s) => (s.id === editingSecret.id ? { ...s, ...secret } : s)));
-      toast.success('Secret updated successfully');
     } else {
       const { data: secret, error } = await createSecret({
         organizationId: organization.id,
@@ -135,7 +134,6 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
         return;
       }
       setSecrets((prev) => [...prev, secret]);
-      toast.success('Secret added successfully');
     }
 
     setIsSubmitting(false);
@@ -152,7 +150,6 @@ export function SecretsView({ organization, secrets: initialSecrets }: SecretsVi
     }
 
     setSecrets((prev) => prev.filter((s) => s.id !== secret.id));
-    toast.success(`Secret "${secret.name}" deleted successfully`);
   }
 
   function validateNameInput(name: string) {

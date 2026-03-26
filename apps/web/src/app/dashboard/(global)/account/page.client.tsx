@@ -72,8 +72,6 @@ export function ProfileSection({ user }: { user: { id: string; name: string; ema
       toast.error('Failed to update profile.', { description: error?.message });
       return;
     }
-
-    toast.success('Profile updated successfully.');
   }
 
   return (
