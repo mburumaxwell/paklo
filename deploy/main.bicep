@@ -177,11 +177,26 @@ resource roleAssignments 'Microsoft.Authorization/roleAssignments@2022-04-01' = 
   }
 ]
 
-/* RBAC in JOBS RG */
+/*
+ * RBAC in JOBS RG
+ * This exists because we need role assignments outside this resource group.
+*/
 module jobsRbac 'jobs-rbac.bicep' = {
   name: 'rbac'
   scope: resourceGroup('${resourceGroup().name}-JOBS')
-  params: { name: name, mainRGName: resourceGroup().name }
+  params: {
+    managedIdentityId: managedIdentity.id
+    managedIdentityPrincipalId: managedIdentity.properties.principalId
+    roles: [
+      // the names here are used for uniqueness hence adding " (Jobs)" suffix
+      // but the actual role assignment is done using the IDs
+
+      // needed to create resources (e.g. jobs)
+      { name: 'Contributor (Jobs)', id: 'b24988ac-6180-42a0-ab88-20f7382dd24c' }
+      // needed to edit data in key vaults (e.g. secrets)
+      { name: 'Key Vault Administrator (Jobs)', id: '00482a5a-887f-4fb3-b363-3b7fe8e74483' }
+    ]
+  }
 }
 
 output managedIdentityClientId string = managedIdentity.properties.clientId

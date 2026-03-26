@@ -1,28 +1,21 @@
-@minLength(5)
-@maxLength(24)
-@description('Name of the resources.')
-param name string
+type RoleDefinition = { name: string, id: string }
 
-@description('Name of the main resource group where the managed identity is located.')
-param mainRGName string
+@description('Resource Identifier of the managed identity to assign roles to.')
+param managedIdentityId string
 
-/* Managed Identity */
-resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2024-11-30' existing = {
-  name: name
-  scope: resourceGroup(mainRGName)
-}
+@description('Principal ID of the managed identity to assign roles to.')
+param managedIdentityPrincipalId string
 
-var roles = [
-  { name: 'Contributor', id: 'b24988ac-6180-42a0-ab88-20f7382dd24c' } // needed to create resources in this resource group (i.e. the jobs)
-]
+@description('Roles to assign to the managed identity in the jobs resource group.')
+param roles RoleDefinition[]
 
 resource roleAssignments 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
   for role in roles: {
-    name: guid(managedIdentity.id, role.name)
+    name: guid(managedIdentityId, role.name)
     scope: resourceGroup()
     properties: {
       roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', role.id)
-      principalId: managedIdentity.properties.principalId
+      principalId: managedIdentityPrincipalId
     }
   }
 ]
