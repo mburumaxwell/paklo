@@ -24,9 +24,9 @@ type AppLayoutProps = {
   cookies?: Awaited<ReturnType<typeof cookies>>;
 };
 
-export async function AppLayout({ children, session, organizations = [], breadcrumb = true, cookies }: AppLayoutProps) {
-  const slugs = organizations.map((org) => org.slug);
-  const activeOrganization = organizations.find((org) => org.active);
+export async function AppLayout({ children, session, organizations, breadcrumb = true, cookies }: AppLayoutProps) {
+  const slugs = organizations?.map((org) => org.slug);
+  const activeOrganization = organizations?.find((org) => org.active);
 
   const defaultSidebarOpen = cookies ? cookies.get('sidebar_state')?.value === 'true' : undefined;
 
@@ -34,7 +34,7 @@ export async function AppLayout({ children, session, organizations = [], breadcr
     <>
       <WarningBanner session={session} />
       <SidebarProvider defaultOpen={defaultSidebarOpen}>
-        {session && <AppSidebar session={session} organizations={organizations} />}
+        {session && organizations && <AppSidebar session={session} organizations={organizations} />}
         <SidebarInset>
           <header className='flex h-16 shrink-0 items-center gap-2 border-b px-4'>
             {session && (
