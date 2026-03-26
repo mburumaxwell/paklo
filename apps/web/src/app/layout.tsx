@@ -6,6 +6,7 @@ import { Geist } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { NuqsAdapter } from '@/lib/nuqs';
 import { config } from '@/site-config';
 
 import './globals.css';
@@ -25,7 +26,9 @@ export default function Layout({ children }: LayoutProps<'/'>) {
     <html lang='en' className={`font-sans antialiased ${geist.className}`} suppressHydrationWarning>
       <body>
         <ThemeProvider>
-          <TooltipProvider>{children}</TooltipProvider>
+          <NuqsAdapter>
+            <TooltipProvider>{children}</TooltipProvider>
+          </NuqsAdapter>
         </ThemeProvider>
         <Toaster />
         <Analytics />
