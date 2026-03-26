@@ -79,9 +79,7 @@ type SessionUser = Session['user'];
 
 export function ProfileSection({ user: initialUser }: { user: SessionUser }) {
   const [user, setUser] = React.useState(initialUser);
-  const formSchema = z.object({
-    name: z.string().min(1, 'Name is required'),
-  });
+  const formSchema = z.object({ name: z.string().min(1, 'Name is required') });
   const form = useForm({ resolver: zodResolver(formSchema), defaultValues: user });
 
   async function handleSave(data: z.infer<typeof formSchema>) {
@@ -107,8 +105,8 @@ export function ProfileSection({ user: initialUser }: { user: SessionUser }) {
           <FieldSet>
             <FieldGroup>
               <Controller
-                name='name'
                 control={form.control}
+                name='name'
                 render={({ field, fieldState }) => (
                   <Field>
                     <FieldLabel htmlFor='name'>Name</FieldLabel>

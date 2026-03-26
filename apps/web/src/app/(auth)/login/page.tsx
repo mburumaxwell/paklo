@@ -14,16 +14,16 @@ export const metadata: Metadata = {
 };
 
 export default async function LoginPage(props: PageProps<'/login'>) {
-  // if already logged in, redirect to relevant page
-  const headers = await requestHeaders();
-  const session = await auth.api.getSession({ headers });
-  if (session) return redirect('/dashboard');
-
   const filterSearchParams = {
     redirectTo: redirectToParam(),
   };
   const searchParamsLoader = createLoader(filterSearchParams);
   const { redirectTo } = searchParamsLoader(await props.searchParams);
+
+  // if already logged in, redirect to relevant page
+  const headers = await requestHeaders();
+  const session = await auth.api.getSession({ headers });
+  if (session) return redirect(redirectTo);
 
   return <LoginForm redirectTo={redirectTo} />;
 }
