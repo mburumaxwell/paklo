@@ -1,6 +1,6 @@
 'use client';
 
-import { Mail } from 'lucide-react';
+import { MailIcon } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
 import * as React from 'react';
@@ -8,38 +8,41 @@ import { toast } from 'sonner';
 
 import { ExternalLoginButtons } from '@/components/auth-buttons';
 import { PakloIcon } from '@/components/logos';
+import { Controller, useForm, zodResolver } from '@/components/rhf';
 import { Button } from '@/components/ui/button';
-import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from '@/components/ui/field';
+import { Empty, EmptyDescription, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldSeparator } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { useMounted } from '@/hooks/use-mounted';
 import { magicLinkLogin } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
+import { z } from '@/lib/zod';
 
 interface SignupFormProps extends React.ComponentProps<'div'> {
   redirectTo: Route;
 }
 
 export function SignupForm({ className, redirectTo, ...props }: SignupFormProps) {
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
+  const mounted = useMounted();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [magicLinkSent, setMagicLinkSent] = React.useState(false);
-  const mounted = useMounted();
 
-  async function handleSignup(e: React.FormEvent) {
-    e.preventDefault();
-    if (!email) return;
+  const formSchema = z.object({
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+    email: z.email('Invalid email address'),
+  });
+  const form = useForm({ resolver: zodResolver(formSchema), defaultValues: { name: '', email: '' } });
 
+  async function handleSignup(values: z.infer<typeof formSchema>) {
     setLoading(true);
     let error: { code?: string; message?: string } | null = null;
     let data: { status: boolean } | null = null;
     try {
-      ({ data, error } = await magicLinkLogin({ email, name, callbackURL: redirectTo }));
+      ({ data, error } = await magicLinkLogin({ ...values, callbackURL: redirectTo }));
     } catch (err) {
       error = { message: (err as Error).message };
     }
-
     setLoading(false);
 
     if (error || !data?.status) {
@@ -68,63 +71,54 @@ export function SignupForm({ className, redirectTo, ...props }: SignupFormProps)
         </div>
       </FieldGroup>
       {magicLinkSent ? (
-        <div className='space-y-4 text-center'>
-          <div className='space-y-4 text-center'>
-            <div className='flex justify-center'>
-              <div className='rounded-full bg-primary/10 p-3'>
-                <Mail className='size-6 text-primary' />
-              </div>
-            </div>
-          </div>
-          <FieldGroup>
-            <FieldDescription className='text-lg font-semibold'>Check your email</FieldDescription>
-            <FieldDescription>
-              We sent a magic link to <span className='font-medium'>{email}</span>. Click the link to complete your
-              signup and login.
-            </FieldDescription>
-            <Field>
-              <Button variant='ghost' onClick={() => setMagicLinkSent(false)}>
-                Use a different email
-              </Button>
-            </Field>
-          </FieldGroup>
-        </div>
+        <Empty>
+          <EmptyMedia variant='icon'>
+            <MailIcon />
+          </EmptyMedia>
+          <EmptyTitle>Check your email</EmptyTitle>
+          <EmptyDescription>
+            We sent a magic link to your email. Click the link to complete your signup and login.
+          </EmptyDescription>
+        </Empty>
       ) : (
-        <form className='space-y-4' onSubmit={handleSignup}>
+        <form className='space-y-4' onSubmit={form.handleSubmit(handleSignup)}>
+          <Controller
+            control={form.control}
+            name='name'
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel htmlFor='name'>Name</FieldLabel>
+                <Input {...field} id='name' type='text' placeholder='Chris Johnson' disabled={loading} />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+          <Controller
+            control={form.control}
+            name='email'
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel htmlFor='email'>Email</FieldLabel>
+                <Input
+                  {...field}
+                  id='email'
+                  type='email'
+                  placeholder='chris.johnson@contoso.com'
+                  autoCapitalize='none'
+                  autoComplete='email'
+                  autoCorrect='off'
+                  disabled={loading}
+                />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
           <Field>
-            <FieldLabel htmlFor='name'>Name</FieldLabel>
-            <Input
-              id='name'
-              type='text'
-              placeholder='Chris Johnson'
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              disabled={loading}
-            />
-          </Field>
-          <Field>
-            <FieldLabel htmlFor='email'>Email</FieldLabel>
-            <Input
-              id='email'
-              type='email'
-              placeholder='chris.johnson@contoso.com'
-              autoCapitalize='none'
-              autoComplete='email'
-              autoCorrect='off'
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading}
-            />
-          </Field>
-          <Field>
-            <Button type='submit' disabled={loading || !name || !email} size='lg'>
-              {loading ? (
-                <Spinner className='size-5' />
-              ) : (
+            <Button type='submit' disabled={loading}>
+              {loading && <Spinner />}
+              {!loading && (
                 <>
-                  <Mail className='size-5' />
+                  <MailIcon />
                   Continue with email
                 </>
               )}
