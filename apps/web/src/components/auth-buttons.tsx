@@ -122,20 +122,16 @@ export function SignInWithPasskeyButton({
 
   async function handleLogin() {
     setLoading(true);
-    let error: { code?: string; message?: string } | null = null;
-    try {
+    const { error } = await authClient.signIn.passkey({
       // no autofill for manual trigger
-      ({ error } = await authClient.signIn.passkey({ autoFill: false }));
-    } catch (err) {
-      error = { message: (err as Error).message };
-    }
-
+      autoFill: false,
+    });
     setLoading(false);
 
     if (error) {
-      if (error.code !== 'AUTH_CANCELLED') {
-        toast.error('Passkey sign-in failed.', { description: error.message || 'Please try again.' });
-      }
+      const cancellationCodes = ['AUTH_CANCELLED'];
+      if ('code' in error && cancellationCodes.includes(error.code)) return;
+      toast.error('Failed to add passkey.', { description: error.message?.toString() || 'Unknown error' });
       return;
     }
 

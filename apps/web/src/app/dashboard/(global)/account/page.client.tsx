@@ -181,7 +181,7 @@ function LoginSection({ user, passkeys, onPasskeysChanged, accounts, onAccountsC
       // ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY is from @simplewebauthn/browser
       const cancellationCodes = ['AUTH_CANCELLED', 'ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY'];
       if ('code' in error && cancellationCodes.includes(error.code)) return;
-      toast.error('Failed to add passkey.', { description: error.message || 'Unknown error' });
+      toast.error('Failed to add passkey.', { description: error.message?.toString() || 'Unknown error' });
       return;
     }
 
