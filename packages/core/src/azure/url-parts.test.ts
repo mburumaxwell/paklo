@@ -22,6 +22,7 @@ describe('extractOrganizationUrl', () => {
   it('works for on-premise domain', () => {
     const url = extractOrganizationUrl({ organizationUrl: 'https://server.domain.com/tfs/contoso/' });
     expect(url.hostname).toBe('server.domain.com');
+    expect(url.port).toBeUndefined();
     expect(url['api-endpoint']).toBe('https://server.domain.com/tfs/');
     expect(url['identity-api-url']).toEqual(new URL('https://server.domain.com/tfs/contoso/'));
     expect(url.organization).toBe('contoso');
@@ -30,6 +31,7 @@ describe('extractOrganizationUrl', () => {
   it('works for on-premise domain with port', () => {
     const url = extractOrganizationUrl({ organizationUrl: 'https://server.domain.com:8081/tfs/contoso/' });
     expect(url.hostname).toBe('server.domain.com');
+    expect(url.port).toBe('8081');
     expect(url['api-endpoint']).toBe('https://server.domain.com:8081/tfs/');
     expect(url.organization).toBe('contoso');
   });
@@ -37,6 +39,7 @@ describe('extractOrganizationUrl', () => {
   it('works for localhost', () => {
     const url = extractOrganizationUrl({ organizationUrl: 'http://localhost:8080/contoso/' });
     expect(url.hostname).toBe('localhost');
+    expect(url.port).toBe('8080');
     expect(url['api-endpoint']).toBe('http://localhost:8080/');
     expect(url.organization).toBe('contoso');
   });
@@ -120,6 +123,7 @@ describe('extractRepositoryUrl', () => {
       repository: 'repo1',
     });
     expect(url.hostname).toBe('server.domain.com');
+    expect(url.port).toBe('8081');
     expect(url['api-endpoint']).toBe('https://server.domain.com:8081/tfs/');
     expect(url.project).toBe('prj1');
     expect(url.repository).toBe('repo1');
@@ -212,6 +216,7 @@ describe('extractRepositoryUrl with repositoryUrl parameter', () => {
       repositoryUrl: 'https://server.domain.com:8081/tfs/contoso/prj1/_git/repo1',
     });
     expect(url.hostname).toBe('server.domain.com');
+    expect(url.port).toBe('8081');
     expect(url['api-endpoint']).toBe('https://server.domain.com:8081/tfs/');
     expect(url.organization).toBe('contoso');
     expect(url.project).toBe('prj1');

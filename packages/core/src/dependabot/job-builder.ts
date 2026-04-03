@@ -30,6 +30,7 @@ import type {
 export type DependabotSourceInfo = {
   'provider': DependabotSourceProvider;
   'hostname': string;
+  'port'?: string;
   'api-endpoint': string;
   'repository-slug': string;
 };
@@ -82,6 +83,7 @@ export class DependabotJobBuilder {
     this.source = mapSourceFromDependabotConfigToJobConfig(source, update);
     this.credentials = mapCredentials({
       sourceHostname: source.hostname,
+      sourcePort: source.port,
       systemAccessUser,
       systemAccessToken,
       githubToken,
@@ -268,7 +270,7 @@ export function mapSourceFromDependabotConfigToJobConfig(
   return {
     'provider': source.provider,
     'api-endpoint': source['api-endpoint'],
-    'hostname': source.hostname,
+    'hostname': source.port ? `${source.hostname}:${source.port}` : source.hostname,
     'repo': source['repository-slug'],
     'branch': update['target-branch'],
     'commit': null, // use latest commit of target branch
@@ -404,12 +406,14 @@ export function mapSecurityAdvisories(securityVulnerabilities?: SecurityVulnerab
 
 export function mapCredentials({
   sourceHostname,
+  sourcePort,
   systemAccessUser,
   systemAccessToken,
   githubToken,
   registries,
 }: {
   sourceHostname: string;
+  sourcePort?: string;
   systemAccessUser?: string;
   systemAccessToken?: string;
   githubToken?: string;
@@ -419,12 +423,26 @@ export function mapCredentials({
 
   // Required to authenticate with the git repository when cloning the source code
   if (systemAccessToken) {
+    const username = (systemAccessUser ?? '').trim()?.length > 0 ? systemAccessUser : 'x-access-token';
     credentials.push({
       type: 'git_source',
-      host: sourceHostname,
-      username: (systemAccessUser ?? '').trim()?.length > 0 ? systemAccessUser : 'x-access-token',
+      host: sourcePort ? `${sourceHostname}:${sourcePort}` : sourceHostname,
+      username,
       password: systemAccessToken,
     });
+
+    // For non-standard ports, also add a credential using only the hostname (without port).
+    // The dependabot-proxy matches credentials against the hostname extracted from CONNECT targets,
+    // which may not include the port. Adding both forms ensures authentication works regardless of
+    // whether the proxy or git's own credential matching is used.
+    if (sourcePort) {
+      credentials.push({
+        type: 'git_source',
+        host: sourceHostname,
+        username,
+        password: systemAccessToken,
+      });
+    }
   }
 
   // Required to avoid rate-limiting errors when generating pull request descriptions (e.g. fetching release notes, commit messages, etc)

@@ -4,6 +4,7 @@ import type { DependabotGroup, DependabotIgnoreCondition, DependabotUpdate } fro
 import {
   type DependabotSourceInfo,
   mapAllowedUpdatesFromDependabotConfigToJobConfig,
+  mapCredentials,
   mapExperiments,
   mapGroupsFromDependabotConfigToJobConfig,
   mapIgnoreConditionsFromDependabotConfigToJobConfig,
@@ -93,6 +94,7 @@ describe('mapSourceFromDependabotConfigToJobConfig', () => {
       'provider': 'azure',
       'api-endpoint': 'https://my-org.com:8443/tfs',
       'hostname': 'my-org.com',
+      'port': '8443',
       'repository-slug': 'tfs/my-collection/my-project/_git/my-repo',
     };
     const update = {
@@ -106,7 +108,7 @@ describe('mapSourceFromDependabotConfigToJobConfig', () => {
     expect(result).toMatchObject({
       'provider': 'azure',
       'api-endpoint': 'https://my-org.com:8443/tfs',
-      'hostname': 'my-org.com',
+      'hostname': 'my-org.com:8443',
       'repo': 'tfs/my-collection/my-project/_git/my-repo',
     });
   });
@@ -243,5 +245,64 @@ describe('mapGroupsFromDependabotConfigToJobConfig', () => {
     const result = mapGroupsFromDependabotConfigToJobConfig(dependencyGroups);
 
     expect(result).toEqual([{ name: 'group', rules: { patterns: ['*'] } }]);
+  });
+});
+
+describe('mapCredentials', () => {
+  it('should create a single git_source credential for standard hostname without port', () => {
+    const result = mapCredentials({
+      sourceHostname: 'dev.azure.com',
+      systemAccessToken: 'my-token',
+    });
+    const gitSourceCredentials = result.filter((c) => c.type === 'git_source');
+    expect(gitSourceCredentials).toHaveLength(1);
+    expect(gitSourceCredentials[0]).toMatchObject({
+      type: 'git_source',
+      host: 'dev.azure.com',
+      username: 'x-access-token',
+      password: 'my-token',
+    });
+  });
+
+  it('should create two git_source credentials for hostname with non-standard port', () => {
+    const result = mapCredentials({
+      sourceHostname: 'tfs.example.com',
+      sourcePort: '8443',
+      systemAccessToken: 'my-token',
+    });
+    const gitSourceCredentials = result.filter((c) => c.type === 'git_source');
+    expect(gitSourceCredentials).toHaveLength(2);
+    expect(gitSourceCredentials[0]).toMatchObject({
+      type: 'git_source',
+      host: 'tfs.example.com:8443',
+      username: 'x-access-token',
+      password: 'my-token',
+    });
+    expect(gitSourceCredentials[1]).toMatchObject({
+      type: 'git_source',
+      host: 'tfs.example.com',
+      username: 'x-access-token',
+      password: 'my-token',
+    });
+  });
+
+  it('should not create any git_source credential when systemAccessToken is undefined', () => {
+    const result = mapCredentials({
+      sourceHostname: 'dev.azure.com',
+    });
+    expect(result.filter((c) => c.type === 'git_source')).toHaveLength(0);
+  });
+
+  it('should use custom systemAccessUser when provided', () => {
+    const result = mapCredentials({
+      sourceHostname: 'tfs.example.com',
+      sourcePort: '8443',
+      systemAccessUser: 'custom-user',
+      systemAccessToken: 'my-token',
+    });
+    const gitSourceCredentials = result.filter((c) => c.type === 'git_source');
+    expect(gitSourceCredentials).toHaveLength(2);
+    expect(gitSourceCredentials[0]!.username).toBe('custom-user');
+    expect(gitSourceCredentials[1]!.username).toBe('custom-user');
   });
 });
