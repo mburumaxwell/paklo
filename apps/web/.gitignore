@@ -1,0 +1,4 @@
+# the root .gitignore still works, this is for specific ignores in this folder and subfolders
+
+# manifest files for workflow devkit
+public/.well-known/workflow/v1
