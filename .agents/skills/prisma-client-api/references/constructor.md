@@ -2,7 +2,7 @@
 
 Configure Prisma Client when instantiating.
 
-## Basic Instantiation (v7)
+## Basic Instantiation
 
 ```typescript
 import { PrismaClient } from '../generated/client'
@@ -17,7 +17,7 @@ const prisma = new PrismaClient({ adapter })
 
 ## Constructor Options
 
-### adapter (Required in v7)
+### adapter (Required for the SQL provider workflow)
 
 Driver adapter instance:
 
@@ -88,6 +88,29 @@ const prisma = new PrismaClient({
   errorFormat: 'pretty',  // 'pretty' | 'colorless' | 'minimal'
 })
 ```
+
+### comments
+
+Attach SQL commenter plugins for observability, tracing, or query insights:
+
+```typescript
+import { PrismaClient } from '../generated/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { prismaQueryInsights } from '@prisma/sqlcommenter-query-insights'
+import { queryTags, withQueryTags } from '@prisma/sqlcommenter-query-tags'
+import { traceContext } from '@prisma/sqlcommenter-trace-context'
+
+const prisma = new PrismaClient({
+  adapter: new PrismaPg(process.env.DATABASE_URL!),
+  comments: [prismaQueryInsights(), traceContext(), queryTags()],
+})
+
+await withQueryTags({ route: '/api/users', requestId: 'req-123' }, () =>
+  prisma.user.findMany(),
+)
+```
+
+Use `comments` only for SQL providers. This is the clean way to add trace or query-shape metadata without changing your query calls.
 
 ### transactionOptions
 

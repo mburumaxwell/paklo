@@ -13,7 +13,7 @@ prisma migrate reset [options]
 1. **Drops** the database (if possible) or deletes all data/tables
 2. **Re-creates** the database
 3. **Applies** all migrations from `prisma/migrations/`
-4. **Runs** the seed script (if configured)
+4. Stops there - run seed and generate explicitly if needed
 
 **Warning: All data will be lost.**
 
@@ -53,15 +53,13 @@ prisma migrate reset --schema=./custom/schema.prisma
 - **Testing**: Resetting test database before suites
 - **Drift Recovery**: When the database is out of sync and you can't migrate
 
-## Behavior in v7
+## Follow-up Steps
 
-- In v6, `migrate reset` automatically ran `prisma generate`.
-- In v7, you may need to run `prisma generate` separately if you want to update the client, though `reset` focuses on the database state.
-- Seed script IS run by default after reset.
+Run `prisma generate` and `prisma db seed` explicitly when you need refreshed client output or seed data after a reset.
 
 ## Configuration
 
-Configure seed script in `prisma.config.ts` to run it automatically after reset:
+Configure the seed script in `prisma.config.ts`, then run it explicitly after reset:
 
 ```typescript
 export default defineConfig({
@@ -69,4 +67,12 @@ export default defineConfig({
     seed: 'tsx prisma/seed.ts',
   },
 })
+```
+
+Typical workflow:
+
+```bash
+prisma migrate reset --force
+prisma generate
+prisma db seed
 ```

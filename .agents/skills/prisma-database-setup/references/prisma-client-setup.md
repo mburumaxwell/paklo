@@ -1,6 +1,6 @@
 # Prisma Client Setup
 
-Generate and instantiate Prisma Client for any database provider.
+Generate and instantiate Prisma Client for Prisma's standard SQL provider workflow. For MongoDB, follow the provider-specific notes in `references/mongodb.md` instead of copying the SQL adapter example below.
 
 ## 1. Install dependencies
 
@@ -20,7 +20,7 @@ generator client {
 }
 ```
 
-Prisma v7 requires an explicit `output` path and will not generate into `node_modules` by default.
+`prisma-client` requires an explicit `output` path and does not generate into `node_modules` by default.
 
 ## 3. Generate Prisma Client
 
@@ -40,7 +40,7 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
 ```
 
-If you change the generator `output`, update the import path to match. In Prisma ORM 7, a **driver adapter is required** — replace `PrismaPg` with the adapter for your database.
+If you change the generator `output`, update the import path to match. For the SQL provider workflow, replace `PrismaPg` with the adapter for your database.
 
 ## 5. Use a single instance
 

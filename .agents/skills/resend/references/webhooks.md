@@ -136,6 +136,37 @@ curl -X POST 'https://api.resend.com/webhooks' \
 
 The `signing_secret` is only returned once when you create the webhook. Store it as `RESEND_WEBHOOK_SECRET` immediately.
 
+### Webhook Management (List, Get, Update, Delete)
+
+| Operation | Node.js | Python |
+|-----------|---------|--------|
+| List | `resend.webhooks.list()` | `resend.Webhooks.list()` |
+| Get | `resend.webhooks.get(id)` | `resend.Webhooks.get(id)` |
+| Update | `resend.webhooks.update(id, params)` | `resend.Webhooks.update(params)` — `webhook_id` inside params |
+| Delete | `resend.webhooks.remove(id)` | `resend.Webhooks.remove(id)` |
+
+```typescript
+// List all webhooks
+const { data: webhooks, error: listError } = await resend.webhooks.list();
+
+// Update endpoint URL or subscribed events
+const { data: updated, error: updateError } = await resend.webhooks.update(
+  '4dd369bc-aa82-4ff3-97de-514ae3000ee0',
+  {
+    endpoint: 'https://new-domain.com/webhook',
+    events: ['email.delivered', 'email.bounced'],
+  }
+);
+
+// Delete a webhook
+const { data: deleted, error: deleteError } = await resend.webhooks.remove('4dd369bc-aa82-4ff3-97de-514ae3000ee0');
+```
+
+**Key gotchas:**
+- `signing_secret` is only in the create response — `get` does not return it
+- Update can change `endpoint` and `events` — partial updates supported
+- Use `.remove()` not `.delete()` in the Node.js SDK
+
 ## Signature Verification
 
 **Verify webhook signatures on every request.** Without verification, anyone can send fake webhooks to your endpoint.

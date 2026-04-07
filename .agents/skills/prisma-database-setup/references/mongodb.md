@@ -1,16 +1,18 @@
 # MongoDB Setup
 
-**⚠️ WARNING: MongoDB is NOT supported in Prisma ORM v7.**
-
-Support for MongoDB is planned for a future v7 release. If you need MongoDB, you must use **Prisma ORM v6**.
+MongoDB projects should stay on the latest Prisma 6.x release. Do not upgrade a MongoDB app to Prisma 7's SQL client path.
 
 ## Prerequisites
 
 - MongoDB 4.2+
 - Replica Set configured (required for transactions)
-- **Prisma ORM v6.x**
+- Latest Prisma 6.x release, or your team's pinned Prisma 6 version
+- Node.js 20.19.0+
+- TypeScript 5.4.0+
 
-## 1. Schema Configuration (v6)
+## 1. Schema Configuration
+
+Use the standard Prisma 6 MongoDB setup with `prisma-client-js`.
 
 In `prisma/schema.prisma`:
 
@@ -24,6 +26,10 @@ generator client {
   provider = "prisma-client-js"
 }
 ```
+
+### Driver Adapters
+
+Do **not** apply the Prisma 7 SQL adapter setup here. MongoDB does not use a SQL `@prisma/adapter-*` package.
 
 ### ID Field Requirement
 
@@ -62,6 +68,18 @@ DATABASE_URL="mongodb+srv://user:password@cluster.mongodb.net/mydb?retryWrites=t
 - **No Migrations**: MongoDB is schema-less. `prisma migrate` commands **do not work**.
 - **db push**: Use `prisma db push` to sync indexes and constraints.
 - **db pull**: Use `prisma db pull` to generate schema from existing data (sampling).
+
+## Current Verification Notes
+
+- `prisma init --datasource-provider mongodb` is still implemented in Prisma's CLI source.
+- Prisma's upstream repo still contains MongoDB fixtures and tests.
+- Local verification shows Prisma 7 can still recognize MongoDB inputs, but the generated client path does not provide a supported MongoDB upgrade path.
+- Local verification shows Prisma 6.x works end to end with `prisma-client-js`, `prisma db push`, and `new PrismaClient()` against a MongoDB replica set.
+
+## Version Guidance
+
+- For MongoDB, stay on the latest available Prisma 6.x release.
+- Treat Prisma 7 MongoDB migration attempts as unsupported until Prisma ships a real MongoDB upgrade path.
 
 ## Common Issues
 

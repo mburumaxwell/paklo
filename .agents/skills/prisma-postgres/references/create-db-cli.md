@@ -48,6 +48,10 @@ Top-level commands currently exposed:
 | `--interactive [boolean]` | `-i` | Open region selector |
 | `--json [boolean]` | `-j` | Output machine-readable JSON |
 | `--env [string]` | `-e` | Write `DATABASE_URL` and `CLAIM_URL` into a target `.env` |
+| `--ttl [string]` | `-t` | Auto-delete after a TTL like `30m` or `1h-24h` |
+| `--copy [boolean]` | `-c` | Copy the connection string to the clipboard |
+| `--quiet [boolean]` | `-q` | Only print the connection string |
+| `--open [boolean]` | `-o` | Open the claim URL in your browser |
 
 ## Lifecycle and claim flow
 
@@ -113,6 +117,15 @@ npx create-db@latest --interactive
 
 # write env vars for app bootstrap
 npx create-db@latest --env .env
+
+# auto-delete sooner
+npx create-db@latest --ttl 2h
+
+# copy connection string to clipboard
+npx create-db@latest --copy
+
+# print only the connection string
+npx create-db@latest --quiet
 
 # CI-friendly output
 npx create-db@latest --json

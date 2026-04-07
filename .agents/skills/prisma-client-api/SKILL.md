@@ -4,12 +4,12 @@ description: Prisma Client API reference covering model queries, filters, operat
 license: MIT
 metadata:
   author: prisma
-  version: "7.0.0"
+  version: "7.6.0"
 ---
 
 # Prisma Client API Reference
 
-Complete API reference for Prisma Client. This skill provides guidance on model queries, filtering, relations, and client methods for Prisma ORM 7.x.
+Complete API reference for Prisma Client. This skill provides guidance on model queries, filtering, relations, and client methods for current Prisma projects.
 
 ## When to Apply
 
@@ -36,16 +36,16 @@ Reference this skill when:
 
 ## Quick Reference
 
-- `constructor` - `PrismaClient` setup and adapter wiring
+- `constructor` - `PrismaClient` setup, adapter wiring, logging, and SQL commenter plugins
 - `model-queries` - CRUD operations and bulk operations
 - `query-options` - `select`, `include`, `omit`, sort, pagination
 - `filters` - scalar and logical filter operators
 - `relations` - relation reads and nested writes
 - `transactions` - array and interactive transaction patterns
 - `raw-queries` - `$queryRaw` and `$executeRaw` safety
-- `client-methods` - lifecycle and extension methods
+- `client-methods` - lifecycle methods, extensions, and `satisfies` patterns for `prisma-client`
 
-## Client Instantiation (v7)
+## Client Instantiation
 
 ```typescript
 import { PrismaClient } from '../generated/client'

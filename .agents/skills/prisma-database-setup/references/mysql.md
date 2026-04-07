@@ -22,7 +22,7 @@ generator client {
 }
 ```
 
-## 2. Config Configuration (v7)
+## 2. Config Configuration
 
 In `prisma.config.ts`:
 
@@ -57,9 +57,9 @@ mysql://USER:PASSWORD@HOST:PORT/DATABASE
 - **PORT**: Port (default 3306)
 - **DATABASE**: Database name
 
-## Driver Adapter (Prisma ORM 7 required)
+## Driver Adapter
 
-Prisma ORM 7 uses the query compiler by default, so you must use a driver adapter.
+Use a driver adapter for the standard SQL workflow.
 
 1. Install adapter and driver:
    ```bash
@@ -83,6 +83,23 @@ Prisma ORM 7 uses the query compiler by default, so you must use a driver adapte
 
    const prisma = new PrismaClient({ adapter })
    ```
+
+### Text protocol option
+
+If you need the MariaDB driver's text protocol instead of the default binary `execute()` path, enable `useTextProtocol` explicitly:
+
+```typescript
+import { PrismaClient } from '../generated/client'
+import { PrismaMariaDb } from '@prisma/adapter-mariadb'
+
+const adapter = new PrismaMariaDb(process.env.DATABASE_URL!, {
+  useTextProtocol: true,
+})
+
+const prisma = new PrismaClient({ adapter })
+```
+
+Use this only when you specifically need text-protocol compatibility for your MariaDB setup.
 
 ## PlanetScale Setup
 

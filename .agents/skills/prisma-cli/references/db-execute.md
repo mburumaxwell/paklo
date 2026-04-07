@@ -21,8 +21,11 @@ prisma db execute [options]
 |--------|-------------|
 | `--file` | Path to a file containing the script to execute |
 | `--stdin` | Use terminal standard input as the script |
-| `--url` | Override the datasource URL from the Prisma config file |
 | `--config` | Custom path to your Prisma config file |
+
+## Current Option Surface
+
+`prisma db execute` uses the datasource configured in `prisma.config.ts`. Use `--config` if you need a separate config file for another environment.
 
 ## Examples
 
@@ -45,7 +48,7 @@ Pipe the output of `migrate diff` directly to the database:
 ```bash
 prisma migrate diff \
   --from-empty \
-  --to-schema-datamodel prisma/schema.prisma \
+  --to-schema prisma/schema.prisma \
   --script \
 | prisma db execute --stdin
 ```

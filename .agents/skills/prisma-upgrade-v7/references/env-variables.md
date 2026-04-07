@@ -126,8 +126,8 @@ These Prisma-specific env vars are removed in v7:
 | `PRISMA_GENERATE_SKIP_AUTOINSTALL` | Not needed |
 | `PRISMA_SKIP_POSTINSTALL_GENERATE` | Not needed |
 | `PRISMA_GENERATE_IN_POSTINSTALL` | Not needed |
-| `PRISMA_GENERATE_DATAPROXY` | Use `--no-engine` flag |
-| `PRISMA_GENERATE_NO_ENGINE` | Use `--no-engine` flag |
+| `PRISMA_GENERATE_DATAPROXY` | Migrate to `prisma-client` with driver adapters |
+| `PRISMA_GENERATE_NO_ENGINE` | Migrate to `prisma-client` with driver adapters |
 | `PRISMA_CLIENT_NO_RETRY` | Configure on adapter |
 | `PRISMA_MIGRATE_SKIP_GENERATE` | Not needed (auto-generate removed) |
 | `PRISMA_MIGRATE_SKIP_SEED` | Not needed (auto-seed removed) |

@@ -1,10 +1,10 @@
 ---
 name: resend
-description: Use when working with the Resend email API — sending transactional emails (single or batch), receiving inbound emails via webhooks, managing email templates, tracking delivery events, or setting up the Resend SDK. Always use this skill when the user mentions Resend, even for simple tasks like "send an email with Resend" — the skill contains critical gotchas (idempotency keys, webhook verification, template variable syntax) that prevent common production issues.
+description: Use when working with the Resend email API — sending transactional emails (single or batch), receiving inbound emails via webhooks, managing email templates, tracking delivery events, managing domains, contacts, broadcasts, webhooks, API keys, viewing API request logs, or setting up the Resend SDK. Always use this skill when the user mentions Resend, even for simple tasks like "send an email with Resend" — the skill contains critical gotchas (idempotency keys, webhook verification, template variable syntax) that prevent common production issues.
 license: MIT
 metadata:
     author: resend
-    version: "3.0.0"
+    version: "3.2.0"
     homepage: https://resend.com
     source: https://github.com/resend/resend-skills
 inputs:
@@ -19,6 +19,14 @@ references:
     - receiving.md
     - templates.md
     - webhooks.md
+    - domains.md
+    - contacts.md
+    - broadcasts.md
+    - api-keys.md
+    - logs.md
+    - contact-properties.md
+    - segments.md
+    - topics.md
     - installation.md
     - fetch-all-templates.mjs
 ---
@@ -131,12 +139,20 @@ export async function POST(req: Request) {
 | **Send batch emails** | [sending/overview.md](references/sending/overview.md) → [sending/batch-email-examples.md](references/sending/batch-email-examples.md) |
 | **Full SDK examples** (Node.js, Python, Go, cURL) | [sending/single-email-examples.md](references/sending/single-email-examples.md) |
 | **Idempotency, retries, error handling** | [sending/best-practices.md](references/sending/best-practices.md) |
+| **Get, list, reschedule, cancel emails** | [sending/email-management.md](references/sending/email-management.md) |
 | **Receive inbound emails** | [receiving.md](references/receiving.md) — domain setup, webhooks, attachments |
 | **Manage templates** (CRUD, variables) | [templates.md](references/templates.md) — lifecycle, aliases, pagination |
-| **Set up webhooks** (all event types) | [webhooks.md](references/webhooks.md) — verification, retry schedule, IP allowlist |
+| **Set up webhooks** (events, verification) | [webhooks.md](references/webhooks.md) — verification, CRUD, retry schedule, IP allowlist |
+| **Manage domains** (create, verify, DNS) | [domains.md](references/domains.md) — regions, TLS, tracking, capabilities |
+| **Manage contacts** (CRUD, properties) | [contacts.md](references/contacts.md) — segments, topics, custom properties |
+| **Send broadcasts** (marketing campaigns) | [broadcasts.md](references/broadcasts.md) — lifecycle, scheduling, template variables |
+| **Manage API keys** | [api-keys.md](references/api-keys.md) — permission scoping, domain restrictions |
+| **View API request logs** | [logs.md](references/logs.md) — list and retrieve API call history, debugging |
+| **Define contact properties** | [contact-properties.md](references/contact-properties.md) — custom fields for contacts |
+| **Manage segments** (contact groups) | [segments.md](references/segments.md) — broadcast targeting, contact grouping |
+| **Manage topics** (subscriptions) | [topics.md](references/topics.md) — opt-in/out preferences, broadcast filtering |
 | **Install SDK** (8+ languages) | [installation.md](references/installation.md) |
 | **Set up an AI agent inbox** | Install the `agent-email-inbox` skill — covers security levels for untrusted input |
-| **Marketing emails / newsletters** | Use [Resend Broadcasts](https://resend.com/broadcasts) — not batch sending |
 
 ## SDK Version Requirements
 
@@ -186,6 +202,10 @@ Check for these files: `package.json` (Node.js), `requirements.txt`/`pyproject.t
 | 8 | **Sending with draft template** | Templates must be published before sending — call `.publish()` first |
 | 9 | **`html` + `template` in same send call** | Mutually exclusive — remove `html`/`text`/`react` when using template |
 | 10 | **MX record not lowest priority for inbound** | Ensure Resend's MX has the lowest number (highest priority) or emails won't route |
+| 11 | **403 when sending from `resend.dev`** | The default `onboarding@resend.dev` is a sandbox — it can only deliver to your Resend account email. Verify your own domain first |
+| 12 | **403 domain mismatch** | The `from` address domain must exactly match a verified domain. Verified `send.acme.com` but sending from `user@acme.com` will fail |
+| 13 | **Calling Resend API from the browser (CORS)** | The API does not support CORS — this is intentional to protect your API key. Always call from server-side (API routes, serverless functions) |
+| 14 | **401 `restricted_api_key`** | A sending-only API key was used on a non-sending endpoint (domains, contacts, etc.). Create a full-access key instead |
 
 ## Cross-Cutting Concerns
 
@@ -202,7 +222,7 @@ If your system processes untrusted email content and takes actions (refunds, dat
 
 ### Marketing Emails
 
-The sending capabilities in this skill are for **transactional email** (receipts, confirmations, notifications). For marketing campaigns to large subscriber lists with unsubscribe links and engagement tracking, use [Resend Broadcasts](https://resend.com/broadcasts).
+The sending capabilities in this skill are for **transactional email** (receipts, confirmations, notifications). For marketing campaigns to large subscriber lists with unsubscribe links and engagement tracking, use Resend Broadcasts — see [broadcasts.md](references/broadcasts.md) for the API.
 
 ### Domain Warm-up
 
@@ -242,7 +262,8 @@ See [webhooks.md](references/webhooks.md) for full details, signature verificati
 | Code | Action |
 |------|--------|
 | 400, 422 | Fix request parameters, don't retry |
-| 401, 403 | Check API key / verify domain, don't retry |
+| 401 | Check API key — `restricted_api_key` means sending-only key used on non-sending endpoint |
+| 403 | Verify domain ownership — common causes: `resend.dev` sandbox, `from` domain mismatch, unverified domain |
 | 409 | Idempotency conflict — use new key or fix payload |
 | 429 | Rate limited — retry with exponential backoff (default rate limit: 2 req/s) |
 | 500 | Server error — retry with exponential backoff |

@@ -41,7 +41,7 @@ npx skills add resend/email-best-practices
 ```
 email-best-practices/
 ├── SKILL.md                             # Start here - routes to the right resource
-└── resources/
+└── references/
     ├── deliverability.md                # SPF/DKIM/DMARC, sender reputation
     ├── transactional-emails.md          # Password resets, OTPs, confirmations
     ├── transactional-email-catalog.md   # Email combinations by app type

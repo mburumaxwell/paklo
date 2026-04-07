@@ -25,13 +25,40 @@ You can also inspect data locally:
 npx prisma studio
 ```
 
+## Linking an existing project
+
+If the Prisma Postgres database already exists, link the local project instead of provisioning a new one:
+
+```bash
+prisma postgres link
+```
+
+For CI or non-interactive usage:
+
+```bash
+prisma postgres link --api-key "<your-api-key>" --database "db_..."
+```
+
+This command updates or creates `.env` with `DATABASE_URL`. If the project is already linked, use `--force` to re-link. After linking, run `prisma generate`, then `prisma migrate dev` if you need to apply the schema.
+
 ## Connection setup
 
 For direct PostgreSQL tools and drivers:
 
 - Generate/copy direct connection credentials from the project connection UI.
-- Use the resulting PostgreSQL URL as `DATABASE_URL`.
+- Use the resulting PostgreSQL URL as `DATABASE_URL` for `pg` and `@prisma/adapter-pg`.
 - For Prisma Postgres direct TCP, include `sslmode=require`.
+
+Typical direct TCP format:
+
+```env
+DATABASE_URL="postgres://identifier:key@db.prisma.io:5432/postgres?sslmode=require"
+```
+
+## Adapter choices
+
+- Standard Node.js apps: prefer `@prisma/adapter-pg` with the direct TCP URL above.
+- Edge/serverless runtimes: use `@prisma/adapter-ppg` with `@prisma/ppg` only when you specifically need the Prisma Postgres serverless driver.
 
 ## References
 

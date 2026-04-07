@@ -68,7 +68,7 @@ prisma generate --generator client --generator zod_schemas
 prisma generate --sql
 ```
 
-## Schema Configuration (v7)
+## Schema Configuration
 
 ```prisma
 generator client {
@@ -77,19 +77,34 @@ generator client {
 }
 ```
 
-### Key v7 Changes
+### Current Generator Behavior
 
-- Provider must be `prisma-client`
-- `output` is now **required** - client no longer generates to `node_modules`
-- Update imports after generating:
+- `prisma-client` is the standard generator
+- `output` is required when using `prisma-client`
+- `prisma-client` supports both ESM and CommonJS via `moduleFormat`
+- `compilerBuild` supports `fast` and `small` query compiler artifacts
+- Use TypeScript `satisfies` for typed query fragments with `prisma-client`
+- Import Prisma Client from your generated output path, for example:
 
 ```typescript
-// Before (v6)
-import { PrismaClient } from '@prisma/client'
-
-// After (v7)
-import { PrismaClient } from '../generated/client'
+import { PrismaClient } from '../generated/prisma/client'
 ```
+
+### Compiler Build Tuning
+
+Use `compilerBuild` when you need to trade artifact size against the default build:
+
+```prisma
+generator client {
+  provider      = "prisma-client"
+  output        = "../generated"
+  compilerBuild = "small"
+}
+```
+
+- `fast` is the default build for most targets
+- `small` is useful for size-constrained targets
+- Prisma defaults `vercel-edge` targets to `small`
 
 ## Common Patterns
 
@@ -100,7 +115,7 @@ prisma migrate dev --name my_migration
 prisma generate
 ```
 
-Note: In v7, `migrate dev` no longer auto-runs `generate`.
+Run `prisma generate` whenever you need refreshed client code after schema-changing commands.
 
 ### CI/CD pipeline
 
@@ -134,14 +149,25 @@ After running `prisma generate`, your output directory contains:
 
 ```
 generated/
+├── browser.ts
 ├── client.ts
+├── commonInputTypes.ts
 ├── models/
 ├── enums.ts
+├── models.ts
 └── ...
 ```
 
 Import the client:
 
 ```typescript
-import { PrismaClient, Prisma } from '../generated/client'
+import { PrismaClient, Prisma } from '../generated/prisma/client'
+```
+
+Import browser-safe types:
+
+```typescript
+import { Prisma } from '../generated/prisma/browser'
+import { Role } from '../generated/prisma/enums'
+import type { UserModel } from '../generated/prisma/models/User'
 ```

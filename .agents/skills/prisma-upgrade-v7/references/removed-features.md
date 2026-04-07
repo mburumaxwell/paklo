@@ -133,9 +133,11 @@ prisma migrate dev
 prisma generate  # Run explicitly if needed
 ```
 
+Local verification with Prisma `7.6.0` showed no generated client files emitted by `migrate dev` or `db push`, even though some CLI help text still says `migrate dev` "trigger[s] generators".
+
 ### --skip-seed
 
-Removed from `migrate dev` and `migrate reset`.
+Removed from `migrate dev`. More importantly, Prisma v7 no longer auto-runs seeds during `migrate dev` or `migrate reset`, so seed explicitly when you need it.
 
 ```bash
 # v6
@@ -192,6 +194,19 @@ prisma generate  # Must run explicitly
 # v7 workflow
 prisma migrate reset --force
 prisma db seed  # Must run explicitly
+```
+
+## Prisma.validator
+
+The `prisma-client` generator no longer exposes `Prisma.validator`. Use TypeScript's `satisfies` operator instead.
+
+```typescript
+import { Prisma } from '../generated/prisma/client'
+
+const userSelect = {
+  id: true,
+  email: true,
+} satisfies Prisma.UserSelect
 ```
 
 ## rejectOnNotFound

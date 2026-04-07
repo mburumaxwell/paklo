@@ -1,12 +1,10 @@
-# ESM Support
+# ESM and CommonJS Support
 
-Prisma ORM v7 ships as an ES module only. Your project must be configured for ESM.
+Prisma ORM v7 is ESM-first, but the `prisma-client` generator can target either ESM or CommonJS. Use ESM by default, and opt into CommonJS with `moduleFormat = "cjs"` if your project still needs it.
 
-## Required Changes
+## ESM Projects
 
-### package.json
-
-Add the `type` field:
+Add `"type": "module"` to `package.json` and use an ESM-compatible `tsconfig.json`:
 
 ```json
 {
@@ -17,10 +15,6 @@ Add the `type` field:
   }
 }
 ```
-
-### tsconfig.json
-
-Configure for ESM:
 
 ```json
 {
@@ -37,38 +31,70 @@ Configure for ESM:
 }
 ```
 
-### Alternative: Node16/NodeNext
+## CommonJS Projects
+
+If the rest of your app is still CommonJS, keep that setup and make the generated Prisma Client CommonJS too:
 
 ```json
 {
   "compilerOptions": {
-    "module": "Node16",
-    "moduleResolution": "Node16",
-    "target": "ES2022"
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    "esModuleInterop": true
   }
 }
 ```
 
-## Import Syntax Changes
-
-### Named imports
-
-```typescript
-// ESM (v7)
-import { PrismaClient } from '../generated/client'
-
-// Not: require()
+```prisma
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
 ```
 
-### File extensions
+## Generator Fields That Matter
 
-With `moduleResolution: "Node16"`, add `.js` extensions:
+- `moduleFormat`: `esm` or `cjs`
+- `runtime`: `nodejs`, `bun`, `deno`, `workerd`, `vercel-edge`, `react-native`
+- `generatedFileExtension`: `ts`, `mts`, or `cts`
+- `importFileExtension`: `ts`, `mts`, `cts`, `js`, `mjs`, `cjs`, or empty
 
-```typescript
-import { helper } from './utils/helper.js'
+Example:
+
+```prisma
+generator client {
+  provider               = "prisma-client"
+  output                 = "../generated/prisma"
+  runtime                = "nodejs"
+  moduleFormat           = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension    = "ts"
+}
 ```
 
-With `moduleResolution: "bundler"`, extensions are optional.
+## Import Paths
+
+### Server Code
+
+```typescript
+import { PrismaClient } from '../generated/prisma/client'
+```
+
+### Browser-Safe Types
+
+```typescript
+import { Prisma } from '../generated/prisma/browser'
+import { Role } from '../generated/prisma/enums'
+import type { UserModel } from '../generated/prisma/models/User'
+```
+
+## File Extensions
+
+With `moduleResolution: "Node16"` or `"NodeNext"`, use `.js`/`.mjs`/`.cjs` extensions that match your emitted files.
+
+With `moduleResolution: "bundler"`, bare relative imports are usually fine.
 
 ## Minimum Versions
 
@@ -77,84 +103,26 @@ With `moduleResolution: "bundler"`, extensions are optional.
 | Node.js | 20.19.0 |
 | TypeScript | 5.4.0 |
 
-## CommonJS Compatibility
-
-If you must use CommonJS:
-
-### Dynamic import
-
-```javascript
-// CommonJS file
-async function main() {
-  const { PrismaClient } = await import('../generated/client.js')
-  const prisma = new PrismaClient()
-}
-```
-
-### Separate ESM file
-
-Create an ESM wrapper:
-
-```javascript
-// prisma.mjs
-import { PrismaClient } from '../generated/client'
-export const prisma = new PrismaClient()
-```
-
 ## Framework Considerations
 
 ### Next.js
 
-Next.js supports ESM. Ensure `next.config.js` → `next.config.mjs`:
+Next.js works well with the default ESM output. If you need generated types in client components, import them from `browser`, `models`, or `enums`, not from `client`.
 
-```javascript
-// next.config.mjs
-export default {
-  // config
-}
-```
+### Bun
 
-### Express
-
-Update entry point:
-
-```javascript
-// index.js (with "type": "module")
-import express from 'express'
-import { PrismaClient } from '../generated/client'
-
-const app = express()
-const prisma = new PrismaClient()
-```
-
-### Jest
-
-Configure Jest for ESM:
-
-```json
-{
-  "jest": {
-    "preset": "ts-jest/presets/default-esm",
-    "extensionsToTreatAsEsm": [".ts"],
-    "transform": {
-      "^.+\\.tsx?$": ["ts-jest", { "useESM": true }]
-    }
-  }
-}
-```
-
-Or use Vitest which has native ESM support.
+Bun loads `.env` files automatically, so ESM plus `env()` is the smoothest default. You can still choose `moduleFormat = "cjs"` if the rest of your project requires it.
 
 ## Troubleshooting
 
 ### "ERR_REQUIRE_ESM"
 
-Your code is using `require()` on an ESM module. Switch to `import`.
+Your generated client is ESM, but your app is requiring it as CommonJS. Either switch the project to ESM or set `moduleFormat = "cjs"` and regenerate.
 
 ### "Cannot use import statement outside a module"
 
-Add `"type": "module"` to package.json.
+Your app is still being executed as CommonJS. Add `"type": "module"` or use `moduleFormat = "cjs"` instead.
 
 ### TypeScript compilation errors
 
-Ensure `module` and `moduleResolution` are set correctly in tsconfig.json.
+Ensure `module`, `moduleResolution`, and your generator's `moduleFormat` agree with one another.

@@ -21,7 +21,7 @@ generator client {
 }
 ```
 
-## 2. Config Configuration (v7)
+## 2. Config Configuration
 
 In `prisma.config.ts`:
 
@@ -46,9 +46,9 @@ DATABASE_URL="postgresql://user:password@host:26257/db?sslmode=verify-full"
 
 Note: CockroachDB uses the PostgreSQL wire protocol, so the URL often looks like postgresql, but the provider **MUST** be `cockroachdb` in the schema to handle specific CRDB features correctly.
 
-## Driver Adapter (Prisma ORM 7 required)
+## Driver Adapter
 
-Prisma ORM 7 uses the query compiler by default, so you must use a driver adapter. CockroachDB is PostgreSQL-compatible, so use the PostgreSQL adapter.
+Use a driver adapter for the standard SQL workflow. CockroachDB is PostgreSQL-compatible, so use the PostgreSQL adapter.
 
 1. Install adapter and driver:
    ```bash

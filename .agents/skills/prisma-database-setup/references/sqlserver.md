@@ -22,7 +22,7 @@ generator client {
 }
 ```
 
-## 2. Config Configuration (v7)
+## 2. Config Configuration
 
 In `prisma.config.ts`:
 
@@ -54,9 +54,9 @@ sqlserver://HOST:PORT;database=DB;user=USER;password=PASS;encrypt=true;trustServ
 - **encrypt**: Required for Azure (true).
 - **trustServerCertificate**: True for self-signed certs (local dev).
 
-## Driver Adapter (Prisma ORM 7 required)
+## Driver Adapter
 
-Prisma ORM 7 uses the query compiler by default, so you must use a driver adapter.
+Use a driver adapter for the standard SQL workflow.
 
 1. Install adapter and driver:
    ```bash

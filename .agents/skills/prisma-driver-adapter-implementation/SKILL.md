@@ -4,7 +4,7 @@ description: Required reference for Prisma v7 driver adapter work. Use when impl
 license: MIT
 metadata:
   author: Tyler Benfield
-  version: "7.0.0"
+  version: "7.6.0"
 ---
 
 # Prisma 7 Driver Adapter Implementation Guide

@@ -4,7 +4,7 @@ description: Prisma Postgres setup and operations guidance across Console, creat
 license: MIT
 metadata:
   author: prisma
-  version: "1.0.0"
+  version: "7.6.0"
 ---
 
 # Prisma Postgres
@@ -16,6 +16,7 @@ Guidance for creating, managing, and integrating Prisma Postgres across interact
 Reference this skill when:
 - Setting up Prisma Postgres from Prisma Console
 - Provisioning instant temporary databases with `create-db`
+- Linking an existing local project with `prisma postgres link`
 - Managing Prisma Postgres resources via Management API
 - Using `@prisma/management-api-sdk` in TypeScript/JavaScript
 - Handling claim URLs, connection strings, regions, and auth flows
@@ -31,10 +32,10 @@ Reference this skill when:
 
 ## Quick Reference
 
-- `create-db-cli` - instant databases and CLI options
+- `create-db-cli` - instant databases and current CLI flags (`--ttl`, `--copy`, `--quiet`, `--open`)
 - `management-api` - service token and OAuth API workflows
 - `management-api-sdk` - typed SDK usage with token storage
-- `console-and-connections` - Console operations and connection setup
+- `console-and-connections` - Console operations, `prisma postgres link`, direct TCP connections, and serverless-driver choices
 
 ## Core Workflows
 
@@ -66,7 +67,23 @@ For app integrations, you can also use the programmatic API (`create()` / `regio
 
 Temporary databases auto-delete after ~24 hours unless claimed.
 
-### 3. Programmatic provisioning with Management API
+### 3. Link an existing local project
+
+Use `prisma postgres link` when the database already exists and you want to wire a local project to it:
+
+```bash
+prisma postgres link
+```
+
+For CI or other non-interactive environments:
+
+```bash
+prisma postgres link --api-key "<your-api-key>" --database "db_..."
+```
+
+This flow updates your local `.env` with `DATABASE_URL`, then you can run `prisma generate` and `prisma migrate dev`.
+
+### 4. Programmatic provisioning with Management API
 
 Use API endpoints on:
 
@@ -84,7 +101,7 @@ Auth options:
 - Service token (workspace server-to-server)
 - OAuth 2.0 (act on behalf of users)
 
-### 4. Type-safe integration with Management API SDK
+### 5. Type-safe integration with Management API SDK
 
 Install and use:
 

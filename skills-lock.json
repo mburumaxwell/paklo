@@ -4,7 +4,7 @@
     "agent-browser": {
       "source": "vercel-labs/agent-browser",
       "sourceType": "github",
-      "computedHash": "1fdc3ae39490000d36b242168c64db00c1654fe1a0e45a1b12e93b38cc21e32c"
+      "computedHash": "fc173a14ecea820739ea971bf81eddbf94e12ce99312fb83e55342724316c5dd"
     },
     "better-auth-best-practices": {
       "source": "better-auth/skills",
@@ -24,27 +24,27 @@
     "email-best-practices": {
       "source": "resend/email-best-practices",
       "sourceType": "github",
-      "computedHash": "7e6c8d495e66e88a20dc45d17d24b445d6c5c9072855c78d8800fff994bc813f"
+      "computedHash": "345d2c8d69ea959172f084b923241772695b73f66a1068787349dffcfd3df4e6"
     },
     "flags-sdk": {
       "source": "vercel/flags",
       "sourceType": "github",
-      "computedHash": "df739e9a3e56aad569707c7cbeac5c5a76a21a7946afa3551e3424f1cea68417"
+      "computedHash": "a9fbc5cdeb0d891ddfaf0674f779aa7107c43011e6301f806a7a836a83c7002d"
     },
     "next-best-practices": {
       "source": "vercel-labs/next-skills",
       "sourceType": "github",
-      "computedHash": "515ba75178bd44875812d9a560bdf14651f86709f89cf1d4f209638e879807f3"
+      "computedHash": "db85045827ebeb83ac8dbc992b69188755eeb74dcf01cbf5e694d58aa494a106"
     },
     "next-cache-components": {
       "source": "vercel-labs/next-skills",
       "sourceType": "github",
-      "computedHash": "a94b83ddcd2ff1c30722577f693b1bfe32f2e1a83abdd6c08c2d6cc6753b53c8"
+      "computedHash": "f835d8226c28abf012cc013928e2627c8a7a046de61127ef229be1711bd1f255"
     },
     "next-upgrade": {
       "source": "vercel-labs/next-skills",
       "sourceType": "github",
-      "computedHash": "be6bbf6ab1dc2cc6f2505cea52d497920c04f5b532c0846ee201f6029b803fb0"
+      "computedHash": "e3aeb1f9e8a68d24df0c1c2e3c8ab97ede09a7251a2c76988318d02254346979"
     },
     "organization-best-practices": {
       "source": "better-auth/skills",
@@ -54,32 +54,32 @@
     "prisma-cli": {
       "source": "prisma/skills",
       "sourceType": "github",
-      "computedHash": "500f80cfb0bebbaf7ef60645b43eb126e6489d6a1a2a592983c37a3ef8a789b5"
+      "computedHash": "b9d9314e3716af725997843c5026ba0e258fb2d27a986190bf2ad53be67b72b9"
     },
     "prisma-client-api": {
       "source": "prisma/skills",
       "sourceType": "github",
-      "computedHash": "ea94a5efcd3240e45c389bcdadd4613643245d226ffe1318c396e3b3edeb72ee"
+      "computedHash": "0434410e48fb796bbdc3ad0050654bfc9cf72c89b30dbad098ee5c9f655b7f85"
     },
     "prisma-database-setup": {
       "source": "prisma/skills",
       "sourceType": "github",
-      "computedHash": "b05e88d284c4a754d3624697c2f749e21f7da3fc1f4319b6658df318e84b0dd9"
+      "computedHash": "46d2dc2f9c968722376bbb6a1a1389c82bd7cceb5973ac1486c54890514b8959"
     },
     "prisma-driver-adapter-implementation": {
       "source": "prisma/skills",
       "sourceType": "github",
-      "computedHash": "866755316f6d86e743dd4ea08411fd3a9be52d34e9cf58db174d97eca56f4e8e"
+      "computedHash": "2e00b0d05f0da23796f6d44684e19219b74cf993f8a2df6e5b044812f375bbc6"
     },
     "prisma-postgres": {
       "source": "prisma/skills",
       "sourceType": "github",
-      "computedHash": "7cf11f4b74c616f1e154c6f00735411b4edbe46e9e968d7c420177b8fa5b1518"
+      "computedHash": "d090d1206fb6a2dd9f7b9f658d851ccd653132512c53c6e0a164110d9ee80005"
     },
     "prisma-upgrade-v7": {
       "source": "prisma/skills",
       "sourceType": "github",
-      "computedHash": "a3944954fcaabe06285ad866ca7ba19de0a8ab73ff988cbccd795a7694ecdcd6"
+      "computedHash": "2e4d54a4c7a0fc2476e81686718a765f5eb2cacfb2fb0822f3109c76bf4a9bb0"
     },
     "react-doctor": {
       "source": "millionco/react-doctor",
@@ -94,12 +94,12 @@
     "resend": {
       "source": "resend/resend-skills",
       "sourceType": "github",
-      "computedHash": "e756972f463d161f3c227eab41d119fd7430249736bc770d00b21c3eeb68f91a"
+      "computedHash": "f9b9da21da1ccaa4ff9f64bf87b8327c29ec5addb0f328011e2d42cf60a5ed19"
     },
     "seo-audit": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
-      "computedHash": "ec3109d213dde1747614ad1112ef0e498e04b24e464538968e156dfbfadb2121"
+      "computedHash": "1eef04180a5278a6869fab117c75fa2acf512bfda0a4b16569409b88b7bcb343"
     },
     "shadcn": {
       "source": "shadcn/ui",
@@ -109,42 +109,42 @@
     "stripe-best-practices": {
       "source": "stripe/ai",
       "sourceType": "github",
-      "computedHash": "7b886129e39257cd1c3b885cb7e5bdcb04973598acc421fb7418c32fb1690dc2"
+      "computedHash": "ae5889d45a1e29668b672290ca8d3d833fa30ff0634be85c30918ca0385dd1c6"
     },
     "turborepo": {
       "source": "vercel/turborepo",
       "sourceType": "github",
-      "computedHash": "9f5095588ad368e23ebff66249200d13cdc836dc65c8ce9db7d7b84199e87e6f"
+      "computedHash": "f59628995c41e11858d63acf2792030325c9ca0174df5d1bae5c43ded301d851"
     },
     "upgrade-stripe": {
       "source": "stripe/ai",
       "sourceType": "github",
-      "computedHash": "32fe96a1d9933d2d0a1bb99c8328b01284b018dcbae850f069556c82c07b8c7e"
+      "computedHash": "06c5c3fd85657ff9aaadff65bd2d63f606da8e44802dc1f9aaf42c73263a11b7"
     },
     "vercel-composition-patterns": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
-      "computedHash": "f98931159fa9c7fed043bcd18a891a46dcf89ababa38df13a4c5b7b30dc0ce07"
+      "computedHash": "575757e3e25761c8c562d6e395d29f0b76c98b1273c0bd72d88e6ab1bc9c7d42"
     },
     "vercel-react-best-practices": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
-      "computedHash": "bbc31a48537b473ff4feea6360ef0de3bfdcbef26c14f4967a5deefe8ca801d3"
+      "computedHash": "43ca6c197f8ec13055079da7053232d477068b03ca443f9ac1bc819b95cdd432"
     },
     "web-design-guidelines": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
-      "computedHash": "a6a44d5498f7e8f68289902f3dedfc6f38ae0cee1e96527c80724cf27f727c2a"
+      "computedHash": "f3bc47f890f42a44db1007ab390709ec368e4b8c089baee6b0007182236ac474"
     },
     "workflow": {
       "source": "vercel/workflow",
       "sourceType": "github",
-      "computedHash": "dfb59009ebfb21747e6dc89fd4c683c052c459ae2592b3b966c120e2a7fb7601"
+      "computedHash": "0d31efa78ad6a2e76d8e6089bf5e820a155976b76f8b82b64391344ad2ae310b"
     },
     "workflow-init": {
       "source": "vercel/workflow",
       "sourceType": "github",
-      "computedHash": "6daea9d2b91c25b924a868435da7b3ae0ad10691cd08ad39cff0060524cfaf2b"
+      "computedHash": "df6aec9f1c1fcf1aa44423c4a9a83dc78fe4812fc6c3e874e6e69d3dfb1300d1"
     }
   }
 }

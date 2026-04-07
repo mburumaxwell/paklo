@@ -201,21 +201,23 @@ type UserWithPosts = Prisma.UserGetPayload<{
 }>
 ```
 
-### Prisma.validator
+### Type-safe query fragments with satisfies
 
 Type-safe query fragments:
 
 ```typescript
 import { Prisma } from '../generated/client'
 
-const userSelect = Prisma.validator<Prisma.UserSelect>()({
+const userSelect = {
   id: true,
   email: true,
   name: true
-})
+} satisfies Prisma.UserSelect
 
 const user = await prisma.user.findUnique({
   where: { id: 1 },
   select: userSelect
 })
 ```
+
+With the `prisma-client` generator, use TypeScript `satisfies` for typed query fragments. You may still see older examples that use `Prisma.validator()` with `prisma-client-js`.

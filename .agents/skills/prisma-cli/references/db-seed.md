@@ -118,18 +118,15 @@ prisma db seed -- --environment development
 
 Arguments after `--` are passed to your seed script.
 
-## v7 Changes
+## Current Workflow
 
-In Prisma 7, seeding is NOT automatic after migrations:
+Run seeding explicitly after migrations when you need seed data:
 
 ```bash
-# v7 workflow
 prisma migrate dev --name init
 prisma generate
 prisma db seed  # Must run explicitly
 ```
-
-Previously (v6), `migrate dev` and `migrate reset` auto-ran seeds.
 
 ## Idempotent Seeding
 

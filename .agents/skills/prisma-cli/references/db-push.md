@@ -25,9 +25,9 @@ prisma db push [options]
 | `--config` | Custom path to your Prisma config file |
 | `--url` | Override the datasource URL from the Prisma config file |
 
-### Removed in v7
+### Follow-up Command
 
-- `--skip-generate` - Run `prisma generate` explicitly
+- Run `prisma generate` explicitly when you need refreshed client output
 
 ## Examples
 
@@ -53,11 +53,11 @@ prisma db push --force-reset
 
 Completely resets database and applies schema.
 
-### Full workflow (v7)
+### Full workflow
 
 ```bash
 prisma db push
-prisma generate  # Must run explicitly in v7
+prisma generate
 ```
 
 ## When to Use

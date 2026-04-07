@@ -1,10 +1,12 @@
 # Driver Adapters
 
-Prisma v7 requires driver adapters for all database connections. This replaces the built-in Rust query engine.
+Prisma v7 requires driver adapters for SQL database connections. This is the standard SQL execution path in current Prisma releases.
+
+MongoDB should not follow this path. There is no published MongoDB `@prisma/adapter-*` package, and MongoDB projects should remain on the latest Prisma 6.x release instead of trying to fit into the Prisma 7 SQL adapter model.
 
 ## Why Driver Adapters?
 
-- No more binary downloads
+- No native engine binary in the Prisma Client SQL path
 - Smaller bundle size
 - Better serverless/edge compatibility
 - Uses native Node.js database drivers
@@ -17,7 +19,8 @@ Prisma v7 requires driver adapters for all database connections. This replaces t
 | PostgreSQL | `@prisma/adapter-pg` | `pg` |
 | MySQL / MariaDB | `@prisma/adapter-mariadb` | `mariadb` |
 | SQLite | `@prisma/adapter-better-sqlite3` | `better-sqlite3` |
-| Prisma Postgres | `@prisma/adapter-ppg` | `@prisma/ppg` |
+| Prisma Postgres (Node.js) | `@prisma/adapter-pg` | `pg` |
+| Prisma Postgres (edge/serverless) | `@prisma/adapter-ppg` | `@prisma/ppg` |
 | SQL Server | `@prisma/adapter-mssql` | `mssql` |
 | Neon | `@prisma/adapter-neon` | `@neondatabase/serverless` |
 | PlanetScale | `@prisma/adapter-planetscale` | `@planetscale/database` |
@@ -47,7 +50,7 @@ npm install @prisma/adapter-better-sqlite3
 ### Prisma Postgres
 
 ```bash
-npm install @prisma/adapter-ppg @prisma/ppg
+npm install @prisma/adapter-pg pg
 ```
 
 ### SQL Server
@@ -116,6 +119,19 @@ const prisma = new PrismaClient({ adapter })
 ```
 
 ### Prisma Postgres
+
+```typescript
+import { PrismaClient } from '../generated/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+})
+
+const prisma = new PrismaClient({ adapter })
+```
+
+### Prisma Postgres serverless driver
 
 ```typescript
 import { PrismaClient } from '../generated/client'
