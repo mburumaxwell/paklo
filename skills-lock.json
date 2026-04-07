@@ -51,6 +51,11 @@
       "sourceType": "github",
       "computedHash": "79a5a85b43d10e9fe37582b3506b051a33a991817b938f349099baa5ddba21aa"
     },
+    "portless": {
+      "source": "vercel-labs/portless",
+      "sourceType": "github",
+      "computedHash": "bb399eedebe2be908c90dee8fb295760f6e3db5ff94d3b85304d3b22fa1de0f0"
+    },
     "prisma-cli": {
       "source": "prisma/skills",
       "sourceType": "github",

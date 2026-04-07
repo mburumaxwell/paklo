@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "paklo-web",
   "version": "0.0.0",
   "license": "AGPL-3.0-later",
   "author": "mburumaxwell",
@@ -18,7 +18,7 @@
     "codegen": "pnpm prisma-gen",
     "typegen": "next typegen && pnpm codegen",
     "build": "next build",
-    "dev": "next dev",
+    "dev": "portless run next dev",
     "start": "next start",
     "test": "vitest",
     "clean": "rimraf .turbo .next .source .react-email .generated src/app/.well-known/workflow out"

@@ -15,8 +15,8 @@ interface SiteUrlOptions {
  * @returns The site URL.
  */
 export function getSiteUrlCombined({ development, main, defaultValue }: SiteUrlOptions) {
-  // if we are in development, use localhost
-  if (development) return `http://localhost:${process.env.PORT || 3000}`;
+  // if we are in development, use portless or localhost
+  if (development) return process.env.PORTLESS_URL || `http://localhost:${process.env.PORT || 3000}`;
 
   // if we are on the main branch, use the known URL
   if (main) return defaultValue;

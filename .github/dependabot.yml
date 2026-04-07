@@ -86,6 +86,7 @@ updates:
           - '@opentelemetry/*'
           - 'oxfmt'
           - 'oxlint'
+          - 'portless'
           - '@prisma/*'
           - 'prisma'
           - '@stripe/*'
