@@ -71,7 +71,7 @@
     "flags": "4.0.6",
     "fumadocs-core": "16.7.10",
     "fumadocs-mdx": "14.2.11",
-    "hono": "4.12.10",
+    "hono": "4.12.12",
     "lucide-react": "1.7.0",
     "mermaid": "11.14.0",
     "mongodb": "7.1.1",
