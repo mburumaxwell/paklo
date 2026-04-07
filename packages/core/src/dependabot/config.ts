@@ -177,6 +177,7 @@ export const PackageEcosystemSchema = z.enum([
   'gradle',
   'julia',
   'maven',
+  'nix',
   'npm',
   'nuget',
   'opentofu',
