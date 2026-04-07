@@ -54,6 +54,7 @@ const manifest = {
   bazel: getImageName('Dockerfile.bazel'),
   opentofu: getImageName('Dockerfile.opentofu'),
   pre_commit: getImageName('Dockerfile.pre-commit'),
+  nix: getImageName('Dockerfile.nix'),
 };
 
 fs.writeFile(

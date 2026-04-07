@@ -127,6 +127,7 @@ const packageManagerLabelMap: Record<DependabotPackageManager, LabelMappingValue
   bazel: { label: 'Bazel' },
   opentofu: { label: 'OpenTofu' },
   pre_commit: { label: 'Pre-commit' },
+  nix: { label: 'Nix' },
 };
 export const packageManagerOptions: LabelOption<DependabotPackageManager>[] = Object.entries(
   packageManagerLabelMap,

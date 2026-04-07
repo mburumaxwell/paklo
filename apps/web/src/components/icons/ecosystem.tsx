@@ -14,6 +14,7 @@ import {
   HelmOriginal,
   JuliaOriginal,
   MavenOriginal,
+  NixosOriginal,
   NpmOriginal,
   NugetOriginal,
   PnpmOriginal,
@@ -45,6 +46,8 @@ export function EcosystemIcon({ ecosystem, ...props }: { ecosystem: string | Pac
       return <GradleOriginal {...props} />;
     case 'maven':
       return <MavenOriginal {...props} />;
+    case 'nix':
+      return <NixosOriginal {...props} />;
     case 'nuget':
       return <NugetOriginal {...props} />;
     case 'pip':
