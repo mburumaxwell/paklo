@@ -21,8 +21,8 @@ importers:
         specifier: 1.58.0
         version: 1.58.0
       portless:
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: 0.10.1
+        version: 0.10.1
       rimraf:
         specifier: 6.1.3
         version: 6.1.3
@@ -8085,8 +8085,8 @@ packages:
   points-on-path@0.2.1:
     resolution: {integrity: sha512-25ClnWWuw7JbWZcgqY/gJ4FQWadKxGWk+3kR/7kD0tCaDtPPMj7oHu2ToLaVhfpnHrZzYby2w6tUA0eOIuUg8g==}
 
-  portless@0.10.0:
-    resolution: {integrity: sha512-dJHvAKORfg0VTe8+pU9AkBcycHPaK2wVAynHL9U6/7k6MbQxzb9uOGh4Rw1TFMlp9jSSXfr4gG4h+9s+NsluxQ==}
+  portless@0.10.1:
+    resolution: {integrity: sha512-WSzw0bW5tKoK8TIrOr54T43jc0A35XR6RApGEhlbBOl8NgugfQTD3EGKwqE2jjEdcNtPG5WHH/dXzxgVIoY4hw==}
     engines: {node: '>=20'}
     os: [darwin, linux, win32]
     hasBin: true
@@ -18200,7 +18200,7 @@ snapshots:
       path-data-parser: 0.1.0
       points-on-curve: 0.2.0
 
-  portless@0.10.0: {}
+  portless@0.10.1: {}
 
   possible-typed-array-names@1.1.0: {}
 
