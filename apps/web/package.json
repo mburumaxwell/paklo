@@ -48,7 +48,7 @@
     "@react-email/render": "2.0.5",
     "@sapphire/snowflake": "3.5.5",
     "@spdx/tools": "0.1.0",
-    "@stripe/stripe-js": "9.0.1",
+    "@stripe/stripe-js": "9.1.0",
     "@tanstack/react-table": "8.21.3",
     "@upstash/ratelimit": "2.0.8",
     "@upstash/redis": "1.37.0",
