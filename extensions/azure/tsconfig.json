@@ -1,6 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../../tsconfig.json",
-  "include": ["src/**/*", "tests/**/*"],
+  "compilerOptions": {
+    "rootDir": "./"
+  },
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "tasks/**/dist"]
 }
