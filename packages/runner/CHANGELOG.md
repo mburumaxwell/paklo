@@ -1,5 +1,20 @@
 # @paklo/runner
 
+## 0.13.0
+
+### Minor Changes
+
+- [`7431349`](https://github.com/mburumaxwell/paklo/commit/743134945b0de6e641fcf632964f5beae14a5656) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Add `nix` to package ecosystems/managers
+
+### Patch Changes
+
+- [#2631](https://github.com/mburumaxwell/paklo/pull/2631) [`231805b`](https://github.com/mburumaxwell/paklo/commit/231805bfb306731f1991eedd69c1aa3f464c46f1) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 31 updates
+
+- [#2677](https://github.com/mburumaxwell/paklo/pull/2677) [`1874a27`](https://github.com/mburumaxwell/paklo/commit/1874a27d022cad745a0095c1a3b0c8296ac56cdf) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 32 updates
+
+- Updated dependencies [[`7431349`](https://github.com/mburumaxwell/paklo/commit/743134945b0de6e641fcf632964f5beae14a5656)]:
+  - @paklo/core@0.16.0
+
 ## 0.12.4
 
 ### Patch Changes

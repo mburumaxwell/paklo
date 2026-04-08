@@ -1,5 +1,11 @@
 # @paklo/core
 
+## 0.16.0
+
+### Minor Changes
+
+- [`7431349`](https://github.com/mburumaxwell/paklo/commit/743134945b0de6e641fcf632964f5beae14a5656) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Add `nix` to package ecosystems/managers
+
 ## 0.15.0
 
 ### Minor Changes
