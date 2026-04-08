@@ -67,6 +67,7 @@ updates:
           - 'react'
           - 'react-dom'
       opentelemetry: { patterns: ['@opentelemetry/*'] }
+      oxc: { patterns: ['oxfmt', 'oxlint'] }
       prisma: { patterns: ['@prisma/*', 'prisma'] }
       stripe: { patterns: ['@stripe/*', 'stripe'] }
       all-npm-minor-updates:
