@@ -5,6 +5,9 @@ export type AzureDevOpsOrganizationUrl = {
   /** Organization URL hostname */
   'hostname': string;
 
+  /** Organization URL port (if non-default) */
+  'port'?: string;
+
   /** Organization API endpoint URL */
   'api-endpoint': string;
 
@@ -90,6 +93,7 @@ export function extractOrganizationUrl({ organizationUrl }: { organizationUrl: s
   return {
     value,
     hostname,
+    'port': value.port || undefined,
     'api-endpoint': apiEndpoint,
     organization,
     'virtual-directory': virtualDirectory,

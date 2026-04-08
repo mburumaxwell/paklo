@@ -224,6 +224,7 @@ async function getOrCreateUpdateJobs(options: GetOrCreateUpdateJobOptions): Prom
       source: {
         'provider': organization.type,
         'hostname': organization.providerHostname,
+        'port': new URL(organization.providerApiEndpoint).port || undefined,
         'api-endpoint': organization.providerApiEndpoint,
         'repository-slug': repository.slug,
       },
