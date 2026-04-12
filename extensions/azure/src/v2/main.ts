@@ -1,4 +1,4 @@
-import { getDependabotConfig } from '@paklo/core/azure';
+import { getDependabotConfig } from '@paklo/core/azure/config';
 import {
   DEPENDABOT_DEFAULT_AUTHOR_EMAIL,
   DEPENDABOT_DEFAULT_AUTHOR_NAME,

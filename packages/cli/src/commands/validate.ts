@@ -1,4 +1,5 @@
-import { extractRepositoryUrl, getDependabotConfig } from '@paklo/core/azure';
+import { extractRepositoryUrl } from '@paklo/core/azure';
+import { getDependabotConfig } from '@paklo/core/azure/config';
 import type { DependabotConfig } from '@paklo/core/dependabot';
 import { logger } from '@paklo/core/logger';
 import { Command, Option } from 'commander';

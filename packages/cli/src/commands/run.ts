@@ -7,8 +7,8 @@ import {
   AZDO_PULL_REQUEST_MERGE_STRATEGIES,
   AzdoPullRequestMergeStrategySchema,
   extractRepositoryUrl,
-  getDependabotConfig,
 } from '@paklo/core/azure';
+import { getDependabotConfig } from '@paklo/core/azure/config';
 import {
   DEFAULT_EXPERIMENTS,
   DEPENDABOT_COMMANDS,

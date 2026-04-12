@@ -30,6 +30,10 @@
       "types": "./dist/azure/index.d.mts",
       "import": "./dist/azure/index.mjs"
     },
+    "./azure/config": {
+      "types": "./dist/azure/config.d.mts",
+      "import": "./dist/azure/config.mjs"
+    },
     "./runner": {
       "types": "./dist/runner/index.d.mts",
       "import": "./dist/runner/index.mjs"
