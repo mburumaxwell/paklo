@@ -1,5 +1,5 @@
 import { DependabotPackageManagerSchema } from '@paklo/core/dependabot';
-import { ImageService, PROXY_IMAGE_NAME, updaterImageName } from '@paklo/runner';
+import { ImageService, PROXY_IMAGE_NAME, updaterImageName } from '@paklo/core/runner';
 import { Argument, Command } from 'commander';
 import { z } from 'zod';
 

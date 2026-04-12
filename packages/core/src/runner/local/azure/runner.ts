@@ -6,7 +6,7 @@ import {
   AzureDevOpsClientWrapper,
   PR_PROPERTY_MICROSOFT_GIT_SOURCE_REF_NAME,
   parsePullRequestProperties,
-} from '@paklo/core/azure';
+} from '@/azure';
 import {
   type DependabotCommand,
   type DependabotCredential,
@@ -15,7 +15,7 @@ import {
   type DependabotUpdate,
   mapPackageEcosystemToPackageManager,
   normalizeBranchName,
-} from '@paklo/core/dependabot';
+} from '@/dependabot';
 import {
   GitHubSecurityAdvisoryClient,
   type Package,
@@ -23,8 +23,8 @@ import {
   SecurityVulnerabilitySchema,
   filterVulnerabilities,
   getGhsaPackageEcosystemFromDependabotPackageManager,
-} from '@paklo/core/github';
-import { logger } from '@paklo/core/logger';
+} from '@/github';
+import { logger } from '@/logger';
 
 import { type RunJobOptions, runJob } from '../../run';
 import { LocalJobsRunner, type LocalJobsRunnerOptions, type RunJobsResult } from '../runner';

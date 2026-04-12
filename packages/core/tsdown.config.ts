@@ -15,5 +15,10 @@ export default defineConfig({
     'src/github/index.ts',
     'src/dependabot/index.ts',
     'src/azure/index.ts',
+
+    // runner
+    'src/runner/index.ts',
+    'src/runner/local/index.ts',
+    'src/runner/local/azure/index.ts',
   ],
 });

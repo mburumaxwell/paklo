@@ -75,7 +75,7 @@ jobs:
 
       - name: Download deps
         run: pnpm install
-        working-directory: '${{ github.workspace }}/packages/runner'
+        working-directory: '${{ github.workspace }}/packages/core'
 
       # Change git info to match the token
       - name: Setup git info
@@ -103,7 +103,7 @@ jobs:
           CHANGESET_ID="docker-manifest-$(date +%s)"
           cat > ../../.changeset/${CHANGESET_ID}.md << EOF
           ---
-          "@paklo/runner": patch
+          "@paklo/core": patch
           ---
 
           Updated docker container manifest for ${PR_TITLE}
@@ -112,7 +112,7 @@ jobs:
           # Stage both files
           git add docker/containers.json ../../.changeset/${CHANGESET_ID}.md
           git commit -m "[dependabot skip] Update container manifest and changeset"
-        working-directory: '${{ github.workspace }}/packages/runner'
+        working-directory: '${{ github.workspace }}/packages/core'
 
       - name: Push staged changes
         run: |

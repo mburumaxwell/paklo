@@ -1,6 +1,7 @@
 import type { AddressInfo } from 'node:net';
 
 import { createAdaptorServer } from '@hono/node-server';
+
 import {
   type CreateApiServerAppOptions,
   type DependabotCredential,
@@ -12,8 +13,8 @@ import {
   type DependabotUpdate,
   type GitAuthor,
   createApiServerApp,
-} from '@paklo/core/dependabot';
-import { logger } from '@paklo/core/logger';
+} from '@/dependabot';
+import { logger } from '@/logger';
 
 export type LocalDependabotServerAddOptions = {
   /** The ID of the dependabot job. */

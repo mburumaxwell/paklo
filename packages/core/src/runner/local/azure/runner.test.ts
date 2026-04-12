@@ -1,5 +1,7 @@
 /* oxlint-disable typescript/no-explicit-any */
 
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import {
   type AzdoPrExtractedWithProperties,
   AzureDevOpsClientWrapper,
@@ -7,23 +9,21 @@ import {
   PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER,
   PR_PROPERTY_MICROSOFT_GIT_SOURCE_REF_NAME,
   extractRepositoryUrl,
-} from '@paklo/core/azure';
-import { DEFAULT_EXPERIMENTS, type DependabotConfig, type DependabotUpdate } from '@paklo/core/dependabot';
-import { GitHubSecurityAdvisoryClient } from '@paklo/core/github';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+} from '@/azure';
+import { DEFAULT_EXPERIMENTS, type DependabotConfig, type DependabotUpdate } from '@/dependabot';
+import { GitHubSecurityAdvisoryClient } from '@/github';
 
 import type { SecretMasker } from '../../api-client';
 import { runJob } from '../../run';
 import { AzureLocalJobsRunner, type AzureLocalJobsRunnerOptions } from './runner';
-import { AzureLocalDependabotServer } from './server';
 
-vi.mock('@paklo/core/github', () => ({
+vi.mock('@/github', () => ({
   GitHubSecurityAdvisoryClient: vi.fn(),
   filterVulnerabilities: vi.fn((vulns) => vulns || []),
   getGhsaPackageEcosystemFromDependabotPackageManager: vi.fn(() => 'npm'),
 }));
-vi.mock('@paklo/core/azure', async () => {
-  const actual = await vi.importActual('@paklo/core/azure');
+vi.mock('@/azure', async () => {
+  const actual = await vi.importActual('@/azure');
   return {
     ...actual,
     AzureDevOpsClientWrapper: vi.fn(),
@@ -31,9 +31,6 @@ vi.mock('@paklo/core/azure', async () => {
 });
 vi.mock('../../run', () => ({
   runJob: vi.fn(),
-}));
-vi.mock('./server', () => ({
-  AzureLocalDependabotServer: vi.fn(),
 }));
 
 // Helper function to create a partial jobs runner that allows testing private methods
@@ -70,7 +67,12 @@ describe('AzureLocalJobsRunner', () => {
   let existingBranchNames: string[];
   let existingPullRequests: AzdoPrExtractedWithProperties[];
   let mockAuthorClient: AzureDevOpsClientWrapper;
-  let mockServer: any;
+  let mockServer: {
+    add: ReturnType<typeof vi.fn>;
+    clear: ReturnType<typeof vi.fn>;
+    requests: ReturnType<typeof vi.fn>;
+    allAffectedPrs: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -129,20 +131,13 @@ describe('AzureLocalJobsRunner', () => {
       return mockAuthorClient as AzureDevOpsClientWrapper;
     } as any);
 
-    // Mock AzureLocalDependabotServer
+    // Minimal server shape required by performUpdates tests
     mockServer = {
-      start: vi.fn(),
-      stop: vi.fn(),
       add: vi.fn(),
       clear: vi.fn(),
       requests: vi.fn().mockReturnValue([]),
       allAffectedPrs: vi.fn().mockReturnValue([]),
-      port: 3000,
     };
-
-    vi.mocked(AzureLocalDependabotServer).mockImplementation(function MockAzureLocalDependabotServer() {
-      return mockServer as AzureLocalDependabotServer;
-    } as any);
 
     jobsRunner = new TestableAzureLocalJobsRunner(options);
   });

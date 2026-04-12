@@ -19,7 +19,7 @@ import {
   parseExperiments,
 } from '@paklo/core/dependabot';
 import { logger } from '@paklo/core/logger';
-import { AzureLocalJobsRunner, type AzureLocalJobsRunnerOptions } from '@paklo/runner/local/azure';
+import { AzureLocalJobsRunner, type AzureLocalJobsRunnerOptions } from '@paklo/core/runner/local/azure';
 import { Command, Option } from 'commander';
 import { z } from 'zod';
 

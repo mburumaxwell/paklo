@@ -1,3 +1,3 @@
-import { cleanup } from '@paklo/runner';
+import { cleanup } from '@paklo/core/runner';
 
 cleanup();

@@ -1,10 +1,6 @@
-import type {
-  DependabotCredential,
-  DependabotJobConfig,
-  FileFetcherInput,
-  FileUpdaterInput,
-} from '@paklo/core/dependabot';
 import Docker, { type Container } from 'dockerode';
+
+import type { DependabotCredential, DependabotJobConfig, FileFetcherInput, FileUpdaterInput } from '@/dependabot';
 
 import { ContainerService } from './container-service';
 import type { JobParameters } from './params';

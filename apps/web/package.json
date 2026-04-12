@@ -40,7 +40,6 @@
     "@opentelemetry/instrumentation-pino": "0.60.0",
     "@owpz/ksuid": "25.7.20",
     "@paklo/core": "workspace:*",
-    "@paklo/runner": "workspace:*",
     "@prisma/adapter-pg": "7.7.0",
     "@prisma/client": "7.7.0",
     "@prisma/instrumentation": "7.7.0",

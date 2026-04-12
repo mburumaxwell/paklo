@@ -1,14 +1,15 @@
 /* oxlint-disable typescript/no-explicit-any */
 
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import {
   type AzdoPrExtractedWithProperties,
   type AzureDevOpsClientWrapper,
   PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
   PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER,
   extractRepositoryUrl,
-} from '@paklo/core/azure';
-import type { DependabotJobBuilderOutput, DependabotUpdate } from '@paklo/core/dependabot';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+} from '@/azure';
+import type { DependabotJobBuilderOutput, DependabotUpdate } from '@/dependabot';
 
 import { AzureLocalDependabotServer, type AzureLocalDependabotServerOptions } from './server';
 

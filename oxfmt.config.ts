@@ -31,7 +31,7 @@ export default defineConfig({
     '.changeset',
     '.vscode/settings.json',
     'extensions/azure/**/*.json',
-    'packages/runner/docker/containers.json',
+    'packages/core/docker/containers.json',
     'packages/core/fixtures',
     'package.json',
   ],

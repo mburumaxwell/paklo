@@ -1,11 +1,12 @@
+import { type KyInstance, type KyResponse, isHTTPError } from 'ky';
+
 import type {
   DependabotCredential,
   DependabotJobConfig,
   DependabotMetric,
   DependabotRecordUpdateJobError,
-} from '@paklo/core/dependabot';
-import { logger } from '@paklo/core/logger';
-import { type KyInstance, type KyResponse, isHTTPError } from 'ky';
+} from '@/dependabot';
+import { logger } from '@/logger';
 
 import type { JobParameters } from './params';
 

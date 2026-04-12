@@ -3,12 +3,13 @@ import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import os from 'node:os';
 
-import { logger } from '@paklo/core/logger';
-import type { UsageTelemetryRequestData } from '@paklo/core/usage';
 import ky from 'ky';
 import { z } from 'zod';
 
-import packageJson from '../package.json';
+import { logger } from '@/logger';
+import type { UsageTelemetryRequestData } from '@/usage';
+
+import packageJson from '../../package.json';
 import { ApiClient, CredentialFetchingError, type SecretMasker } from './api-client';
 import { PROXY_IMAGE_NAME, updaterImageName } from './docker-tags';
 import { ImageService, type MetricReporter } from './image-service';

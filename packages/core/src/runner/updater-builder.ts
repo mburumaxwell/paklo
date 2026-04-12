@@ -1,7 +1,8 @@
-import type { FileFetcherInput, FileUpdaterInput } from '@paklo/core/dependabot';
-import { logger } from '@paklo/core/logger';
 import type Docker from 'dockerode';
 import type { Container } from 'dockerode';
+
+import type { FileFetcherInput, FileUpdaterInput } from '@/dependabot';
+import { logger } from '@/logger';
 
 import { ContainerService } from './container-service';
 import type { JobParameters } from './params';

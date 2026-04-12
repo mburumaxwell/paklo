@@ -8,7 +8,7 @@ import {
   getPullRequestChangedFiles,
   getPullRequestForDependencyNames,
   parsePullRequestProperties,
-} from '@paklo/core/azure';
+} from '@/azure';
 import {
   type DependabotRequest,
   getBranchNameForUpdate,
@@ -16,8 +16,8 @@ import {
   getPullRequestCloseReason,
   getPullRequestDescription,
   shouldSupersede,
-} from '@paklo/core/dependabot';
-import { logger } from '@paklo/core/logger';
+} from '@/dependabot';
+import { logger } from '@/logger';
 
 import { LocalDependabotServer, type LocalDependabotServerOptions } from '../server';
 

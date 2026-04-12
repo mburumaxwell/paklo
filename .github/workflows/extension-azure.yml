@@ -8,14 +8,12 @@ on:
     paths:
       - 'extensions/azure/**'
       - 'packages/core/**'
-      - 'packages/runner/**'
       - '.github/workflows/extension-azure.yml'
   pull_request:
     branches: [main]
     paths:
       - 'extensions/azure/**'
       - 'packages/core/**'
-      - 'packages/runner/**'
       - '.github/workflows/extension-azure.yml'
 
 permissions:

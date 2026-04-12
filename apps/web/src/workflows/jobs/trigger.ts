@@ -24,7 +24,7 @@ import {
   REPO_CONTENTS_PATH,
   extractUpdaterSha,
   updaterImageName,
-} from '@paklo/runner';
+} from '@paklo/core/runner';
 import { filesize } from 'filesize';
 import { FatalError, type WorkflowMetadata, createHook, getWorkflowMetadata, sleep } from 'workflow';
 
@@ -363,7 +363,7 @@ const SECRET_NAME_PROXY_CONFIG = 'proxy-config';
 const SECRET_NAME_CA_CERT = 'ca-cert';
 const SECRET_NAME_JOB_CONFIG = 'job-config';
 // The proxy needs the least amount of resources we are allowed to specify.
-// For the updater (we use 8GB in packages/runner) we set what fits the bill.
+// For the updater (we use 8GB in packages/core/runner) we set what fits the bill.
 // This affects the available ephemeral storage as well (dependabot checks out repos in ephemeral storage).
 // https://learn.microsoft.com/en-us/azure/container-apps/storage-mounts?tabs=smb&pivots=azure-cli#ephemeral-storage
 // Total usage below is 1.25 CPU and 2.5Gi memory.

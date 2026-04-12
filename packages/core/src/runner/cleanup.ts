@@ -1,5 +1,6 @@
-import { logger } from '@paklo/core/logger';
 import Docker from 'dockerode';
+
+import { logger } from '@/logger';
 
 import { PROXY_IMAGE_NAME, digestName, hasDigest, repositoryName, updaterImages } from './docker-tags';
 
