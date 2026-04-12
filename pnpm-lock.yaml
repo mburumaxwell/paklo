@@ -237,8 +237,8 @@ importers:
         specifier: 2.0.7
         version: 2.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       stripe:
-        specifier: 22.0.0
-        version: 22.0.0(@types/node@25.5.2)
+        specifier: 22.0.1
+        version: 22.0.1(@types/node@25.5.2)
       swr:
         specifier: 2.4.1
         version: 2.4.1(react@19.2.4)
@@ -9137,8 +9137,8 @@ packages:
     resolution: {integrity: sha512-1tB5mhVo7U+ETBKNf92xT4hrQa3pm0MZ0PQvuDnWgAAGHDsfp4lPSpiS6psrSiet87wyGPh9ft6wmhOMQ0hDiw==}
     engines: {node: '>=14.16'}
 
-  stripe@22.0.0:
-    resolution: {integrity: sha512-q1UgXXpSfZCmkyzZEh3vFEWT7+ajuaFGqaP9Tsi2NMtwlkigIWNr+KBIUQqtNeNEsreDKgdn+BP5HRW9JDj22Q==}
+  stripe@22.0.1:
+    resolution: {integrity: sha512-Yw764pZ6s8Xu4CtUZdD5uWOkw6gc9xzO9OKylCuj1gMhMDLbyGbDtaPNNSFE4mB6njYSHESYIVbF1iIzUfAl2g==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -19664,7 +19664,7 @@ snapshots:
 
   strip-json-comments@5.0.3: {}
 
-  stripe@22.0.0(@types/node@25.5.2):
+  stripe@22.0.1(@types/node@25.5.2):
     optionalDependencies:
       '@types/node': 25.5.2
 
