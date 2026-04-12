@@ -15,6 +15,7 @@
         "oxlint",
         "paklo",
         "portless",
+        "SVIX",
         "vercel"
     ],
     "yaml.schemas": {

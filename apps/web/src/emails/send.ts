@@ -1,13 +1,12 @@
 import { render, toPlainText } from '@react-email/render';
 import React from 'react';
+
 import {
-  Resend,
   type Attachment as ResendAttachment,
   type CreateEmailOptions as ResendCreateEmailOptions,
   type Tag as ResendTag,
-} from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY ?? 'temp');
+  resend,
+} from '@/lib/resend';
 
 type RequireAtLeastOne<T> = {
   [K in keyof T]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<keyof T, K>>>;
