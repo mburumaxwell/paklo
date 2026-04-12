@@ -15,6 +15,11 @@ const config: NextConfig = {
   experimental: {
     authInterrupts: true, // needed to use forbidden() and unauthorized()
   },
+  // TODO: remove this after issue is fixed:
+  // https://github.com/vercel/next.js/issues/92116#issuecomment-4216009699
+  outputFileTracingIncludes: {
+    '/*': ['./.env'],
+  },
   async headers() {
     // In development, we need to allow 'unsafe-eval' for React Fast Refresh
     // and 'wasm-unsafe-eval' for WebAssembly debugging.
