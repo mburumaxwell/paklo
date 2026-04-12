@@ -1,4 +1,4 @@
-import type { Hono } from 'hono';
+import { type Context, Hono } from 'hono';
 import { handle } from 'hono/vercel';
 
 /**
@@ -35,3 +35,7 @@ export function toNextJsHandler(app: Hono) {
     HEAD: handler,
   };
 }
+
+export { zValidator } from '@hono/zod-validator';
+export { bearerAuth } from 'hono/bearer-auth';
+export { Hono, type Context };

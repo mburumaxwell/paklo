@@ -1,9 +1,7 @@
-import { zValidator } from '@hono/zod-validator';
-import { toNextJsHandler } from '@paklo/core/hono';
 import { UsageTelemetryRequestDataSchema } from '@paklo/core/usage';
 import { geolocation } from '@vercel/functions';
-import { Hono } from 'hono';
 
+import { Hono, toNextJsHandler, zValidator } from '@/lib/hono';
 import { type UsageTelemetry, getMongoCollection } from '@/lib/mongodb';
 import { fromExternalRegion } from '@/lib/regions';
 

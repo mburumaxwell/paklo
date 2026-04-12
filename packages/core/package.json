@@ -6,10 +6,6 @@
   "author": "mburumaxwell",
   "license": "AGPL-3.0-later",
   "exports": {
-    "./hono": {
-      "types": "./dist/hono.d.mts",
-      "import": "./dist/hono.mjs"
-    },
     "./keygen": {
       "types": "./dist/keygen.d.mts",
       "import": "./dist/keygen.mjs"

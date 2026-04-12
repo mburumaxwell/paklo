@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Hono } from '@/lib/hono';
 
 export const app = new Hono();
 

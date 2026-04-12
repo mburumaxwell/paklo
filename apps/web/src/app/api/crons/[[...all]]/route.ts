@@ -1,9 +1,7 @@
-import { toNextJsHandler } from '@paklo/core/hono';
-import { Hono } from 'hono';
-import { bearerAuth } from 'hono/bearer-auth';
 import { start } from 'workflow/api';
 
 import { getNextRunDate } from '@/lib/cron';
+import { Hono, bearerAuth, toNextJsHandler } from '@/lib/hono';
 import { MIN_AUTO_SYNC_INTERVAL_PROJECT } from '@/lib/organizations';
 import { prisma } from '@/lib/prisma';
 import { startSync, startTriggerUpdateJobs } from '@/workflows';

@@ -1,6 +1,4 @@
-import { toNextJsHandler } from '@paklo/core/hono';
-import { Hono } from 'hono';
-
+import { Hono, toNextJsHandler } from '@/lib/hono';
 import { logger } from '@/lib/logger';
 import { resend, webhookSecret } from '@/lib/resend';
 

@@ -14,11 +14,11 @@ import {
   makeDirectoryKey,
   shouldSupersede,
 } from '@paklo/core/dependabot';
-import { toNextJsHandler } from '@paklo/core/hono';
 import { resumeHook } from 'workflow/api';
 
 import { createAzdoClient } from '@/integrations';
 import { author } from '@/lib/author';
+import { toNextJsHandler } from '@/lib/hono';
 import { logger } from '@/lib/logger';
 import { getMongoCollection } from '@/lib/mongodb';
 import {

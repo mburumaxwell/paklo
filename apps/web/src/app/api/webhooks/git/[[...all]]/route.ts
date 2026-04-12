@@ -1,5 +1,4 @@
-import { toNextJsHandler } from '@paklo/core/hono';
-import { Hono } from 'hono';
+import { Hono, toNextJsHandler } from '@/lib/hono';
 
 import { app as azure } from './azure';
 import { app as bitbucket } from './bitbucket';

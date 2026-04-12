@@ -1,7 +1,5 @@
-import { toNextJsHandler } from '@paklo/core/hono';
-import { Hono } from 'hono';
-
 import { type StripeSubscription, getBillingPeriod, mapSubscriptionStatus, stripe, webhookSecret } from '@/lib/billing';
+import { Hono, toNextJsHandler } from '@/lib/hono';
 import { logger } from '@/lib/logger';
 import { prisma } from '@/lib/prisma';
 
