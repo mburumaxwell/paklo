@@ -1,5 +1,18 @@
 # extension-azure-devops
 
+## 2.66.0
+
+### Minor Changes
+
+- [`0e57445`](https://github.com/mburumaxwell/paklo/commit/0e57445d1f4a2761188d1087b8d25f4a9bcc3326) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Merge runner package into core
+
+- [`8dac66b`](https://github.com/mburumaxwell/paklo/commit/8dac66b09f4621c9b328dbdf9cff3805ad49d23c) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Remove config export for azure from barrel export
+
+### Patch Changes
+
+- Updated dependencies [[`0e57445`](https://github.com/mburumaxwell/paklo/commit/0e57445d1f4a2761188d1087b8d25f4a9bcc3326), [`8dac66b`](https://github.com/mburumaxwell/paklo/commit/8dac66b09f4621c9b328dbdf9cff3805ad49d23c), [`0473f0a`](https://github.com/mburumaxwell/paklo/commit/0473f0a501f5025561224ae21310e3e1884ea331)]:
+  - @paklo/core@0.17.0
+
 ## 2.65.6
 
 ### Patch Changes
