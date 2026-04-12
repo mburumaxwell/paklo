@@ -27,7 +27,7 @@ export class AzureDevOpsClient {
     const organizationUrl = url.value.toString().replace(/\/$/, ''); // trim trailing slash
     this.organizationUrl = organizationUrl;
     const mainClientOptions = AzureDevOpsClient.createClientOptions(accessToken, debug, {
-      prefixUrl: organizationUrl,
+      prefix: organizationUrl,
     });
     const mainClient = ky.create(mainClientOptions);
     this.connection = new ConnectionClient(mainClient);
@@ -38,7 +38,7 @@ export class AzureDevOpsClient {
     this.subscriptions = new HookSubscriptionsClient(mainClient);
 
     const identityApiUrl = url['identity-api-url'].toString().replace(/\/$/, ''); // trim trailing slash
-    const identityClient = ky.create({ ...mainClientOptions, prefixUrl: identityApiUrl });
+    const identityClient = ky.create({ ...mainClientOptions, prefix: identityApiUrl });
     this.identity = new IdentityClient(identityClient);
   }
 
@@ -50,20 +50,20 @@ export class AzureDevOpsClient {
       },
       hooks: {
         beforeRequest: [
-          async (request, _options) => {
-            if (debug) logger.debug(`🌎 🠊 [${request.method}] ${request.url}`);
+          async (state) => {
+            if (debug) logger.debug(`🌎 🠊 [${state.request.method}] ${state.request.url}`);
           },
         ],
         afterResponse: [
-          async (request, _options, response) => {
+          async (state) => {
             if (debug) {
-              logger.debug(`🌎 🠈 [${response.status}] ${response.statusText}`);
+              logger.debug(`🌎 🠈 [${state.response.status}] ${state.response.statusText}`);
 
               // log the request and response for debugging
-              if (request.body) {
-                logger.debug(`REQUEST: ${JSON.stringify(request.body)}`);
+              if (state.request.body) {
+                logger.debug(`REQUEST: ${JSON.stringify(state.request.body)}`);
               }
-              // const body = await response.text();
+              // const body = await state.response.text();
               // if (body) {
               //   logger.debug(`RESPONSE: ${body}`);
               // }
@@ -71,9 +71,9 @@ export class AzureDevOpsClient {
           },
         ],
         beforeRetry: [
-          async ({ request: _request, options: _options, error, retryCount: _retryCount }) => {
-            if (debug && isHTTPError(error)) {
-              logger.debug(`⏳ Retrying failed request with status code: ${error.response.status}`);
+          async (state) => {
+            if (debug && isHTTPError(state.error)) {
+              logger.debug(`⏳ Retrying failed request with status code: ${state.error.response.status}`);
             }
           },
         ],
