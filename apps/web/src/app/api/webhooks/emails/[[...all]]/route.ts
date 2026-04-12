@@ -35,7 +35,7 @@ app.post('/resend', async (context) => {
 
     const { data, error } = await resend.emails.receiving.forward({
       emailId: event.data.email_id,
-      from: event.data.from,
+      from: 'support@paklo.app', // must be verified domain in Resend
       to: process.env.HELPSCOUT_EMAIL!,
       passthrough: true, // so that it does not look like a forwarded email
     });
