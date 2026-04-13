@@ -4,18 +4,11 @@
         "cooldown",
         "cutoff",
         "devcontainers",
-        "fumadocs",
-        "geist",
         "GHSA",
-        "helpscout",
-        "IATA",
-        "KSUID",
         "mburumaxwell",
         "numify",
         "oxlint",
         "paklo",
-        "portless",
-        "SVIX",
         "vercel"
     ],
     "yaml.schemas": {

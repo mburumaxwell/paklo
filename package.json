@@ -15,11 +15,6 @@
     "packages:version": "changeset version && turbo run packages:version",
     "packages:publish": "changeset publish",
 
-    "web:start": "turbo run start --filter=web...",
-    "web:dev": "turbo run dev --filter=web...",
-    "web:build": "turbo run build --filter=web...",
-    "web:clean": "turbo run clean --filter=web...",
-
     "extensions-azure:start": "turbo run start --filter=extension-azure-devops...",
     "extensions-azure:build": "turbo run build --filter=extension-azure-devops...",
 
@@ -35,7 +30,6 @@
     "@changesets/cli": "2.30.0",
     "oxfmt": "0.44.0",
     "oxlint": "1.59.0",
-    "portless": "0.10.1",
     "rimraf": "6.1.3",
     "tsx": "4.21.0",
     "turbo": "2.9.6",

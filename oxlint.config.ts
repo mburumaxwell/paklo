@@ -1,7 +1,7 @@
 import { defineConfig } from 'oxlint';
 
 export default defineConfig({
-  plugins: ['typescript', 'oxc', 'react', 'nextjs', 'import'],
+  plugins: ['typescript', 'oxc', 'nextjs', 'import'],
   categories: {
     correctness: 'error',
   },
@@ -12,7 +12,6 @@ export default defineConfig({
     'typescript/no-explicit-any': 'error',
     'typescript/consistent-type-imports': 'error',
     'typescript/dot-notation': 'error',
-    'react/no-danger': 'error',
     'import/no-duplicates': 'error',
     'sort-imports': ['error', { ignoreDeclarationSort: true }],
   },
@@ -20,10 +19,5 @@ export default defineConfig({
     // exclude git submodules
     'dependabot-action',
     'dependabot-cli',
-
-    // shadcn components (generated and diff checked)
-    'apps/web/src/components/ui',
-    'apps/web/src/components/stepper.tsx',
-    'apps/web/src/hooks/use-mobile.ts',
   ],
 });

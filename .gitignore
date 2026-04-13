@@ -13,11 +13,5 @@ node_modules/
 dist
 out
 .turbo
-.vercel
-.next
-.source
-.generated
-next-env.d.ts
 .env*.local
-.react-email
 bruno/.env
