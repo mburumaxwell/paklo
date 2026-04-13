@@ -56,42 +56,12 @@ updates:
       time: '02:00'
     open-pull-requests-limit: 20
     groups:
-      azure: { patterns: ['@azure/*'] }
-      better-auth: { patterns: ['auth', 'better-auth', '@better-auth/*'] }
-      fumadocs: { patterns: ['fumadocs-*', '@fumadocs/*'] }
-      next-and-react:
-        patterns:
-          - '@types/react'
-          - '@types/react-dom'
-          - 'next'
-          - 'react'
-          - 'react-dom'
-      opentelemetry: { patterns: ['@opentelemetry/*'] }
       oxc: { patterns: ['oxfmt', 'oxlint'] }
-      prisma: { patterns: ['@prisma/*', 'prisma'] }
-      stripe: { patterns: ['@stripe/*', 'stripe'] }
       all-npm-minor-updates:
         patterns: ['*']
         exclude-patterns:
-          - '@azure/*'
-          - 'auth'
-          - 'better-auth'
-          - '@better-auth/*'
-          - 'fumadocs-*'
-          - '@fumadocs/*'
-          - '@types/react'
-          - '@types/react-dom'
-          - 'next'
-          - 'react'
-          - 'react-dom'
-          - '@opentelemetry/*'
           - 'oxfmt'
           - 'oxlint'
-          - 'portless'
-          - '@prisma/*'
-          - 'prisma'
-          - '@stripe/*'
-          - 'stripe'
         update-types:
           - minor
           - patch
