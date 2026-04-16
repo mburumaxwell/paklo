@@ -8,9 +8,7 @@
   "bin": {
     "paklo": "./dist/index.mjs"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "dev": "tsdown --watch",
     "typecheck": "tsc",
