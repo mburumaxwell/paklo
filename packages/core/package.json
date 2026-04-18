@@ -14,10 +14,6 @@
       "types": "./dist/logger.d.mts",
       "import": "./dist/logger.mjs"
     },
-    "./usage": {
-      "types": "./dist/usage.d.mts",
-      "import": "./dist/usage.mjs"
-    },
     "./github": {
       "types": "./dist/github/index.d.mts",
       "import": "./dist/github/index.mjs"

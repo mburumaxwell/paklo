@@ -9,7 +9,6 @@ export default defineConfig({
     // base
     'src/keygen.ts',
     'src/logger.ts',
-    'src/usage.ts',
 
     // dependabot
     'src/github/index.ts',
