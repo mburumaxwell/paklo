@@ -10,6 +10,5 @@
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["paklo-web"],
   "privatePackages": { "version": true, "tag": true }
 }
