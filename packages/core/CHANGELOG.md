@@ -1,5 +1,13 @@
 # @paklo/core
 
+## 0.17.1
+
+### Patch Changes
+
+- [#2695](https://github.com/mburumaxwell/paklo/pull/2695) [`25d5095`](https://github.com/mburumaxwell/paklo/commit/25d5095158d953b00e24533d5cbdca7bf3c33669) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 32 updates
+
+- [`67f1ff6`](https://github.com/mburumaxwell/paklo/commit/67f1ff6d52f24f6dc264570ee638432411f88bec) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - No longer export usage types
+
 ## 0.17.0
 
 ### Minor Changes
