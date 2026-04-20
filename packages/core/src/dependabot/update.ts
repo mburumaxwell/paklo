@@ -186,3 +186,39 @@ export const DependabotMetricSchema = z.object({
   tags: z.record(z.string(), z.string()).nullish(),
 });
 export type DependabotMetric = z.infer<typeof DependabotMetricSchema>;
+
+export const DependabotRequestTypeSchema = z.enum([
+  'create_pull_request',
+  'update_pull_request',
+  'close_pull_request',
+  'record_update_job_error',
+  'record_update_job_warning',
+  'record_update_job_unknown_error',
+  'mark_as_processed',
+  'update_dependency_list',
+  'create_dependency_submission',
+  'record_ecosystem_versions',
+  'increment_metric',
+  'record_ecosystem_meta',
+  'record_cooldown_meta',
+  'record_metrics', // from the runner
+]);
+export type DependabotRequestType = z.infer<typeof DependabotRequestTypeSchema>;
+
+export const DependabotRequestSchema = z.discriminatedUnion('type', [
+  z.object({ type: z.literal('create_pull_request'), data: DependabotCreatePullRequestSchema }),
+  z.object({ type: z.literal('update_pull_request'), data: DependabotUpdatePullRequestSchema }),
+  z.object({ type: z.literal('close_pull_request'), data: DependabotClosePullRequestSchema }),
+  z.object({ type: z.literal('record_update_job_error'), data: DependabotRecordUpdateJobErrorSchema }),
+  z.object({ type: z.literal('record_update_job_warning'), data: DependabotRecordUpdateJobWarningSchema }),
+  z.object({ type: z.literal('record_update_job_unknown_error'), data: DependabotRecordUpdateJobUnknownErrorSchema }),
+  z.object({ type: z.literal('mark_as_processed'), data: DependabotMarkAsProcessedSchema }),
+  z.object({ type: z.literal('update_dependency_list'), data: DependabotUpdateDependencyListSchema }),
+  z.object({ type: z.literal('create_dependency_submission'), data: DependabotDependencySubmissionSchema }),
+  z.object({ type: z.literal('record_ecosystem_versions'), data: DependabotRecordEcosystemVersionsSchema }),
+  z.object({ type: z.literal('record_ecosystem_meta'), data: DependabotRecordEcosystemMetaSchema.array() }),
+  z.object({ type: z.literal('record_cooldown_meta'), data: DependabotRecordCooldownMetaSchema.array() }),
+  z.object({ type: z.literal('increment_metric'), data: DependabotIncrementMetricSchema }),
+  z.object({ type: z.literal('record_metrics'), data: DependabotMetricSchema.array() }), // from the runner
+]);
+export type DependabotRequest = z.infer<typeof DependabotRequestSchema>;

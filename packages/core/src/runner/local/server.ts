@@ -3,18 +3,16 @@ import type { AddressInfo } from 'node:net';
 import { createAdaptorServer } from '@hono/node-server';
 
 import {
-  type CreateApiServerAppOptions,
   type DependabotCredential,
   type DependabotExistingGroupPr,
   type DependabotExistingPr,
   type DependabotJobConfig,
   type DependabotRequest,
-  type DependabotTokenType,
   type DependabotUpdate,
   type GitAuthor,
-  createApiServerApp,
 } from '@/dependabot';
 import { logger } from '@/logger';
+import { type CreateApiServerAppOptions, type DependabotTokenType, createApiServerApp } from '@/server';
 
 export type LocalDependabotServerAddOptions = {
   /** The ID of the dependabot job. */
