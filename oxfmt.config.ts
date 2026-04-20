@@ -24,6 +24,7 @@ export default defineConfig({
     'packages/core/docker/containers.json',
     'packages/core/fixtures',
     'package.json',
+    'CHANGELOG.md',
   ],
   sortImports: {},
 });
