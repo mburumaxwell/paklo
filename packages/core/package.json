@@ -43,7 +43,9 @@
       "import": "./dist/runner/local/azure/index.mjs"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "tsdown --watch",
     "typecheck": "tsc",

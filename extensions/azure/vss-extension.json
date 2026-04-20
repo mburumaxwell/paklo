@@ -7,7 +7,11 @@
   "version": "2.66.0.0",
   "publisher": "tingle-software",
   "public": true,
-  "targets": [{ "id": "Microsoft.VisualStudio.Services" }],
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
   "demands": [
     "api-version/5.0"
   ],
@@ -53,18 +57,29 @@
     "uri": "https://github.com/mburumaxwell/paklo"
   },
   "content": {
-    "details": { "path": "README.md" }
+    "details": {
+      "path": "README.md"
+    }
   },
   "files": [
-    { "path": "tasks" },
-    { "path": "images", "addressable": true }
+    {
+      "path": "tasks"
+    },
+    {
+      "path": "images",
+      "addressable": true
+    }
   ],
   "contributions": [
     {
       "id": "dependabot",
       "type": "ms.vss-distributed-task.task",
-      "targets": ["ms.vss-distributed-task.tasks"],
-      "properties": { "name": "tasks" }
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "tasks"
+      }
     }
   ]
 }
