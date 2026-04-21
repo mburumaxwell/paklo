@@ -36,9 +36,17 @@ export type LogRecord = {
 };
 
 /**
- * Function that receives log records from the logger.
+ * Transport used by the logger.
+ *
+ * Implementations can provide optional group/section methods if supported by
+ * the host runtime. Unsupported hooks can be omitted (no-op behavior).
  */
-export type LogTransport = (record: LogRecord) => void;
+export type LogTransport = {
+  log: (record: LogRecord) => void;
+  startGroup?: (name: string) => void;
+  endGroup?: () => void;
+  section?: (name: string) => void;
+};
 
 /**
  * Logger implementation that emits structured records to one or more transports.
@@ -73,6 +81,21 @@ export class Logger {
   /** Restore the default console transport. */
   public reset(): void {
     this.transports = [defaultTransport];
+  }
+
+  /** Start a named group in logger implementations that support grouping. */
+  public startGroup(name: string): void {
+    this.forEachTransport((transport) => transport.startGroup?.(name));
+  }
+
+  /** End the current group in logger implementations that support grouping. */
+  public endGroup(): void {
+    this.forEachTransport((transport) => transport.endGroup?.());
+  }
+
+  /** Emit a standalone section marker in logger implementations that support sections. */
+  public section(name: string): void {
+    this.forEachTransport((transport) => transport.section?.(name));
   }
 
   /** Log at fatal level. */
@@ -117,10 +140,21 @@ export class Logger {
 
     for (const transport of this.transports) {
       try {
-        transport(record);
+        transport.log(record);
       } catch (error) {
         // A broken transport should never stop other transports from receiving logs.
         console.error('Logger transport failure:', error);
+      }
+    }
+  }
+
+  private forEachTransport(action: (transport: LogTransport) => void): void {
+    for (const transport of this.transports) {
+      try {
+        action(transport);
+      } catch (error) {
+        // A broken transport should never stop other transports from receiving logs.
+        console.error('Logger structure hook failure:', error);
       }
     }
   }
@@ -131,24 +165,26 @@ export class Logger {
 }
 
 // Fallback transport so logger is always usable before custom wiring is configured.
-const defaultTransport: LogTransport = ({ level, message }) => {
-  switch (level) {
-    case 'fatal':
-    case 'error':
-      console.error(message);
-      break;
-    case 'warn':
-      console.warn(message);
-      break;
-    case 'debug':
-    case 'trace':
-      console.debug(message);
-      break;
-    case 'info':
-    default:
-      console.info(message);
-      break;
-  }
+const defaultTransport: LogTransport = {
+  log({ level, message }) {
+    switch (level) {
+      case 'fatal':
+      case 'error':
+        console.error(message);
+        break;
+      case 'warn':
+        console.warn(message);
+        break;
+      case 'debug':
+      case 'trace':
+        console.debug(message);
+        break;
+      case 'info':
+      default:
+        console.info(message);
+        break;
+    }
+  },
 };
 
 /** Default logger instance */

@@ -12,7 +12,7 @@ const prettyStream = pretty({ ignore: 'pid,hostname' });
 const output = process.env.NODE_ENV === 'production' ? undefined : prettyStream;
 const pinoLogger = pino({ level: 'info' }, output);
 
-logger.replace(({ level, message }) => pinoLogger[level](message));
+logger.replace({ log: ({ level, message }) => pinoLogger[level](message) });
 
 const root = new Command();
 

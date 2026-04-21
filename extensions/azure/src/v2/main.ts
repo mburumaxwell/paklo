@@ -25,24 +25,35 @@ async function run() {
     }
 
     // Route core logs through Azure DevOps task output.
-    logger.replace(({ level, message }) => {
-      switch (level) {
-        case 'fatal':
-        case 'error':
-          tl.error(message);
-          break;
-        case 'warn':
-          tl.warning(message);
-          break;
-        case 'debug':
-        case 'trace':
-          tl.debug(message);
-          break;
-        case 'info':
-        default:
-          console.log(message);
-          break;
-      }
+    logger.replace({
+      log: ({ level, message }) => {
+        switch (level) {
+          case 'fatal':
+          case 'error':
+            tl.error(message);
+            break;
+          case 'warn':
+            tl.warning(message);
+            break;
+          case 'debug':
+          case 'trace':
+            tl.debug(message);
+            break;
+          case 'info':
+          default:
+            console.log(message);
+            break;
+        }
+      },
+
+      /**
+       * Formats the logs into groups and sections to allow for easier navigation and readability.
+       * https://learn.microsoft.com/en-us/azure/devops/pipelines/scripts/logging-commands?view=azure-devops&tabs=bash#formatting-commands
+       */
+
+      startGroup: (name) => console.log(`##[group]${name}`),
+      endGroup: () => console.log(`##[endgroup]`),
+      section: (name) => console.log(`##[section]${name}`),
     });
 
     // update logger level based on debug input
