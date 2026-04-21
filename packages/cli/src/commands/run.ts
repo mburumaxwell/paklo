@@ -20,6 +20,7 @@ import { logger } from '@paklo/core/logger';
 import { Command, Option } from 'commander';
 import { z } from 'zod';
 
+import { secretMasker } from '../masker';
 import { type HandlerOptions, handlerOptions } from './base';
 
 const schema = z.object({
@@ -85,10 +86,6 @@ async function handler({ options, error }: HandlerOptions<Options>) {
       );
       return;
     }
-  }
-
-  function secretMasker(_secret: string) {
-    // hide from logs, (clueless how to do this with pino without being global)
   }
 
   // extract url parts
