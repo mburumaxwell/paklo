@@ -24,6 +24,27 @@ async function run() {
       throw new Error('Failed to parse task input configuration');
     }
 
+    // Route core logs through Azure DevOps task output.
+    logger.replace(({ level, message }) => {
+      switch (level) {
+        case 'fatal':
+        case 'error':
+          tl.error(message);
+          break;
+        case 'warn':
+          tl.warning(message);
+          break;
+        case 'debug':
+        case 'trace':
+          tl.debug(message);
+          break;
+        case 'info':
+        default:
+          console.log(message);
+          break;
+      }
+    });
+
     // update logger level based on debug input
     logger.level = inputs.debug ? 'debug' : 'warn';
 
