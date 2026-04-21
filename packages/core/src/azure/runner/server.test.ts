@@ -8,7 +8,7 @@ import {
   PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
   PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER,
 } from '@/azure/client';
-import type { DependabotJobBuilderOutput, DependabotUpdate } from '@/dependabot';
+import type { DependabotConfig, DependabotJobBuilderOutput, DependabotUpdate } from '@/dependabot';
 
 import { extractRepositoryUrl } from '../url-parts';
 import { AzureLocalDependabotServer, type AzureLocalDependabotServerOptions } from './server';
@@ -50,6 +50,10 @@ describe('AzureLocalDependabotServer', () => {
       authorClient,
       autoApprove: false,
       approverClient,
+      config: {
+        version: 2,
+        updates: [],
+      } as unknown as DependabotConfig,
       setAutoComplete: false,
       autoCompleteIgnoreConfigIds: [],
       existingBranchNames,
@@ -249,6 +253,70 @@ describe('AzureLocalDependabotServer', () => {
       expect(result).toEqual(true);
       expect(authorClient.createPullRequest).toHaveBeenCalled();
       expect(approverClient!.approvePullRequest).toHaveBeenCalled();
+    });
+
+    it('should use merged multi-ecosystem group settings when creating a pull request', async () => {
+      options.config = {
+        'version': 2,
+        'multi-ecosystem-groups': {
+          infrastructure: {
+            'schedule': { interval: 'weekly' },
+            'assignees': ['@platform-team'],
+            'labels': ['infrastructure'],
+            'milestone': '42',
+            'target-branch': 'release/1.x',
+            'pull-request-branch-name': { separator: '-' },
+          },
+        },
+        'updates': [],
+      } as unknown as DependabotConfig;
+      update = {
+        'package-ecosystem': 'docker',
+        'directory': '/',
+        'patterns': ['*'],
+        'multi-ecosystem-group': 'infrastructure',
+        'assignees': ['@docker-admin'],
+        'labels': ['docker'],
+      };
+
+      server = new AzureLocalDependabotServer(options);
+      server.add({
+        id: '1',
+        update,
+        job: jobBuilderOutput.job,
+        jobToken: 'test-token',
+        credentialsToken: 'test-creds-token',
+        credentials: jobBuilderOutput.credentials,
+      });
+
+      vi.mocked(authorClient.createPullRequest).mockResolvedValue(11);
+
+      const result = await (server as any).handle('1', {
+        type: 'create_pull_request',
+        data: {
+          'base-commit-sha': '1234abcd',
+          'commit-message': 'Test commit message',
+          'pr-body': 'Test body',
+          'pr-title': 'Test PR',
+          'updated-dependency-files': [],
+          'dependencies': [{ name: 'nginx', version: '1.0.0', requirements: [], directory: '/' }],
+          'dependency-group': { name: 'infrastructure' },
+        },
+      });
+
+      expect(result).toEqual(true);
+      expect(authorClient.getDefaultBranch).not.toHaveBeenCalled();
+      expect(authorClient.createPullRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          target: { branch: 'release/1.x' },
+          assignees: ['@platform-team', '@docker-admin'],
+          labels: ['infrastructure', 'docker'],
+          workItems: ['42'],
+          source: expect.objectContaining({
+            branch: expect.stringContaining('dependabot-docker-release'),
+          }),
+        }),
+      );
     });
 
     it('should skip processing "update_pull_request" if "dryRun" is true', async () => {

@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
-import type { DependabotGroup, DependabotIgnoreCondition, DependabotUpdate } from './config';
 import {
+  type DependabotConfig,
+  type DependabotGroup,
+  type DependabotIgnoreCondition,
+  type DependabotUpdate,
+  getEffectiveUpdateSettings,
+} from './config';
+import {
+  DependabotJobBuilder,
   type DependabotSourceInfo,
   mapAllowedUpdatesFromDependabotConfigToJobConfig,
   mapExperiments,
@@ -65,6 +72,11 @@ describe('mapExperiments', () => {
 });
 
 describe('mapSourceFromDependabotConfigToJobConfig', () => {
+  const config = {
+    version: 2,
+    updates: [],
+  } as unknown as DependabotConfig;
+
   it('should map source correctly for Azure DevOps Services', () => {
     const sourceInfo: DependabotSourceInfo = {
       'provider': 'azure',
@@ -79,7 +91,7 @@ describe('mapSourceFromDependabotConfigToJobConfig', () => {
       'directories': [],
     } as DependabotUpdate;
 
-    const result = mapSourceFromDependabotConfigToJobConfig(sourceInfo, update);
+    const result = mapSourceFromDependabotConfigToJobConfig(sourceInfo, config, update);
     expect(result).toMatchObject({
       'provider': 'azure',
       'api-endpoint': 'https://dev.azure.com',
@@ -102,13 +114,78 @@ describe('mapSourceFromDependabotConfigToJobConfig', () => {
       'directories': [],
     } as DependabotUpdate;
 
-    const result = mapSourceFromDependabotConfigToJobConfig(sourceInfo, update);
+    const result = mapSourceFromDependabotConfigToJobConfig(sourceInfo, config, update);
     expect(result).toMatchObject({
       'provider': 'azure',
       'api-endpoint': 'https://my-org.com:8443/tfs',
       'hostname': 'my-org.com',
       'repo': 'tfs/my-collection/my-project/_git/my-repo',
     });
+  });
+
+  it('should prefer group target branch for multi-ecosystem updates', () => {
+    const sourceInfo: DependabotSourceInfo = {
+      'provider': 'azure',
+      'api-endpoint': 'https://dev.azure.com',
+      'hostname': 'dev.azure.com',
+      'repository-slug': 'my-org/my-project/_git/my-repo',
+    };
+    const groupedConfig = {
+      'version': 2,
+      'multi-ecosystem-groups': {
+        infrastructure: {
+          'schedule': { interval: 'weekly' },
+          'target-branch': 'release/1.x',
+        },
+      },
+      'updates': [],
+    } as unknown as DependabotConfig;
+    const update = {
+      'package-ecosystem': 'docker',
+      'directory': '/',
+      'patterns': ['*'],
+      'multi-ecosystem-group': 'infrastructure',
+    } as DependabotUpdate;
+
+    const result = mapSourceFromDependabotConfigToJobConfig(sourceInfo, groupedConfig, update);
+    expect(result.branch).toBe('release/1.x');
+  });
+});
+
+describe('getEffectiveUpdateSettings', () => {
+  it('should merge additive and group-only multi-ecosystem settings', () => {
+    const config = {
+      'version': 2,
+      'multi-ecosystem-groups': {
+        infrastructure: {
+          'schedule': { interval: 'weekly' },
+          'assignees': ['@platform-team'],
+          'labels': ['infrastructure'],
+          'milestone': '12',
+          'target-branch': 'release/1.x',
+          'commit-message': { prefix: 'chore' },
+          'pull-request-branch-name': { separator: '-' },
+        },
+      },
+      'updates': [],
+    } as unknown as DependabotConfig;
+    const update = {
+      'package-ecosystem': 'docker',
+      'directory': '/',
+      'patterns': ['*'],
+      'multi-ecosystem-group': 'infrastructure',
+      'assignees': ['@docker-admin'],
+      'labels': ['docker'],
+    } as DependabotUpdate;
+
+    const result = getEffectiveUpdateSettings(config, update);
+
+    expect(result.assignees).toEqual(['@platform-team', '@docker-admin']);
+    expect(result.labels).toEqual(['infrastructure', 'docker']);
+    expect(result.milestone).toBe('12');
+    expect(result['target-branch']).toBe('release/1.x');
+    expect(result['commit-message']).toEqual({ prefix: 'chore' });
+    expect(result['pull-request-branch-name']).toEqual({ separator: '-' });
   });
 });
 
@@ -243,5 +320,53 @@ describe('mapGroupsFromDependabotConfigToJobConfig', () => {
     const result = mapGroupsFromDependabotConfigToJobConfig(dependencyGroups);
 
     expect(result).toEqual([{ name: 'group', rules: { patterns: ['*'] } }]);
+  });
+});
+
+describe('DependabotJobBuilder', () => {
+  it('should use group commit message options for multi-ecosystem jobs', () => {
+    const builder = new DependabotJobBuilder({
+      experiments: {},
+      source: {
+        'provider': 'azure',
+        'hostname': 'dev.azure.com',
+        'api-endpoint': 'https://dev.azure.com',
+        'repository-slug': 'my-org/my-project/_git/my-repo',
+      },
+      config: {
+        'version': 2,
+        'multi-ecosystem-groups': {
+          infrastructure: {
+            'schedule': { interval: 'weekly' },
+            'commit-message': {
+              'prefix': 'chore',
+              'prefix-development': 'deps-dev',
+              'include': 'scope',
+            },
+          },
+        },
+        'updates': [],
+      } as unknown as DependabotConfig,
+      update: {
+        'package-ecosystem': 'docker',
+        'directory': '/',
+        'patterns': ['*'],
+        'multi-ecosystem-group': 'infrastructure',
+        'schedule': { interval: 'daily' },
+      } as DependabotUpdate,
+      debug: false,
+    });
+
+    const result = builder.forUpdate({
+      id: '1',
+      command: 'update',
+      existingPullRequests: [],
+    });
+
+    expect(result.job['commit-message-options']).toEqual({
+      'prefix': 'chore',
+      'prefix-development': 'deps-dev',
+      'include-scope': true,
+    });
   });
 });
