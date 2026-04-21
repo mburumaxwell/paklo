@@ -34,6 +34,15 @@ export type RunJobOptions = {
 export type RunJobResult = { success: true; message?: string } | { success: false; message: string };
 
 export async function runJob(options: RunJobOptions): Promise<RunJobResult> {
+  try {
+    logger.startGroup(`Running job ${options.jobId}`);
+    return await runJobInner(options);
+  } finally {
+    logger.endGroup();
+  }
+}
+
+export async function runJobInner(options: RunJobOptions): Promise<RunJobResult> {
   const { jobId, dependabotApiUrl, dependabotApiDockerUrl, jobToken, credentialsToken, secretMasker, debug, usage } =
     options;
 
