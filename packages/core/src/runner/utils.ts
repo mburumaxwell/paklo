@@ -1,5 +1,7 @@
 import stream, { type Writable } from 'node:stream';
 
+import { logger } from '@/logger';
+
 // Code below is borrowed and adapted from dependabot-action
 
 export const nullStream: Writable = new stream.Writable({ write: (__, _, next) => next() });
@@ -7,7 +9,8 @@ export const nullStream: Writable = new stream.Writable({ write: (__, _, next) =
 export const outStream = (prefix: string): Writable => {
   return new stream.Writable({
     write(chunk, _, next) {
-      process.stdout.write(`${prefix} | ${chunk.toString()}`);
+      // process.stdout.write(`${prefix} | ${chunk.toString()}`);
+      logger.info(`${prefix} | ${chunk.toString().trimEnd()}`);
       next();
     },
   });
@@ -16,7 +19,8 @@ export const outStream = (prefix: string): Writable => {
 export const errStream = (prefix: string): Writable => {
   return new stream.Writable({
     write(chunk, _, next) {
-      process.stderr.write(`${prefix} | ${chunk.toString()}`);
+      // process.stderr.write(`${prefix} | ${chunk.toString()}`);
+      logger.info(`${prefix} | ${chunk.toString().trimEnd()}`);
       next();
     },
   });
