@@ -24,4 +24,8 @@ Thank you for contributing to Paklo!
    pnpm test
    pnpm run format
    ```
-7. Submit a pull request
+7. Create a changeset:
+   ```bash
+   pnpm changeset
+   ```
+8. Submit a pull request
