@@ -1,5 +1,19 @@
 # @paklo/core
 
+## 0.18.0
+
+### Minor Changes
+
+- [`01ec8c7`](https://github.com/mburumaxwell/paklo/commit/01ec8c73408ac8593d46c76088e2384d01400851) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - No longer exporting hono server logic
+
+- [`5527ff5`](https://github.com/mburumaxwell/paklo/commit/5527ff5d3d31124d12bbaf4f27c26edb26bc16cd) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Introduced better logger, not all logs are handled with pino.
+  Defaults to console unless replaced. This helps us avoid exporting pino in places we should not and will allow later for using different logging tools in each area of tools.
+
+- [`13f507a`](https://github.com/mburumaxwell/paklo/commit/13f507a9ef3170953cb90cc5f7957ac5431f6175) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Add support for logging groups and sections.
+  This used to be supported earlier but removed when we moved from `dependabot/cli` to our own CLI. This re-adds it.
+
+- [`8052857`](https://github.com/mburumaxwell/paklo/commit/80528572578491931cf4f24010f9b3de2bd1497d) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Reorganize files for easier grouping and exports
+
 ## 0.17.1
 
 ### Patch Changes
@@ -200,6 +214,7 @@
 ### Patch Changes
 
 - ff9570c: Prevent ReDoS vulnerabilities in regex patterns
+
   - Replace unsafe regex quantifiers in branch name normalization with safe string operations using split/filter/join
   - Replace regex-based placeholder extraction with bounded quantifiers and non-global matching to prevent exponential backtracking
   - Eliminates potential denial of service attacks from maliciously crafted input strings with consecutive special characters
