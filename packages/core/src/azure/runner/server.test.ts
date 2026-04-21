@@ -2,7 +2,6 @@
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { extractRepositoryUrl } from '@/azure';
 import {
   type AzdoPrExtractedWithProperties,
   type AzureDevOpsClientWrapper,
@@ -11,6 +10,7 @@ import {
 } from '@/azure/client';
 import type { DependabotJobBuilderOutput, DependabotUpdate } from '@/dependabot';
 
+import { extractRepositoryUrl } from '../url-parts';
 import { AzureLocalDependabotServer, type AzureLocalDependabotServerOptions } from './server';
 
 vi.mock('./client');

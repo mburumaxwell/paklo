@@ -25,8 +25,7 @@ import {
   getGhsaPackageEcosystemFromDependabotPackageManager,
 } from '@/github';
 import { logger } from '@/logger';
-import { LocalJobsRunner, type LocalJobsRunnerOptions, type RunJobsResult } from '@/runner';
-import { type RunJobOptions, runJob } from '@/runner/run';
+import { LocalJobsRunner, type LocalJobsRunnerOptions, type RunJobOptions, type RunJobsResult, runJob } from '@/runner';
 
 import { AzureLocalDependabotServer, type AzureLocalDependabotServerOptions } from './server';
 

@@ -2,7 +2,6 @@
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { extractRepositoryUrl } from '@/azure';
 import {
   type AzdoPrExtractedWithProperties,
   AzureDevOpsClientWrapper,
@@ -15,6 +14,7 @@ import { GitHubSecurityAdvisoryClient } from '@/github';
 import type { SecretMasker } from '@/runner/api-client';
 import { runJob } from '@/runner/run';
 
+import { extractRepositoryUrl } from '../url-parts';
 import { AzureLocalJobsRunner, type AzureLocalJobsRunnerOptions } from './runner';
 
 vi.mock('@/github', () => ({

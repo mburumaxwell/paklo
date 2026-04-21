@@ -1,4 +1,3 @@
-import { type AzureDevOpsRepositoryUrl } from '@/azure';
 import {
   type AzdoPrExtractedWithProperties,
   type AzdoPullRequestMergeStrategy,
@@ -19,6 +18,8 @@ import {
 } from '@/dependabot';
 import { LocalDependabotServer, type LocalDependabotServerOptions } from '@/local';
 import { logger } from '@/logger';
+
+import { type AzureDevOpsRepositoryUrl } from '../url-parts';
 
 export type AzureLocalDependabotServerOptions = LocalDependabotServerOptions & {
   url: AzureDevOpsRepositoryUrl;
