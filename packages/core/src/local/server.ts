@@ -12,7 +12,8 @@ import {
   type GitAuthor,
 } from '@/dependabot';
 import { logger } from '@/logger';
-import { type CreateApiServerAppOptions, type DependabotTokenType, createApiServerApp } from '@/server';
+
+import { type CreateApiServerAppOptions, type DependabotTokenType, createApiServerApp } from './server-http';
 
 export type LocalDependabotServerAddOptions = {
   /** The ID of the dependabot job. */

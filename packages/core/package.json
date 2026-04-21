@@ -6,10 +6,6 @@
   "author": "mburumaxwell",
   "license": "AGPL-3.0-later",
   "exports": {
-    "./keygen": {
-      "types": "./dist/keygen.d.mts",
-      "import": "./dist/keygen.mjs"
-    },
     "./logger": {
       "types": "./dist/logger.d.mts",
       "import": "./dist/logger.mjs"
@@ -22,25 +18,29 @@
       "types": "./dist/dependabot/index.d.mts",
       "import": "./dist/dependabot/index.mjs"
     },
-    "./azure": {
-      "types": "./dist/azure/index.d.mts",
-      "import": "./dist/azure/index.mjs"
-    },
-    "./azure/config": {
-      "types": "./dist/azure/config.d.mts",
-      "import": "./dist/azure/config.mjs"
+    "./local": {
+      "types": "./dist/local/index.d.mts",
+      "import": "./dist/local/index.mjs"
     },
     "./runner": {
       "types": "./dist/runner/index.d.mts",
       "import": "./dist/runner/index.mjs"
     },
-    "./runner/local": {
-      "types": "./dist/runner/local/index.d.mts",
-      "import": "./dist/runner/local/index.mjs"
+    "./azure": {
+      "types": "./dist/azure/index.d.mts",
+      "import": "./dist/azure/index.mjs"
     },
-    "./runner/local/azure": {
-      "types": "./dist/runner/local/azure/index.d.mts",
-      "import": "./dist/runner/local/azure/index.mjs"
+    "./azure/client": {
+      "types": "./dist/azure/client/index.d.mts",
+      "import": "./dist/azure/client/index.mjs"
+    },
+    "./azure/config": {
+      "types": "./dist/azure/config.d.mts",
+      "import": "./dist/azure/config.mjs"
+    },
+    "./azure/runner": {
+      "types": "./dist/azure/runner/index.d.mts",
+      "import": "./dist/azure/runner/index.mjs"
     }
   },
   "files": [

@@ -3,12 +3,10 @@ import { dirname } from 'node:path';
 import { stdin, stdout } from 'node:process';
 import readline from 'node:readline/promises';
 
-import {
-  AZDO_PULL_REQUEST_MERGE_STRATEGIES,
-  AzdoPullRequestMergeStrategySchema,
-  extractRepositoryUrl,
-} from '@paklo/core/azure';
+import { extractRepositoryUrl } from '@paklo/core/azure';
+import { AZDO_PULL_REQUEST_MERGE_STRATEGIES, AzdoPullRequestMergeStrategySchema } from '@paklo/core/azure/client';
 import { getDependabotConfig } from '@paklo/core/azure/config';
+import { AzureLocalJobsRunner, type AzureLocalJobsRunnerOptions } from '@paklo/core/azure/runner';
 import {
   DEFAULT_EXPERIMENTS,
   DEPENDABOT_COMMANDS,
@@ -19,7 +17,6 @@ import {
   parseExperiments,
 } from '@paklo/core/dependabot';
 import { logger } from '@paklo/core/logger';
-import { AzureLocalJobsRunner, type AzureLocalJobsRunnerOptions } from '@paklo/core/runner/local/azure';
 import { Command, Option } from 'commander';
 import { z } from 'zod';
 

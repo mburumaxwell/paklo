@@ -1,14 +1,14 @@
+import { type AzureDevOpsRepositoryUrl } from '@/azure';
 import {
   type AzdoPrExtractedWithProperties,
   type AzdoPullRequestMergeStrategy,
   type AzureDevOpsClientWrapper,
-  type AzureDevOpsRepositoryUrl,
   PR_DESCRIPTION_MAX_LENGTH,
   buildPullRequestProperties,
   getPullRequestChangedFiles,
   getPullRequestForDependencyNames,
   parsePullRequestProperties,
-} from '@/azure';
+} from '@/azure/client';
 import {
   type DependabotRequest,
   getBranchNameForUpdate,
@@ -17,9 +17,8 @@ import {
   getPullRequestDescription,
   shouldSupersede,
 } from '@/dependabot';
+import { LocalDependabotServer, type LocalDependabotServerOptions } from '@/local';
 import { logger } from '@/logger';
-
-import { LocalDependabotServer, type LocalDependabotServerOptions } from '../server';
 
 export type AzureLocalDependabotServerOptions = LocalDependabotServerOptions & {
   url: AzureDevOpsRepositoryUrl;

@@ -1,8 +1,5 @@
-import {
-  type AzdoPullRequestMergeStrategy,
-  type AzureDevOpsRepositoryUrl,
-  extractRepositoryUrl,
-} from '@paklo/core/azure';
+import { type AzureDevOpsRepositoryUrl, extractRepositoryUrl } from '@paklo/core/azure';
+import { type AzdoPullRequestMergeStrategy } from '@paklo/core/azure/client';
 import { DEFAULT_EXPERIMENTS, type DependabotExperiments, parseExperiments } from '@paklo/core/dependabot';
 import * as tl from 'azure-pipelines-task-lib/task';
 

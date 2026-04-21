@@ -6,7 +6,7 @@ import {
   AzureDevOpsClientWrapper,
   PR_PROPERTY_MICROSOFT_GIT_SOURCE_REF_NAME,
   parsePullRequestProperties,
-} from '@/azure';
+} from '@/azure/client';
 import {
   type DependabotCommand,
   type DependabotCredential,
@@ -25,9 +25,9 @@ import {
   getGhsaPackageEcosystemFromDependabotPackageManager,
 } from '@/github';
 import { logger } from '@/logger';
+import { LocalJobsRunner, type LocalJobsRunnerOptions, type RunJobsResult } from '@/runner';
+import { type RunJobOptions, runJob } from '@/runner/run';
 
-import { type RunJobOptions, runJob } from '../../run';
-import { LocalJobsRunner, type LocalJobsRunnerOptions, type RunJobsResult } from '../runner';
 import { AzureLocalDependabotServer, type AzureLocalDependabotServerOptions } from './server';
 
 export type AzureLocalJobsRunnerOptions = LocalJobsRunnerOptions &

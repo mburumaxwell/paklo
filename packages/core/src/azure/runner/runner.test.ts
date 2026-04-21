@@ -2,19 +2,19 @@
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { extractRepositoryUrl } from '@/azure';
 import {
   type AzdoPrExtractedWithProperties,
   AzureDevOpsClientWrapper,
   PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
   PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER,
   PR_PROPERTY_MICROSOFT_GIT_SOURCE_REF_NAME,
-  extractRepositoryUrl,
-} from '@/azure';
+} from '@/azure/client';
 import { DEFAULT_EXPERIMENTS, type DependabotConfig, type DependabotUpdate } from '@/dependabot';
 import { GitHubSecurityAdvisoryClient } from '@/github';
+import type { SecretMasker } from '@/runner/api-client';
+import { runJob } from '@/runner/run';
 
-import type { SecretMasker } from '../../api-client';
-import { runJob } from '../../run';
 import { AzureLocalJobsRunner, type AzureLocalJobsRunnerOptions } from './runner';
 
 vi.mock('@/github', () => ({
@@ -22,16 +22,20 @@ vi.mock('@/github', () => ({
   filterVulnerabilities: vi.fn((vulns) => vulns || []),
   getGhsaPackageEcosystemFromDependabotPackageManager: vi.fn(() => 'npm'),
 }));
-vi.mock('@/azure', async () => {
-  const actual = await vi.importActual('@/azure');
+vi.mock('@/azure/client', async () => {
+  const actual = await vi.importActual('@/azure/client');
   return {
     ...actual,
     AzureDevOpsClientWrapper: vi.fn(),
   };
 });
-vi.mock('../../run', () => ({
-  runJob: vi.fn(),
-}));
+vi.mock('@/runner/run', async () => {
+  const actual = await vi.importActual('@/runner/run');
+  return {
+    ...actual,
+    runJob: vi.fn(),
+  };
+});
 
 // Helper function to create a partial jobs runner that allows testing private methods
 class TestableAzureLocalJobsRunner extends AzureLocalJobsRunner {

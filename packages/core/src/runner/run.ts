@@ -6,6 +6,7 @@ import os from 'node:os';
 import ky from 'ky';
 import { z } from 'zod';
 
+import type { DependabotCommand, DependabotConfig, DependabotExperiments } from '@/dependabot';
 import { logger } from '@/logger';
 import type { UsageTelemetryRequestData } from '@/usage';
 
@@ -166,5 +167,57 @@ export async function isRunningInDocker(): Promise<boolean> {
     return cgroup.includes('docker') || cgroup.includes('kubepods');
   } catch {
     return false;
+  }
+}
+
+export type RunJobsResult = { id: string; success: boolean; message?: string; affectedPrs: number[] }[];
+
+export type LocalJobsRunnerOptions = {
+  jobTokenOverride?: string;
+  credentialsTokenOverride?: string;
+  secretMasker: SecretMasker;
+
+  config: DependabotConfig;
+  targetUpdateIds?: number[];
+  command: DependabotCommand;
+  experiments: DependabotExperiments;
+  updaterImage?: string;
+};
+
+export abstract class LocalJobsRunner {
+  private readonly opt: LocalJobsRunnerOptions;
+
+  constructor(options: LocalJobsRunnerOptions) {
+    this.opt = options;
+  }
+
+  protected makeTokens() {
+    const { jobTokenOverride, credentialsTokenOverride } = this.opt;
+    return {
+      jobToken: jobTokenOverride ?? this.generateToken(),
+      credentialsToken: credentialsTokenOverride ?? this.generateToken(),
+    };
+  }
+
+  private generateToken() {
+    const bytes = new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+    const buffer = Buffer.from(bytes);
+
+    const base62Chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    let value = BigInt(`0x${buffer.toString('hex')}`);
+
+    while (value > 0) {
+      const remainder = value % BigInt(62);
+      result = base62Chars[Number(remainder)] + result;
+      value = value / BigInt(62);
+    }
+
+    return result || '0';
+  }
+
+  public run(): Promise<RunJobsResult> {
+    return Promise.resolve([{ id: '-1', success: false, affectedPrs: [] }]);
   }
 }

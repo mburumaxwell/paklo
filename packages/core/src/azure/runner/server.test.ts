@@ -2,13 +2,13 @@
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { extractRepositoryUrl } from '@/azure';
 import {
   type AzdoPrExtractedWithProperties,
   type AzureDevOpsClientWrapper,
   PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
   PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER,
-  extractRepositoryUrl,
-} from '@/azure';
+} from '@/azure/client';
 import type { DependabotJobBuilderOutput, DependabotUpdate } from '@/dependabot';
 
 import { AzureLocalDependabotServer, type AzureLocalDependabotServerOptions } from './server';

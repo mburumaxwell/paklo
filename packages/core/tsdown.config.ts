@@ -7,18 +7,20 @@ export default defineConfig({
   sourcemap: true,
   entry: [
     // base
-    'src/keygen.ts',
     'src/logger.ts',
 
     // dependabot
     'src/github/index.ts',
     'src/dependabot/index.ts',
-    'src/azure/index.ts',
-    'src/azure/config.ts',
 
     // runner
+    'src/local/index.ts',
     'src/runner/index.ts',
-    'src/runner/local/index.ts',
-    'src/runner/local/azure/index.ts',
+
+    // azure
+    'src/azure/index.ts',
+    'src/azure/client/index.ts',
+    'src/azure/config.ts',
+    'src/azure/runner/index.ts',
   ],
 });
