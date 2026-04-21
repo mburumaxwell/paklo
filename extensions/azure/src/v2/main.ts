@@ -57,7 +57,7 @@ async function run() {
     });
 
     // update logger level based on debug input
-    logger.level = inputs.debug ? 'debug' : 'warn';
+    logger.level = inputs.debug ? 'debug' : 'info';
 
     const { url, authorEmail, authorName, ...remainingInputs } = inputs;
 
