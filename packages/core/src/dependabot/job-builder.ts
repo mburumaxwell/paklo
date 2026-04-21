@@ -1,14 +1,15 @@
 import type { SecurityVulnerability } from '@/github';
 
-import type {
-  DependabotAllowCondition,
-  DependabotConfig,
-  DependabotGroup,
-  DependabotIgnoreCondition,
-  DependabotRegistry,
-  DependabotUpdate,
-  PackageEcosystem,
-  VersioningStrategy,
+import {
+  type DependabotAllowCondition,
+  type DependabotConfig,
+  type DependabotGroup,
+  type DependabotIgnoreCondition,
+  type DependabotRegistry,
+  type DependabotUpdate,
+  type PackageEcosystem,
+  type VersioningStrategy,
+  getEffectiveUpdateSettings,
 } from './config';
 import { setExperiment } from './experiments';
 import type {
@@ -53,19 +54,19 @@ export class DependabotJobBuilder {
   private readonly credentials: DependabotCredential[];
 
   constructor({
+    experiments,
     source,
     config,
     update,
     systemAccessUser,
     systemAccessToken,
     githubToken,
-    experiments,
     debug,
   }: {
+    experiments: DependabotExperiments;
     source: DependabotSourceInfo;
     config: DependabotConfig;
     update: DependabotUpdate;
-    experiments: DependabotExperiments;
     systemAccessUser?: string;
     systemAccessToken?: string;
     githubToken?: string;
@@ -79,7 +80,7 @@ export class DependabotJobBuilder {
     this.experiments = setExperiment(experiments, 'enable_beta_ecosystems', config['enable-beta-ecosystems']);
 
     this.packageManager = mapPackageEcosystemToPackageManager(update['package-ecosystem']);
-    this.source = mapSourceFromDependabotConfigToJobConfig(source, update);
+    this.source = mapSourceFromDependabotConfigToJobConfig(source, config, update);
     this.credentials = mapCredentials({
       sourceHostname: source.hostname,
       systemAccessUser,
@@ -172,6 +173,10 @@ export class DependabotJobBuilder {
       source.directory = undefined;
     }
 
+    const effective = getEffectiveUpdateSettings(this.config, this.update);
+    const multiEcosystemGroupName = this.update['multi-ecosystem-group'];
+    const multiEcosystemUpdate = !!multiEcosystemGroupName;
+
     return {
       job: {
         'id': id,
@@ -190,10 +195,9 @@ export class DependabotJobBuilder {
         'existing-pull-requests': existingPullRequests.filter((pr) => !('dependency-group-name' in pr)),
         'existing-group-pull-requests': existingPullRequests.filter((pr) => 'dependency-group-name' in pr),
         'commit-message-options': {
-          'prefix': this.update['commit-message']?.prefix ?? null,
-          'prefix-development': this.update['commit-message']?.['prefix-development'] ?? null,
-          'include-scope':
-            this.update['commit-message']?.include?.toLocaleLowerCase()?.trim() === 'scope' ? true : null,
+          'prefix': effective['commit-message']?.prefix ?? null,
+          'prefix-development': effective['commit-message']?.['prefix-development'] ?? null,
+          'include-scope': effective['commit-message']?.include?.toLocaleLowerCase()?.trim() === 'scope' ? true : null,
         },
         'cooldown': this.update.cooldown,
         'experiments': mapExperiments(this.experiments),
@@ -209,12 +213,7 @@ export class DependabotJobBuilder {
         'proxy-log-response-body-on-auth-failure': true,
         'max-updater-run-time': 2700,
         'enable-beta-ecosystems': this.config['enable-beta-ecosystems'] || false,
-        // Updates across ecosystems is still in development
-        // See https://github.com/dependabot/dependabot-core/issues/8126
-        //     https://github.com/dependabot/dependabot-core/pull/12339
-        // It needs to merged in the core repo first before we support it
-        // However, to match current job configs and to prevent surprises, we disable it
-        'multi-ecosystem-update': false,
+        'multi-ecosystem-update': multiEcosystemUpdate,
         'exclude-paths': this.update['exclude-paths'],
       },
       credentials: this.credentials,
@@ -263,14 +262,16 @@ export function mapPackageEcosystemToPackageManager(ecosystem: PackageEcosystem)
 
 export function mapSourceFromDependabotConfigToJobConfig(
   source: DependabotSourceInfo,
+  config: DependabotConfig,
   update: DependabotUpdate,
 ): DependabotSource {
+  const effective = getEffectiveUpdateSettings(config, update);
   return {
     'provider': source.provider,
     'api-endpoint': source['api-endpoint'],
     'hostname': source.hostname,
     'repo': source['repository-slug'],
-    'branch': update['target-branch'],
+    'branch': effective['target-branch'],
     'commit': null, // use latest commit of target branch
     'directory': update.directory,
     'directories': update.directories,

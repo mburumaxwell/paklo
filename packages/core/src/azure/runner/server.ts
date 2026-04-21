@@ -9,8 +9,10 @@ import {
   parsePullRequestProperties,
 } from '@/azure/client';
 import {
+  type DependabotConfig,
   type DependabotRequest,
   getBranchNameForUpdate,
+  getEffectiveUpdateSettings,
   getPersistedPr,
   getPullRequestCloseReason,
   getPullRequestDescription,
@@ -22,6 +24,7 @@ import { logger } from '@/logger';
 import { type AzureDevOpsRepositoryUrl } from '../url-parts';
 
 export type AzureLocalDependabotServerOptions = LocalDependabotServerOptions & {
+  config: DependabotConfig;
   url: AzureDevOpsRepositoryUrl;
   authorClient: AzureDevOpsClientWrapper;
   autoApprove: boolean;
@@ -57,6 +60,7 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
       autoCompleteIgnoreConfigIds,
       author,
       dryRun,
+      config,
     } = options;
 
     const { type, data } = request;
@@ -71,6 +75,7 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
     const { 'package-manager': packageManager } = job;
 
     const update = this.update(id)!; // exists because job exists
+    const effective = getEffectiveUpdateSettings(config, update);
     const { project, repository } = url;
 
     switch (type) {
@@ -104,7 +109,8 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
 
         const persisted = getPersistedPr(data);
         const changedFiles = getPullRequestChangedFiles(data);
-        const targetBranch = update['target-branch'] || (await authorClient.getDefaultBranch({ project, repository }));
+        const targetBranch =
+          effective['target-branch'] || (await authorClient.getDefaultBranch({ project, repository }));
         const sourceBranch = getBranchNameForUpdate({
           packageEcosystem: update['package-ecosystem'],
           targetBranchName: targetBranch,
@@ -113,7 +119,7 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
           changedFiles,
           dependencyGroupName: persisted['dependency-group-name'],
           dependencies: persisted.dependencies,
-          separator: update['pull-request-branch-name']?.separator,
+          separator: effective['pull-request-branch-name']?.separator,
         });
 
         // Check if the source branch already exists or conflicts with an existing branch
@@ -158,9 +164,9 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
                 mergeStrategy: mergeStrategy ?? 'squash',
               }
             : undefined,
-          assignees: update.assignees,
-          labels: update.labels?.map((label) => label?.trim()) || [],
-          workItems: update.milestone ? [update.milestone] : [],
+          assignees: effective.assignees,
+          labels: effective.labels?.map((label) => label?.trim()) || [],
+          workItems: effective.milestone ? [effective.milestone] : [],
           changes: changedFiles,
           properties: buildPullRequestProperties(packageManager, persisted),
         });

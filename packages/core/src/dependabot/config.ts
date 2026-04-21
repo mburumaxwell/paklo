@@ -219,7 +219,7 @@ export const DependabotUpdateSchema = z
     'pull-request-branch-name': DependabotPullRequestBranchNameSchema.optional(),
     'rebase-strategy': z.string().optional(),
     'registries': z.string().array().optional(),
-    'schedule': DependabotScheduleSchema,
+    'schedule': DependabotScheduleSchema.optional(),
     'target-branch': z.string().optional(),
     'vendor': z.boolean().optional(),
     'versioning-strategy': VersioningStrategySchema.optional(),
@@ -239,13 +239,22 @@ export const DependabotUpdateSchema = z
 
     value['open-pull-requests-limit'] ??= 5; // default to 5 if not specified
 
-    // The patterns key is required when using multi-ecosystem-group.
-    // You can specify dependency patterns to include only certain dependencies in the group,
-    // or use ["*"] to include all dependencies.
-    if (value['multi-ecosystem-group'] && (!value.patterns || value.patterns.length === 0)) {
-      addIssue(
-        "The 'patterns' field must be specified and contain at least one pattern when using 'multi-ecosystem-group'.",
-      );
+    // When using multi-ecosystem-group, schedule is not required (comes from the group)
+    // When NOT using multi-ecosystem-group, schedule is required
+    if (value['multi-ecosystem-group']) {
+      // The patterns key is required when using multi-ecosystem-group.
+      // You can specify dependency patterns to include only certain dependencies in the group,
+      // or use ["*"] to include all dependencies.
+      if (!value.patterns || value.patterns.length === 0) {
+        addIssue(
+          "The 'patterns' field is required and must contain at least one pattern when 'multi-ecosystem-group' is specified.",
+        );
+      }
+    } else {
+      // When not using multi-ecosystem-group, schedule is required
+      if (!value.schedule) {
+        addIssue("The 'schedule' field is required when 'multi-ecosystem-group' is not specified.");
+      }
     }
 
     return value;
@@ -343,10 +352,53 @@ export const DependabotConfigSchema = z
       }
     }
 
+    // validate multi-ecosystem-groups: ensure all defined groups are used and all referenced groups exist
+    if (value['multi-ecosystem-groups']) {
+      const definedGroups = Object.keys(value['multi-ecosystem-groups']);
+      const referencedGroups: string[] = [];
+
+      for (const update of value.updates) {
+        if (update['multi-ecosystem-group']) {
+          referencedGroups.push(update['multi-ecosystem-group']);
+        }
+      }
+
+      // ensure there are no referenced groups that have not been defined
+      const missingDefinitions = referencedGroups.filter((group) => !definedGroups.includes(group));
+      if (missingDefinitions.length > 0) {
+        addIssue(
+          `Referenced multi-ecosystem groups: '${missingDefinitions.join(',')}' have not been defined in 'multi-ecosystem-groups'.`,
+        );
+      }
+
+      // ensure there are no defined groups that have not been referenced
+      const unusedGroups = definedGroups.filter((group) => !referencedGroups.includes(group));
+      if (unusedGroups.length > 0) {
+        addIssue(
+          `Multi-ecosystem groups: '${unusedGroups.join(',')}' have been defined but are not referenced by any update.`,
+        );
+      }
+    }
+
     return value;
   });
 
 export type DependabotConfig = z.infer<typeof DependabotConfigSchema>;
+
+export function getEffectiveUpdateSettings(config: DependabotConfig, update: DependabotUpdate) {
+  const groupName = update['multi-ecosystem-group'];
+  const group = groupName ? config['multi-ecosystem-groups']?.[groupName] : undefined;
+
+  return {
+    'schedule': group?.schedule ?? update.schedule,
+    'assignees': Array.from(new Set([...(group?.assignees ?? []), ...(update.assignees ?? [])])),
+    'labels': Array.from(new Set([...(group?.labels ?? []), ...(update.labels ?? [])])),
+    'milestone': group?.milestone ?? update.milestone,
+    'target-branch': group?.['target-branch'] ?? update['target-branch'],
+    'commit-message': group?.['commit-message'] ?? update['commit-message'],
+    'pull-request-branch-name': group?.['pull-request-branch-name'] ?? update['pull-request-branch-name'],
+  };
+}
 
 export function parseUpdates(config: DependabotConfig, configPath: string): DependabotUpdate[] {
   const updates: DependabotUpdate[] = [];
