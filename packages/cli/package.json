@@ -1,6 +1,6 @@
 {
   "name": "@paklo/cli",
-  "version": "0.19.1",
+  "version": "0.20.0",
   "sideEffects": false,
   "type": "module",
   "author": "mburumaxwell",

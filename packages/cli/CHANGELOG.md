@@ -1,5 +1,24 @@
 # paklo
 
+## 0.20.0
+
+### Minor Changes
+
+- [`5527ff5`](https://github.com/mburumaxwell/paklo/commit/5527ff5d3d31124d12bbaf4f27c26edb26bc16cd) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Introduced better logger, not all logs are handled with pino.
+  Defaults to console unless replaced. This helps us avoid exporting pino in places we should not and will allow later for using different logging tools in each area of tools.
+
+- [`3ed6ba9`](https://github.com/mburumaxwell/paklo/commit/3ed6ba93ee68d7ef2e7f2cbe6478eb135b980c42) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Implement secret masker when running just the CLI
+
+### Patch Changes
+
+- [`13f507a`](https://github.com/mburumaxwell/paklo/commit/13f507a9ef3170953cb90cc5f7957ac5431f6175) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Add support for logging groups and sections.
+  This used to be supported earlier but removed when we moved from `dependabot/cli` to our own CLI. This re-adds it.
+
+- [`8052857`](https://github.com/mburumaxwell/paklo/commit/80528572578491931cf4f24010f9b3de2bd1497d) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Reorganize files for easier grouping and exports
+
+- Updated dependencies [[`01ec8c7`](https://github.com/mburumaxwell/paklo/commit/01ec8c73408ac8593d46c76088e2384d01400851), [`5527ff5`](https://github.com/mburumaxwell/paklo/commit/5527ff5d3d31124d12bbaf4f27c26edb26bc16cd), [`13f507a`](https://github.com/mburumaxwell/paklo/commit/13f507a9ef3170953cb90cc5f7957ac5431f6175), [`8052857`](https://github.com/mburumaxwell/paklo/commit/80528572578491931cf4f24010f9b3de2bd1497d)]:
+  - @paklo/core@0.18.0
+
 ## 0.19.1
 
 ### Patch Changes
