@@ -62,6 +62,7 @@ updates:
         exclude-patterns:
           - 'oxfmt'
           - 'oxlint'
+          - 'azure-pipelines-task-lib'
         update-types:
           - minor
           - patch
