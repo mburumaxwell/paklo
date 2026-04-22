@@ -191,7 +191,7 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
           for (const existingPr of existingPullRequestsForPackageManager) {
             if (shouldSupersede(persisted, existingPr)) {
               logger.info(
-                `Detected that existing PR #${existingPr['pr-number']} is superseded by new PR #${newPullRequestId}`,
+                `Detected that existing PR !${existingPr['pr-number']} is superseded by new PR !${newPullRequestId}`,
               );
 
               // The updater leaves the PR open for the backend to close with a comment that it has been superseded
@@ -199,7 +199,7 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
                 project: project,
                 repository: repository,
                 pullRequestId: existingPr['pr-number'],
-                comment: `Superseded by #${newPullRequestId}`,
+                comment: `Superseded by !${newPullRequestId}`,
                 deleteSourceBranch: true,
               });
             }
