@@ -1,0 +1,34 @@
+version: 2
+
+multi-ecosystem-groups:
+  infrastructure:
+    schedule:
+      interval: weekly
+    target-branch: release/1.x
+    assignees:
+      - "@platform-team"
+    labels:
+      - infrastructure
+    milestone: 42
+    commit-message:
+      prefix: chore
+      include: scope
+    pull-request-branch-name:
+      separator: "-"
+
+updates:
+  - package-ecosystem: docker
+    directory: /
+    multi-ecosystem-group: infrastructure
+    patterns:
+      - "*"
+    assignees:
+      - "@docker-admin"
+    labels:
+      - docker
+
+  - package-ecosystem: terraform
+    directory: /
+    multi-ecosystem-group: infrastructure
+    patterns:
+      - "*"

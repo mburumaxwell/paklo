@@ -10,6 +10,7 @@ import {
   DependabotScheduleSchema,
   type DependabotUpdate,
   DependabotUpdateSchema,
+  getEffectiveUpdateSettings,
   parseRegistries,
   parseUpdates,
   validateConfiguration,
@@ -81,6 +82,38 @@ describe('Parse configuration file', () => {
     expect(update.registries).toEqual(['platform-clients', 'custom-packages']);
     expect(update.ignore?.length).toEqual(18);
     expect(update.ignore![17]!.versions).toEqual('>=3');
+  });
+
+  it('Parsing works as expected for multi-ecosystem fixture', async () => {
+    const config = await DependabotConfigSchema.parseAsync(
+      yaml.load(await readFile('fixtures/config/dependabot-multi-ecosystem.yml', 'utf-8')),
+    );
+    const updates = parseUpdates(config, '');
+    expect(updates.length).toBe(2);
+
+    const docker = updates[0]!;
+    expect(docker['package-ecosystem']).toBe('docker');
+    expect(docker['multi-ecosystem-group']).toBe('infrastructure');
+    expect(docker.schedule).toBeUndefined();
+    expect(docker.patterns).toEqual(['*']);
+
+    const terraform = updates[1]!;
+    expect(terraform['package-ecosystem']).toBe('terraform');
+    expect(terraform['multi-ecosystem-group']).toBe('infrastructure');
+    expect(terraform.schedule).toBeUndefined();
+    expect(terraform.patterns).toEqual(['*']);
+
+    const dockerEffective = getEffectiveUpdateSettings(config, docker);
+    expect(dockerEffective['target-branch']).toBe('release/1.x');
+    expect(dockerEffective.assignees).toEqual(['@platform-team', '@docker-admin']);
+    expect(dockerEffective.labels).toEqual(['infrastructure', 'docker']);
+    expect(dockerEffective.milestone).toBe('42');
+    expect(dockerEffective['commit-message']).toEqual({ prefix: 'chore', include: 'scope' });
+    expect(dockerEffective['pull-request-branch-name']).toEqual({ separator: '-' });
+
+    const terraformEffective = getEffectiveUpdateSettings(config, terraform);
+    expect(terraformEffective.assignees).toEqual(['@platform-team']);
+    expect(terraformEffective.labels).toEqual(['infrastructure']);
   });
 });
 
