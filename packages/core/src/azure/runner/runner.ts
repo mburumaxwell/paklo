@@ -238,7 +238,16 @@ export class AzureLocalJobsRunner extends LocalJobsRunner {
 
       const builder = new DependabotJobBuilder({
         experiments,
-        source: { provider: 'azure', ...url },
+        source: {
+          provider: 'azure',
+          ...url,
+          // replacing hostname with host to ensure we capture port if specified
+          // this mostly applies to Azure DevOps Server on-premises instances
+          // where the URL often includes a port number,
+          // e.g. `https://on.prem.com:8080/contoso`
+          // the api-endpoint already has it
+          hostname: url.host,
+        },
         config,
         update,
         systemAccessToken: gitToken,

@@ -104,7 +104,7 @@ describe('mapSourceFromDependabotConfigToJobConfig', () => {
     const sourceInfo: DependabotSourceInfo = {
       'provider': 'azure',
       'api-endpoint': 'https://my-org.com:8443/tfs',
-      'hostname': 'my-org.com',
+      'hostname': 'my-org.com:8443',
       'repository-slug': 'tfs/my-collection/my-project/_git/my-repo',
     };
     const update = {
@@ -118,7 +118,7 @@ describe('mapSourceFromDependabotConfigToJobConfig', () => {
     expect(result).toMatchObject({
       'provider': 'azure',
       'api-endpoint': 'https://my-org.com:8443/tfs',
-      'hostname': 'my-org.com',
+      'hostname': 'my-org.com:8443',
       'repo': 'tfs/my-collection/my-project/_git/my-repo',
     });
   });

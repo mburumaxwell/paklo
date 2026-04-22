@@ -2,7 +2,10 @@ export type AzureDevOpsOrganizationUrl = {
   /** URL of the organization. This may lack the project name */
   'value': URL;
 
-  /** Organization URL hostname */
+  /** Organization URL host including port if present */
+  'host': string;
+
+  /** Organization URL hostname without port */
   'hostname': string;
 
   /** Organization API endpoint URL */
@@ -48,12 +51,13 @@ export function extractOrganizationUrl({ organizationUrl }: { organizationUrl: s
     throw new Error(`Invalid URL protocol: '${protocol}'. Only 'http' and 'https' are supported.`);
   }
 
-  let { hostname } = value;
+  let { host, hostname } = value;
 
   // Handle old Visual Studio URLs: contoso.visualstudio.com -> dev.azure.com
   const visualStudioMatch = hostname.match(/^(\S+)\.visualstudio\.com$/i);
   if (visualStudioMatch) {
     hostname = 'dev.azure.com';
+    host = 'dev.azure.com';
   }
 
   // Parse path segments, ignoring everything after _git if present
@@ -79,7 +83,7 @@ export function extractOrganizationUrl({ organizationUrl }: { organizationUrl: s
     throw new Error(`Error parsing organization from url: '${organizationUrl}'.`);
   }
 
-  const apiEndpoint = `${protocol}://${hostname}${value.port ? `:${value.port}` : ''}/${virtualDirectory ? `${virtualDirectory}/` : ''}`;
+  const apiEndpoint = `${protocol}://${host}/${virtualDirectory ? `${virtualDirectory}/` : ''}`;
 
   // Identity API URL for Azure DevOps cloud
   const identityApiUrl =
@@ -89,6 +93,7 @@ export function extractOrganizationUrl({ organizationUrl }: { organizationUrl: s
 
   return {
     value,
+    host,
     hostname,
     'api-endpoint': apiEndpoint,
     organization,

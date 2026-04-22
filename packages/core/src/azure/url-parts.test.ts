@@ -5,6 +5,7 @@ import { extractOrganizationUrl, extractRepositoryUrl } from './url-parts';
 describe('extractOrganizationUrl', () => {
   it('works for old style devops url', () => {
     const url = extractOrganizationUrl({ organizationUrl: 'https://contoso.visualstudio.com/' });
+    expect(url.host).toBe('dev.azure.com');
     expect(url.hostname).toBe('dev.azure.com');
     expect(url['api-endpoint']).toBe('https://dev.azure.com/');
     expect(url['identity-api-url']).toEqual(new URL('https://vssps.dev.azure.com/contoso/'));
@@ -13,6 +14,7 @@ describe('extractOrganizationUrl', () => {
 
   it('works for azure devops domain', () => {
     const url = extractOrganizationUrl({ organizationUrl: 'https://dev.azure.com/contoso/' });
+    expect(url.host).toBe('dev.azure.com');
     expect(url.hostname).toBe('dev.azure.com');
     expect(url['api-endpoint']).toBe('https://dev.azure.com/');
     expect(url['identity-api-url']).toEqual(new URL('https://vssps.dev.azure.com/contoso/'));
@@ -21,6 +23,7 @@ describe('extractOrganizationUrl', () => {
 
   it('works for on-premise domain', () => {
     const url = extractOrganizationUrl({ organizationUrl: 'https://server.domain.com/tfs/contoso/' });
+    expect(url.host).toBe('server.domain.com');
     expect(url.hostname).toBe('server.domain.com');
     expect(url['api-endpoint']).toBe('https://server.domain.com/tfs/');
     expect(url['identity-api-url']).toEqual(new URL('https://server.domain.com/tfs/contoso/'));
@@ -29,6 +32,7 @@ describe('extractOrganizationUrl', () => {
 
   it('works for on-premise domain with port', () => {
     const url = extractOrganizationUrl({ organizationUrl: 'https://server.domain.com:8081/tfs/contoso/' });
+    expect(url.host).toBe('server.domain.com:8081');
     expect(url.hostname).toBe('server.domain.com');
     expect(url['api-endpoint']).toBe('https://server.domain.com:8081/tfs/');
     expect(url.organization).toBe('contoso');
@@ -36,6 +40,7 @@ describe('extractOrganizationUrl', () => {
 
   it('works for localhost', () => {
     const url = extractOrganizationUrl({ organizationUrl: 'http://localhost:8080/contoso/' });
+    expect(url.host).toBe('localhost:8080');
     expect(url.hostname).toBe('localhost');
     expect(url['api-endpoint']).toBe('http://localhost:8080/');
     expect(url.organization).toBe('contoso');
@@ -43,6 +48,7 @@ describe('extractOrganizationUrl', () => {
 
   it('works for organization url with virtual directory', () => {
     const url = extractOrganizationUrl({ organizationUrl: 'https://server.domain.com/virtualDir/contoso/' });
+    expect(url.host).toBe('server.domain.com');
     expect(url.hostname).toBe('server.domain.com');
     expect(url['api-endpoint']).toBe('https://server.domain.com/virtualDir/');
     expect(url.organization).toBe('contoso');
@@ -51,6 +57,7 @@ describe('extractOrganizationUrl', () => {
 
   it('works for localhost with virtual directory', () => {
     const url = extractOrganizationUrl({ organizationUrl: 'http://localhost:8080/virtualDir/contoso/' });
+    expect(url.host).toBe('localhost:8080');
     expect(url.hostname).toBe('localhost');
     expect(url['api-endpoint']).toBe('http://localhost:8080/virtualDir/');
     expect(url.organization).toBe('contoso');
@@ -77,6 +84,7 @@ describe('extractRepositoryUrl', () => {
       project: 'prj1',
       repository: 'repo1',
     });
+    expect(url.host).toBe('dev.azure.com');
     expect(url.hostname).toBe('dev.azure.com');
     expect(url['api-endpoint']).toBe('https://dev.azure.com/');
     expect(url['identity-api-url']).toEqual(new URL('https://vssps.dev.azure.com/contoso/'));
@@ -91,6 +99,7 @@ describe('extractRepositoryUrl', () => {
       project: 'prj1',
       repository: 'repo1',
     });
+    expect(url.host).toBe('dev.azure.com');
     expect(url.hostname).toBe('dev.azure.com');
     expect(url['api-endpoint']).toBe('https://dev.azure.com/');
     expect(url['identity-api-url']).toEqual(new URL('https://vssps.dev.azure.com/contoso/'));
@@ -105,6 +114,7 @@ describe('extractRepositoryUrl', () => {
       project: 'prj1',
       repository: 'repo1',
     });
+    expect(url.host).toBe('server.domain.com');
     expect(url.hostname).toBe('server.domain.com');
     expect(url['api-endpoint']).toBe('https://server.domain.com/tfs/');
     expect(url['identity-api-url']).toEqual(new URL('https://server.domain.com/tfs/contoso/'));
@@ -119,6 +129,7 @@ describe('extractRepositoryUrl', () => {
       project: 'prj1',
       repository: 'repo1',
     });
+    expect(url.host).toBe('server.domain.com:8081');
     expect(url.hostname).toBe('server.domain.com');
     expect(url['api-endpoint']).toBe('https://server.domain.com:8081/tfs/');
     expect(url.project).toBe('prj1');
@@ -132,6 +143,7 @@ describe('extractRepositoryUrl', () => {
       project: 'prj1',
       repository: 'repo1',
     });
+    expect(url.host).toBe('localhost:8080');
     expect(url.hostname).toBe('localhost');
     expect(url['api-endpoint']).toBe('http://localhost:8080/');
     expect(url.project).toBe('prj1');
@@ -145,6 +157,7 @@ describe('extractRepositoryUrl', () => {
       project: 'prj 1',
       repository: 'repo 1',
     });
+    expect(url.host).toBe('dev.azure.com');
     expect(url.hostname).toBe('dev.azure.com');
     expect(url['api-endpoint']).toBe('https://dev.azure.com/');
     expect(url.project).toBe('prj 1'); // Stored raw for client methods to encode
@@ -158,6 +171,7 @@ describe('extractRepositoryUrl', () => {
       project: 'Markt%20-%20Project', // already encoded input
       repository: 'repo%201', // already encoded input
     });
+    expect(url.host).toBe('dev.azure.com');
     expect(url.hostname).toBe('dev.azure.com');
     expect(url['api-endpoint']).toBe('https://dev.azure.com/');
     expect(url.project).toBe('Markt - Project'); // Decoded to raw value
@@ -197,6 +211,7 @@ describe('extractRepositoryUrl with repositoryUrl parameter', () => {
     const url = extractRepositoryUrl({
       repositoryUrl: 'https://server.domain.com/tfs/contoso/prj1/_git/repo1',
     });
+    expect(url.host).toBe('server.domain.com');
     expect(url.hostname).toBe('server.domain.com');
     expect(url['api-endpoint']).toBe('https://server.domain.com/tfs/');
     expect(url['identity-api-url']).toEqual(new URL('https://server.domain.com/tfs/contoso/'));
@@ -211,6 +226,7 @@ describe('extractRepositoryUrl with repositoryUrl parameter', () => {
     const url = extractRepositoryUrl({
       repositoryUrl: 'https://server.domain.com:8081/tfs/contoso/prj1/_git/repo1',
     });
+    expect(url.host).toBe('server.domain.com:8081');
     expect(url.hostname).toBe('server.domain.com');
     expect(url['api-endpoint']).toBe('https://server.domain.com:8081/tfs/');
     expect(url.organization).toBe('contoso');
@@ -224,6 +240,7 @@ describe('extractRepositoryUrl with repositoryUrl parameter', () => {
     const url = extractRepositoryUrl({
       repositoryUrl: 'http://localhost:8080/contoso/prj1/_git/repo1',
     });
+    expect(url.host).toBe('localhost:8080');
     expect(url.hostname).toBe('localhost');
     expect(url['api-endpoint']).toBe('http://localhost:8080/');
     expect(url.organization).toBe('contoso');
@@ -236,6 +253,7 @@ describe('extractRepositoryUrl with repositoryUrl parameter', () => {
     const url = extractRepositoryUrl({
       repositoryUrl: 'https://dev.azure.com/contoso/prj%201/_git/repo%201',
     });
+    expect(url.host).toBe('dev.azure.com');
     expect(url.hostname).toBe('dev.azure.com');
     expect(url['api-endpoint']).toBe('https://dev.azure.com/');
     expect(url.organization).toBe('contoso');
@@ -248,6 +266,7 @@ describe('extractRepositoryUrl with repositoryUrl parameter', () => {
     const url = extractRepositoryUrl({
       repositoryUrl: 'https://dev.azure.com/contoso/prj1/_git/team/repo1',
     });
+    expect(url.host).toBe('dev.azure.com');
     expect(url.hostname).toBe('dev.azure.com');
     expect(url['api-endpoint']).toBe('https://dev.azure.com/');
     expect(url.organization).toBe('contoso');
@@ -260,6 +279,7 @@ describe('extractRepositoryUrl with repositoryUrl parameter', () => {
     const url = extractRepositoryUrl({
       repositoryUrl: 'http://localhost:8080/tfs/contoso/prj1/_git/repo1',
     });
+    expect(url.host).toBe('localhost:8080');
     expect(url.hostname).toBe('localhost');
     expect(url['api-endpoint']).toBe('http://localhost:8080/tfs/');
     expect(url.organization).toBe('contoso');
