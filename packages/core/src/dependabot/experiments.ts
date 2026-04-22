@@ -9,7 +9,6 @@ export const DEFAULT_EXPERIMENTS: DependabotExperiments = {
   'proxy-cached': true,
   'enable-corepack-for-npm-and-yarn': true,
   'enable-private-registry-for-corepack': true,
-  'avoid-duplicate-updates-package-json': true,
   'allow-refresh-for-existing-pr-dependencies': true,
   'allow-refresh-group-with-all-dependencies': true,
   'azure-registry-backup': true,
@@ -17,6 +16,7 @@ export const DEFAULT_EXPERIMENTS: DependabotExperiments = {
   'gradle-lockfile-updater': true,
   'enable-exclude-paths-subdirectory-manifest-files': true,
   'group-membership-enforcement': true,
+  'python-requirements-file-name-filtering': true,
 };
 
 /**
