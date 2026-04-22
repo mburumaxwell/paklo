@@ -4,7 +4,7 @@ import ky from 'ky';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { extractRepositoryUrl } from '../url-parts';
-import { AzureDevOpsClientWrapper } from './wrapper';
+import { AzureDevOpsClientWrapper, commitsAreAuthoredBy } from './wrapper';
 
 vi.mock('ky');
 
@@ -96,5 +96,31 @@ describe('AzureDevOpsClientWrapper', () => {
       expect(capturedReviewers).toContainEqual({ id: 'user2' });
       expect(pullRequestId).toBe(1);
     });
+  });
+});
+
+describe('commitsAreAuthoredBy', () => {
+  it('allows multiple commits from the same author email', () => {
+    expect(
+      commitsAreAuthoredBy(
+        [
+          { author: { name: 'Author', email: 'author@example.com' } },
+          { author: { name: 'Author', email: 'author@example.com' } },
+        ],
+        { email: 'author@example.com' },
+      ),
+    ).toBe(true);
+  });
+
+  it('rejects commits from another author email', () => {
+    expect(
+      commitsAreAuthoredBy(
+        [
+          { author: { name: 'Author', email: 'author@example.com' } },
+          { author: { name: 'Other', email: 'other@example.com' } },
+        ],
+        { email: 'author@example.com' },
+      ),
+    ).toBe(false);
   });
 });
