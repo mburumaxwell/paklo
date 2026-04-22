@@ -1,5 +1,25 @@
 # @paklo/core
 
+## 0.19.0
+
+### Minor Changes
+
+- [#2705](https://github.com/mburumaxwell/paklo/pull/2705) [`68ddd4e`](https://github.com/mburumaxwell/paklo/commit/68ddd4ea2f413fcaf1ce0b18fb37a9ac215c7c4c) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Add first-stage multi-ecosystem update support.
+  This includes validating group usage in config, merging effective group/update settings for branching and PR metadata, and propagating `multi-ecosystem-update` through jobs and usage telemetry.
+
+- [`425f1c8`](https://github.com/mburumaxwell/paklo/commit/425f1c85f1bd7c1317bf2c4a81fa25be009dfad6) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Checking if a PR has been edited externally should check all commits and not just one.
+
+### Patch Changes
+
+- [`03d4b4c`](https://github.com/mburumaxwell/paklo/commit/03d4b4ca243014d973191ee65ceb002bdb298fb5) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Fix Azure DevOps Server custom-port handling.
+  This is done by preserving bare `hostname` and connectable `host`, then passing the port-aware host into Dependabot jobs.
+
+- [#2698](https://github.com/mburumaxwell/paklo/pull/2698) [`a474cea`](https://github.com/mburumaxwell/paklo/commit/a474ceabe3887ec57f1117ba571ba00fe7f4fcdc) Thanks [@patest-dev](https://github.com/patest-dev)! - Updated Azure DevOps PR linking syntax
+
+- [#2704](https://github.com/mburumaxwell/paklo/pull/2704) [`9274828`](https://github.com/mburumaxwell/paklo/commit/92748283cd7a68ac065044a1ab3cdd4de6522ab8) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 32 updates
+
+- [`a14908a`](https://github.com/mburumaxwell/paklo/commit/a14908a89d09554703b4240e4ecf03f90f857d70) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Fix where startGroup and endGroup logic for logs
+
 ## 0.18.0
 
 ### Minor Changes
