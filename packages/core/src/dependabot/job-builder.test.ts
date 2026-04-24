@@ -328,9 +328,7 @@ describe('mapDependencyGroupsToJobConfig', () => {
       'patterns': ['nginx', 'node'],
     } as DependabotUpdate);
 
-    expect(result).toEqual([
-      { name: 'infrastructure', rules: { patterns: ['nginx', 'node'] } },
-    ]);
+    expect(result).toEqual([{ name: 'infrastructure', rules: { patterns: ['nginx', 'node'] } }]);
   });
 });
 
