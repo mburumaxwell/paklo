@@ -13,6 +13,7 @@ import {
   DependabotJobBuilder,
   type DependabotJobConfig,
   type DependabotUpdate,
+  createExecutionPlan,
   mapPackageEcosystemToPackageManager,
   normalizeBranchName,
 } from '@/dependabot';
@@ -206,6 +207,7 @@ export class AzureLocalJobsRunner extends LocalJobsRunner {
     } = this;
 
     const results: RunJobsResult = [];
+    const { units } = createExecutionPlan(config, updates);
 
     function makeRandomJobId(): string {
       const array = new Uint32Array(1);
@@ -224,144 +226,61 @@ export class AzureLocalJobsRunner extends LocalJobsRunner {
       };
     }
 
-    for (const update of updates) {
-      const packageEcosystem = update['package-ecosystem'];
-      const packageManager = mapPackageEcosystemToPackageManager(packageEcosystem);
+    for (const unit of units) {
+      const updates = unit.kind === 'single' ? [unit.update] : unit.updates;
+      for (const update of updates) {
+        const packageEcosystem = update['package-ecosystem'];
+        const packageManager = mapPackageEcosystemToPackageManager(packageEcosystem);
 
-      // If there is an updater image, replace the placeholder in it
-      let { updaterImage } = this.options;
-      updaterImage = updaterImage?.replace(/\{ecosystem\}/i, packageEcosystem);
+        // If there is an updater image, replace the placeholder in it
+        let { updaterImage } = this.options;
+        updaterImage = updaterImage?.replace(/\{ecosystem\}/i, packageEcosystem);
 
-      // Parse the Dependabot metadata for the existing pull requests that are related to this update
-      // Dependabot will use this to determine if we need to create new pull requests or update/close existing ones
-      const existingPullRequestsForPackageManager = parsePullRequestProperties(existingPullRequests, packageManager);
+        // Parse the Dependabot metadata for the existing pull requests that are related to this update
+        // Dependabot will use this to determine if we need to create new pull requests or update/close existing ones
+        const existingPullRequestsForPackageManager = parsePullRequestProperties(existingPullRequests, packageManager);
 
-      const builder = new DependabotJobBuilder({
-        experiments,
-        source: {
-          provider: 'azure',
-          ...url,
-          // replacing hostname with host to ensure we capture port if specified
-          // this mostly applies to Azure DevOps Server on-premises instances
-          // where the URL often includes a port number,
-          // e.g. `https://on.prem.com:8080/contoso`
-          // the api-endpoint already has it
-          hostname: url.host,
-        },
-        config,
-        update,
-        systemAccessToken: gitToken,
-        githubToken,
-        debug: false,
-      });
-
-      let job: DependabotJobConfig | undefined;
-      let credentials: DependabotCredential[] | undefined;
-      let jobToken: string;
-      let credentialsToken: string;
-
-      const debug = this.options.debug;
-
-      // If this is a security-only update (i.e. 'open-pull-requests-limit: 0'), then we first need to discover the dependencies
-      // that need updating and check each one for vulnerabilities. This is because Dependabot requires the list of vulnerable dependencies
-      // to be supplied in the job definition of security-only update job, it will not automatically discover them like a versioned update does.
-      // https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/configuring-dependabot-security-updates#overriding-the-default-behavior-with-a-configuration-file
-      const securityVulnerabilities: SecurityVulnerability[] = [];
-      const dependencyNamesToUpdate: string[] = [];
-      const openPullRequestsLimit = update['open-pull-requests-limit']!;
-      const securityUpdatesOnly = openPullRequestsLimit === 0;
-      if (securityUpdatesOnly) {
-        // Run an update job to discover all dependencies
-        const id = makeRandomJobId();
-        ({ job, credentials } = builder.forDependenciesList({ id }));
-        ({ jobToken, credentialsToken } = this.makeTokens());
-        server.add({ id, update, job, jobToken, credentialsToken, credentials });
-        await runJob({
-          dependabotApiUrl,
-          dependabotApiDockerUrl,
-          jobId: id,
-          jobToken,
-          credentialsToken,
-          updaterImage,
-          secretMasker,
-          debug,
-          usage: makeUsageData(job),
+        const builder = new DependabotJobBuilder({
+          experiments,
+          source: {
+            provider: 'azure',
+            ...url,
+            // replacing hostname with host to ensure we capture port if specified
+            // this mostly applies to Azure DevOps Server on-premises instances
+            // where the URL often includes a port number,
+            // e.g. `https://on.prem.com:8080/contoso`
+            // the api-endpoint already has it
+            hostname: url.host,
+          },
+          config,
+          update,
+          systemAccessToken: gitToken,
+          githubToken,
+          debug: false,
         });
 
-        const outputs = server.requests(id);
-        const packagesToCheckForVulnerabilities: Package[] | undefined = outputs!
-          .find((o) => o.type === 'update_dependency_list')
-          ?.data.dependencies?.map((d) => ({ name: d.name, version: d.version }));
-        if (packagesToCheckForVulnerabilities?.length) {
-          logger.info(
-            `Detected ${packagesToCheckForVulnerabilities.length} dependencies; Checking for vulnerabilities...`,
-          );
+        let job: DependabotJobConfig | undefined;
+        let credentials: DependabotCredential[] | undefined;
+        let jobToken: string;
+        let credentialsToken: string;
 
-          // parse security advisories from file (private)
-          if (securityAdvisoriesFile) {
-            const filePath = securityAdvisoriesFile;
-            if (existsSync(filePath)) {
-              const fileContents = await readFile(filePath, 'utf-8');
-              securityVulnerabilities.push(
-                ...(await SecurityVulnerabilitySchema.array().parseAsync(JSON.parse(fileContents))),
-              );
-            } else {
-              logger.info(`Private security advisories file '${filePath}' does not exist`);
-            }
-          }
-          if (githubToken) {
-            const ghsaClient = new GitHubSecurityAdvisoryClient(githubToken);
-            const githubVulnerabilities = await ghsaClient.getSecurityVulnerabilitiesAsync(
-              getGhsaPackageEcosystemFromDependabotPackageManager(packageManager),
-              packagesToCheckForVulnerabilities || [],
-            );
-            securityVulnerabilities.push(...githubVulnerabilities);
-          } else {
-            logger.info(
-              'GitHub access token is not provided; Checking for vulnerabilities from GitHub is skipped. ' +
-                'This is not an issue if you are using private security advisories file.',
-            );
-          }
+        const debug = this.options.debug;
 
-          const filtered = filterVulnerabilities(securityVulnerabilities);
-          securityVulnerabilities.splice(0); // clear array
-          securityVulnerabilities.push(...filtered);
-
-          // Only update dependencies that have vulnerabilities
-          dependencyNamesToUpdate.push(...Array.from(new Set(securityVulnerabilities.map((v) => v.package.name))));
-          logger.info(
-            `Detected ${securityVulnerabilities.length} vulnerabilities affecting ${dependencyNamesToUpdate.length} dependencies`,
-          );
-          if (dependencyNamesToUpdate.length) {
-            logger.trace(dependencyNamesToUpdate);
-          }
-        } else {
-          logger.info(`No vulnerabilities detected for update ${update['package-ecosystem']} in ${update.directory}`);
-          server.clear(id);
-          continue; // nothing more to do for this update
-        }
-
-        server.clear(id);
-      }
-
-      // Run an update job for "all dependencies"; this will create new pull requests for dependencies that need updating
-      const openPullRequestsCount = existingPullRequestsForPackageManager.length;
-      const hasReachedOpenPullRequestLimit =
-        openPullRequestsLimit > 0 && openPullRequestsCount >= openPullRequestsLimit;
-      if (!hasReachedOpenPullRequestLimit) {
-        const dependenciesHaveVulnerabilities = dependencyNamesToUpdate.length && securityVulnerabilities.length;
-        if (!securityUpdatesOnly || dependenciesHaveVulnerabilities) {
+        // If this is a security-only update (i.e. 'open-pull-requests-limit: 0'), then we first need to discover the dependencies
+        // that need updating and check each one for vulnerabilities. This is because Dependabot requires the list of vulnerable dependencies
+        // to be supplied in the job definition of security-only update job, it will not automatically discover them like a versioned update does.
+        // https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/configuring-dependabot-security-updates#overriding-the-default-behavior-with-a-configuration-file
+        const securityVulnerabilities: SecurityVulnerability[] = [];
+        const dependencyNamesToUpdate: string[] = [];
+        const openPullRequestsLimit = update['open-pull-requests-limit']!;
+        const securityUpdatesOnly = openPullRequestsLimit === 0;
+        if (securityUpdatesOnly) {
+          // Run an update job to discover all dependencies
           const id = makeRandomJobId();
-          ({ job, credentials } = builder.forUpdate({
-            id,
-            command,
-            dependencyNamesToUpdate,
-            existingPullRequests: existingPullRequestsForPackageManager,
-            securityVulnerabilities,
-          }));
+          ({ job, credentials } = builder.forDependenciesList({ id }));
           ({ jobToken, credentialsToken } = this.makeTokens());
-          server.add({ id, update, job, jobToken, credentialsToken, credentials });
-          const { success, message } = await runJob({
+          server.add({ id, unit, update, job, jobToken, credentialsToken, credentials });
+          await runJob({
             dependabotApiUrl,
             dependabotApiDockerUrl,
             jobId: id,
@@ -372,33 +291,77 @@ export class AzureLocalJobsRunner extends LocalJobsRunner {
             debug,
             usage: makeUsageData(job),
           });
-          const affectedPrs = server.allAffectedPrs(id);
-          server.clear(id);
-          results.push({ id, success, message, affectedPrs });
-        } else {
-          logger.info('Nothing to update; dependencies are not affected by any known vulnerability');
-        }
-      } else {
-        logger.warn(
-          `Skipping update for ${packageEcosystem} packages as the open pull requests limit (${openPullRequestsLimit}) has already been reached`,
-        );
-      }
 
-      // If there are existing pull requests, run an update job for each one; this will resolve merge conflicts and close pull requests that are no longer needed
-      const numberOfPullRequestsToUpdate = existingPullRequestsForPackageManager.length;
-      if (numberOfPullRequestsToUpdate > 0) {
-        if (!dryRun) {
-          for (const pullRequestToUpdate of existingPullRequestsForPackageManager) {
+          const outputs = server.requests(id);
+          const packagesToCheckForVulnerabilities: Package[] | undefined = outputs!
+            .find((o) => o.type === 'update_dependency_list')
+            ?.data.dependencies?.map((d) => ({ name: d.name, version: d.version }));
+          if (packagesToCheckForVulnerabilities?.length) {
+            logger.info(
+              `Detected ${packagesToCheckForVulnerabilities.length} dependencies; Checking for vulnerabilities...`,
+            );
+
+            // parse security advisories from file (private)
+            if (securityAdvisoriesFile) {
+              const filePath = securityAdvisoriesFile;
+              if (existsSync(filePath)) {
+                const fileContents = await readFile(filePath, 'utf-8');
+                securityVulnerabilities.push(
+                  ...(await SecurityVulnerabilitySchema.array().parseAsync(JSON.parse(fileContents))),
+                );
+              } else {
+                logger.info(`Private security advisories file '${filePath}' does not exist`);
+              }
+            }
+            if (githubToken) {
+              const ghsaClient = new GitHubSecurityAdvisoryClient(githubToken);
+              const githubVulnerabilities = await ghsaClient.getSecurityVulnerabilitiesAsync(
+                getGhsaPackageEcosystemFromDependabotPackageManager(packageManager),
+                packagesToCheckForVulnerabilities || [],
+              );
+              securityVulnerabilities.push(...githubVulnerabilities);
+            } else {
+              logger.info(
+                'GitHub access token is not provided; Checking for vulnerabilities from GitHub is skipped. ' +
+                  'This is not an issue if you are using private security advisories file.',
+              );
+            }
+
+            const filtered = filterVulnerabilities(securityVulnerabilities);
+            securityVulnerabilities.splice(0); // clear array
+            securityVulnerabilities.push(...filtered);
+
+            // Only update dependencies that have vulnerabilities
+            dependencyNamesToUpdate.push(...Array.from(new Set(securityVulnerabilities.map((v) => v.package.name))));
+            logger.info(
+              `Detected ${securityVulnerabilities.length} vulnerabilities affecting ${dependencyNamesToUpdate.length} dependencies`,
+            );
+            if (dependencyNamesToUpdate.length) {
+              logger.trace(dependencyNamesToUpdate);
+            }
+          } else {
+            logger.info(`No vulnerabilities detected for update ${update['package-ecosystem']} in ${update.directory}`);
+            continue; // nothing more to do for this update
+          }
+        }
+
+        // Run an update job for "all dependencies"; this will create new pull requests for dependencies that need updating
+        const openPullRequestsCount = existingPullRequestsForPackageManager.length;
+        const hasReachedOpenPullRequestLimit =
+          openPullRequestsLimit > 0 && openPullRequestsCount >= openPullRequestsLimit;
+        if (!hasReachedOpenPullRequestLimit) {
+          const dependenciesHaveVulnerabilities = dependencyNamesToUpdate.length && securityVulnerabilities.length;
+          if (!securityUpdatesOnly || dependenciesHaveVulnerabilities) {
             const id = makeRandomJobId();
             ({ job, credentials } = builder.forUpdate({
               id,
               command,
+              dependencyNamesToUpdate,
               existingPullRequests: existingPullRequestsForPackageManager,
-              pullRequestToUpdate,
               securityVulnerabilities,
             }));
             ({ jobToken, credentialsToken } = this.makeTokens());
-            server.add({ id, update, job, jobToken, credentialsToken, credentials });
+            server.add({ id, unit, update, job, jobToken, credentialsToken, credentials });
             const { success, message } = await runJob({
               dependabotApiUrl,
               dependabotApiDockerUrl,
@@ -411,14 +374,56 @@ export class AzureLocalJobsRunner extends LocalJobsRunner {
               usage: makeUsageData(job),
             });
             const affectedPrs = server.allAffectedPrs(id);
-            server.clear(id);
             results.push({ id, success, message, affectedPrs });
+          } else {
+            logger.info('Nothing to update; dependencies are not affected by any known vulnerability');
           }
         } else {
           logger.warn(
-            `Skipping update of ${numberOfPullRequestsToUpdate} existing ${packageEcosystem} package pull request(s) as 'dryRun' is set to 'true'`,
+            `Skipping update for ${packageEcosystem} packages as the open pull requests limit (${openPullRequestsLimit}) has already been reached`,
           );
         }
+
+        // If there are existing pull requests, run an update job for each one; this will resolve merge conflicts and close pull requests that are no longer needed
+        const numberOfPullRequestsToUpdate = existingPullRequestsForPackageManager.length;
+        if (numberOfPullRequestsToUpdate > 0) {
+          if (!dryRun) {
+            for (const pullRequestToUpdate of existingPullRequestsForPackageManager) {
+              const id = makeRandomJobId();
+              ({ job, credentials } = builder.forUpdate({
+                id,
+                command,
+                existingPullRequests: existingPullRequestsForPackageManager,
+                pullRequestToUpdate,
+                securityVulnerabilities,
+              }));
+              ({ jobToken, credentialsToken } = this.makeTokens());
+              server.add({ id, unit, update, job, jobToken, credentialsToken, credentials });
+              const { success, message } = await runJob({
+                dependabotApiUrl,
+                dependabotApiDockerUrl,
+                jobId: id,
+                jobToken,
+                credentialsToken,
+                updaterImage,
+                secretMasker,
+                debug,
+                usage: makeUsageData(job),
+              });
+              const affectedPrs = server.allAffectedPrs(id);
+              results.push({ id, success, message, affectedPrs });
+            }
+          } else {
+            logger.warn(
+              `Skipping update of ${numberOfPullRequestsToUpdate} existing ${packageEcosystem} package pull request(s) as 'dryRun' is set to 'true'`,
+            );
+          }
+        }
+      }
+
+      const finalized = await server.finalizeUnit(unit);
+      if (unit.kind === 'multi-ecosystem' && finalized) {
+        results.push({ id: `multi-ecosystem:${unit.groupname}`, ...finalized });
       }
     }
 

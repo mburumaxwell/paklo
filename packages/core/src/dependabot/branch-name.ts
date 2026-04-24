@@ -4,6 +4,18 @@ import type { PackageEcosystem } from './config';
 import type { DependabotExistingPrDependency } from './job';
 import { isDependencyRemoved } from './utils';
 
+function getDependencyDigest(dependencies: DependabotExistingPrDependency[]): string {
+  return crypto
+    .createHash('md5')
+    .update(
+      dependencies
+        .map((d) => `${d['dependency-name']}-${isDependencyRemoved(d) ? 'removed' : (d['dependency-version'] ?? '')}`)
+        .join(','),
+    )
+    .digest('hex')
+    .substring(0, 10);
+}
+
 export function getBranchNameForUpdate({
   packageEcosystem,
   targetBranchName,
@@ -41,16 +53,7 @@ export function getBranchNameForUpdate({
   if (branchNameMightBeTooLong) {
     // Group/multi dependency update
     // e.g. dependabot/nuget/main/microsoft-3b49c54d9e
-    const dependencyDigest = crypto
-      .createHash('md5')
-      .update(
-        dependencies
-          .map((d) => `${d['dependency-name']}-${isDependencyRemoved(d) ? 'removed' : (d['dependency-version'] ?? '')}`)
-          .join(','),
-      )
-      .digest('hex')
-      .substring(0, 10);
-    branchName = `${dependencyGroupName || 'multi'}-${dependencyDigest}`;
+    branchName = `${dependencyGroupName || 'multi'}-${getDependencyDigest(dependencies)}`;
   } else {
     // Single dependency update
     // e.g. dependabot/nuget/main/Microsoft.Extensions.Logging-1.0.0
@@ -79,6 +82,18 @@ export function getBranchNameForUpdate({
     ],
     separator,
   );
+}
+
+export function getBranchNameForMultiEcosystemGroup({
+  groupname,
+  dependencies,
+  separator = '-',
+}: {
+  groupname: string;
+  dependencies: DependabotExistingPrDependency[];
+  separator?: string;
+}): string {
+  return sanitizeRef(['dependabot', `${groupname}-${getDependencyDigest(dependencies)}`], separator);
 }
 
 export function sanitizeRef(refParts: (string | undefined)[], separator: string): string {

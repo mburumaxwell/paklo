@@ -5,10 +5,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   type AzdoPrExtractedWithProperties,
   type AzureDevOpsClientWrapper,
+  PR_DESCRIPTION_MAX_LENGTH,
   PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
+  PR_PROPERTY_DEPENDABOT_MULTI_ECOSYSTEM_GROUP_NAME,
   PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER,
+  PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGERS,
 } from '@/azure/client';
-import type { DependabotConfig, DependabotJobBuilderOutput, DependabotUpdate } from '@/dependabot';
+import type { DependabotConfig, DependabotJobBuilderOutput, DependabotUpdate, ExecutionUnit } from '@/dependabot';
 
 import { extractRepositoryUrl } from '../url-parts';
 import { AzureLocalDependabotServer, type AzureLocalDependabotServerOptions } from './server';
@@ -69,6 +72,15 @@ describe('AzureLocalDependabotServer', () => {
   describe('handle', () => {
     let jobBuilderOutput: DependabotJobBuilderOutput;
     let update: DependabotUpdate;
+
+    function makeMultiEcosystemExecutionUnit(updates: DependabotUpdate[]): ExecutionUnit {
+      return {
+        kind: 'multi-ecosystem',
+        groupname: 'infrastructure',
+        group: options.config['multi-ecosystem-groups']!.infrastructure!,
+        updates,
+      };
+    }
 
     beforeEach(() => {
       vi.clearAllMocks();
@@ -255,7 +267,7 @@ describe('AzureLocalDependabotServer', () => {
       expect(approverClient!.approvePullRequest).toHaveBeenCalled();
     });
 
-    it('should use merged multi-ecosystem group settings when creating a pull request', async () => {
+    it('should use merged multi-ecosystem group settings when finalizing a pull request', async () => {
       options.config = {
         'version': 2,
         'multi-ecosystem-groups': {
@@ -282,8 +294,9 @@ describe('AzureLocalDependabotServer', () => {
       server = new AzureLocalDependabotServer(options);
       server.add({
         id: '1',
+        unit: makeMultiEcosystemExecutionUnit([update]),
         update,
-        job: jobBuilderOutput.job,
+        job: { ...jobBuilderOutput.job, 'package-manager': 'docker', 'multi-ecosystem-update': true },
         jobToken: 'test-token',
         credentialsToken: 'test-creds-token',
         credentials: jobBuilderOutput.credentials,
@@ -305,6 +318,11 @@ describe('AzureLocalDependabotServer', () => {
       });
 
       expect(result).toEqual(true);
+      expect(authorClient.createPullRequest).not.toHaveBeenCalled();
+
+      const finalized = await server.finalizeCreateRequests(makeMultiEcosystemExecutionUnit([update]));
+
+      expect(finalized).toEqual({ success: true, affectedPrs: [11] });
       expect(authorClient.getDefaultBranch).not.toHaveBeenCalled();
       expect(authorClient.createPullRequest).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -312,11 +330,323 @@ describe('AzureLocalDependabotServer', () => {
           assignees: ['@platform-team', '@docker-admin'],
           labels: ['infrastructure', 'docker'],
           workItems: ['42'],
+          title: 'chore(deps): Bump the "infrastructure" group with 1 updates across multiple ecosystems',
           source: expect.objectContaining({
-            branch: expect.stringContaining('dependabot-docker-release'),
+            branch: expect.stringMatching(/^dependabot-infrastructure-[a-f0-9]{10}$/),
           }),
         }),
       );
+    });
+
+    it('should aggregate multi-ecosystem create requests by execution unit', async () => {
+      options.config = {
+        'version': 2,
+        'multi-ecosystem-groups': {
+          infrastructure: {
+            schedule: { interval: 'weekly' },
+          },
+        },
+        'updates': [],
+      } as unknown as DependabotConfig;
+
+      const dockerUpdate = {
+        'package-ecosystem': 'docker',
+        'directory': '/',
+        'patterns': ['*'],
+        'multi-ecosystem-group': 'infrastructure',
+      } as DependabotUpdate;
+      const terraformUpdate = {
+        'package-ecosystem': 'terraform',
+        'directory': '/',
+        'patterns': ['*'],
+        'multi-ecosystem-group': 'infrastructure',
+      } as DependabotUpdate;
+
+      server = new AzureLocalDependabotServer(options);
+      server.add({
+        id: 'docker-job',
+        unit: makeMultiEcosystemExecutionUnit([dockerUpdate, terraformUpdate]),
+        update: dockerUpdate,
+        job: {
+          ...jobBuilderOutput.job,
+          'id': 'docker-job',
+          'package-manager': 'docker',
+          'multi-ecosystem-update': true,
+        },
+        jobToken: 'test-token',
+        credentialsToken: 'test-creds-token',
+        credentials: jobBuilderOutput.credentials,
+      });
+      server.add({
+        id: 'terraform-job',
+        unit: makeMultiEcosystemExecutionUnit([dockerUpdate, terraformUpdate]),
+        update: terraformUpdate,
+        job: {
+          ...jobBuilderOutput.job,
+          'id': 'terraform-job',
+          'package-manager': 'terraform',
+          'multi-ecosystem-update': true,
+        },
+        jobToken: 'test-token-2',
+        credentialsToken: 'test-creds-token-2',
+        credentials: jobBuilderOutput.credentials,
+      });
+
+      vi.mocked(authorClient.createPullRequest).mockResolvedValue(11);
+      vi.mocked(authorClient.getDefaultBranch).mockResolvedValue('main');
+
+      await (server as any).handle('docker-job', {
+        type: 'create_pull_request',
+        data: {
+          'base-commit-sha': '1234abcd',
+          'commit-message': 'Update docker dependency',
+          'pr-body': 'Docker body',
+          'pr-title': 'Docker PR',
+          'updated-dependency-files': [],
+          'dependencies': [{ name: 'nginx', version: '1.0.0', requirements: [], directory: '/' }],
+          'dependency-group': { name: 'infrastructure' },
+        },
+      });
+      await (server as any).handle('terraform-job', {
+        type: 'create_pull_request',
+        data: {
+          'base-commit-sha': '1234abcd',
+          'commit-message': 'Update terraform dependency',
+          'pr-body': 'Terraform body',
+          'pr-title': 'Terraform PR',
+          'updated-dependency-files': [],
+          'dependencies': [{ name: 'hashicorp/aws', version: '1.0.0', requirements: [], directory: '/' }],
+          'dependency-group': { name: 'infrastructure' },
+        },
+      });
+
+      expect(server.createRequests('infrastructure')).toMatchObject([
+        { id: 'docker-job', packageManager: 'docker', update: dockerUpdate },
+        { id: 'terraform-job', packageManager: 'terraform', update: terraformUpdate },
+      ]);
+      expect(authorClient.createPullRequest).not.toHaveBeenCalled();
+
+      const finalized = await server.finalizeCreateRequests(
+        makeMultiEcosystemExecutionUnit([dockerUpdate, terraformUpdate]),
+      );
+
+      expect(finalized).toEqual({ success: true, affectedPrs: [11] });
+      expect(authorClient.createPullRequest).toHaveBeenCalledTimes(1);
+      expect(authorClient.createPullRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: 'chore(deps): Bump the "infrastructure" group with 2 updates across multiple ecosystems',
+          commitMessage: 'Update docker dependency',
+          description: 'Docker body\n\nTerraform body',
+          source: expect.objectContaining({
+            branch: expect.stringMatching(/^dependabot-infrastructure-[a-f0-9]{10}$/),
+          }),
+          properties: expect.arrayContaining([
+            { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGERS, value: JSON.stringify(['docker', 'terraform']) },
+            { name: PR_PROPERTY_DEPENDABOT_MULTI_ECOSYSTEM_GROUP_NAME, value: 'infrastructure' },
+          ]),
+        }),
+      );
+    });
+
+    it('should ignore unrelated ecosystem PRs when enforcing the grouped open pull requests limit', async () => {
+      options.config = {
+        'version': 2,
+        'multi-ecosystem-groups': {
+          infrastructure: {
+            schedule: { interval: 'weekly' },
+          },
+        },
+        'updates': [],
+      } as unknown as DependabotConfig;
+
+      const dockerUpdate = {
+        'package-ecosystem': 'docker',
+        'directory': '/',
+        'patterns': ['*'],
+        'multi-ecosystem-group': 'infrastructure',
+        'open-pull-requests-limit': 1,
+      } as DependabotUpdate;
+      const terraformUpdate = {
+        'package-ecosystem': 'terraform',
+        'directory': '/',
+        'patterns': ['*'],
+        'multi-ecosystem-group': 'infrastructure',
+        'open-pull-requests-limit': 1,
+      } as DependabotUpdate;
+
+      existingPullRequests = [
+        {
+          pullRequestId: 99,
+          properties: [
+            { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: 'docker' },
+            {
+              name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
+              value: JSON.stringify({
+                dependencies: [{ 'dependency-name': 'busybox', 'dependency-version': '1.36.0', 'directory': '/' }],
+              }),
+            },
+          ],
+        },
+      ];
+      options.existingPullRequests = existingPullRequests;
+      server = new AzureLocalDependabotServer(options);
+
+      server.add({
+        id: 'docker-job',
+        unit: makeMultiEcosystemExecutionUnit([dockerUpdate, terraformUpdate]),
+        update: dockerUpdate,
+        job: {
+          ...jobBuilderOutput.job,
+          'id': 'docker-job',
+          'package-manager': 'docker',
+          'multi-ecosystem-update': true,
+        },
+        jobToken: 'test-token',
+        credentialsToken: 'test-creds-token',
+        credentials: jobBuilderOutput.credentials,
+      });
+      server.add({
+        id: 'terraform-job',
+        unit: makeMultiEcosystemExecutionUnit([dockerUpdate, terraformUpdate]),
+        update: terraformUpdate,
+        job: {
+          ...jobBuilderOutput.job,
+          'id': 'terraform-job',
+          'package-manager': 'terraform',
+          'multi-ecosystem-update': true,
+        },
+        jobToken: 'test-token-2',
+        credentialsToken: 'test-creds-token-2',
+        credentials: jobBuilderOutput.credentials,
+      });
+
+      vi.mocked(authorClient.createPullRequest).mockResolvedValue(11);
+      vi.mocked(authorClient.getDefaultBranch).mockResolvedValue('main');
+
+      await (server as any).handle('docker-job', {
+        type: 'create_pull_request',
+        data: {
+          'base-commit-sha': '1234abcd',
+          'commit-message': 'Update docker dependency',
+          'pr-body': 'Docker body',
+          'pr-title': 'Docker PR',
+          'updated-dependency-files': [],
+          'dependencies': [{ name: 'nginx', version: '1.0.0', requirements: [], directory: '/' }],
+          'dependency-group': { name: 'infrastructure' },
+        },
+      });
+      await (server as any).handle('terraform-job', {
+        type: 'create_pull_request',
+        data: {
+          'base-commit-sha': '1234abcd',
+          'commit-message': 'Update terraform dependency',
+          'pr-body': 'Terraform body',
+          'pr-title': 'Terraform PR',
+          'updated-dependency-files': [],
+          'dependencies': [{ name: 'hashicorp/aws', version: '1.0.0', requirements: [], directory: '/' }],
+          'dependency-group': { name: 'infrastructure' },
+        },
+      });
+
+      const finalized = await server.finalizeCreateRequests(
+        makeMultiEcosystemExecutionUnit([dockerUpdate, terraformUpdate]),
+      );
+
+      expect(finalized).toEqual({ success: true, affectedPrs: [11] });
+      expect(authorClient.createPullRequest).toHaveBeenCalledTimes(1);
+    });
+
+    it('should truncate multi-ecosystem pull request descriptions to the Azure limit', async () => {
+      options.config = {
+        'version': 2,
+        'multi-ecosystem-groups': {
+          infrastructure: {
+            schedule: { interval: 'weekly' },
+          },
+        },
+        'updates': [],
+      } as unknown as DependabotConfig;
+
+      const dockerUpdate = {
+        'package-ecosystem': 'docker',
+        'directory': '/',
+        'patterns': ['*'],
+        'multi-ecosystem-group': 'infrastructure',
+      } as DependabotUpdate;
+      const terraformUpdate = {
+        'package-ecosystem': 'terraform',
+        'directory': '/',
+        'patterns': ['*'],
+        'multi-ecosystem-group': 'infrastructure',
+      } as DependabotUpdate;
+
+      server = new AzureLocalDependabotServer(options);
+      server.add({
+        id: 'docker-job',
+        unit: makeMultiEcosystemExecutionUnit([dockerUpdate, terraformUpdate]),
+        update: dockerUpdate,
+        job: {
+          ...jobBuilderOutput.job,
+          'id': 'docker-job',
+          'package-manager': 'docker',
+          'multi-ecosystem-update': true,
+        },
+        jobToken: 'test-token',
+        credentialsToken: 'test-creds-token',
+        credentials: jobBuilderOutput.credentials,
+      });
+      server.add({
+        id: 'terraform-job',
+        unit: makeMultiEcosystemExecutionUnit([dockerUpdate, terraformUpdate]),
+        update: terraformUpdate,
+        job: {
+          ...jobBuilderOutput.job,
+          'id': 'terraform-job',
+          'package-manager': 'terraform',
+          'multi-ecosystem-update': true,
+        },
+        jobToken: 'test-token-2',
+        credentialsToken: 'test-creds-token-2',
+        credentials: jobBuilderOutput.credentials,
+      });
+
+      vi.mocked(authorClient.createPullRequest).mockResolvedValue(11);
+      vi.mocked(authorClient.getDefaultBranch).mockResolvedValue('main');
+
+      await (server as any).handle('docker-job', {
+        type: 'create_pull_request',
+        data: {
+          'base-commit-sha': '1234abcd',
+          'commit-message': 'Update docker dependency',
+          'pr-body': 'A'.repeat(3500),
+          'pr-title': 'Docker PR',
+          'updated-dependency-files': [],
+          'dependencies': [{ name: 'nginx', version: '1.0.0', requirements: [], directory: '/' }],
+          'dependency-group': { name: 'infrastructure' },
+        },
+      });
+      await (server as any).handle('terraform-job', {
+        type: 'create_pull_request',
+        data: {
+          'base-commit-sha': '1234abcd',
+          'commit-message': 'Update terraform dependency',
+          'pr-body': 'B'.repeat(3500),
+          'pr-title': 'Terraform PR',
+          'updated-dependency-files': [],
+          'dependencies': [{ name: 'hashicorp/aws', version: '1.0.0', requirements: [], directory: '/' }],
+          'dependency-group': { name: 'infrastructure' },
+        },
+      });
+
+      await server.finalizeCreateRequests(makeMultiEcosystemExecutionUnit([dockerUpdate, terraformUpdate]));
+
+      expect(authorClient.createPullRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          description: expect.any(String),
+        }),
+      );
+      const description = vi.mocked(authorClient.createPullRequest).mock.calls[0]![0].description!;
+      expect(description.length).toBe(PR_DESCRIPTION_MAX_LENGTH);
     });
 
     it('should skip processing "update_pull_request" if "dryRun" is true', async () => {
