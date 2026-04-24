@@ -208,6 +208,12 @@ export class AzureLocalJobsRunner extends LocalJobsRunner {
 
     const results: RunJobsResult = [];
     const { units } = createExecutionPlan(config, updates);
+    logger.info(`Planned ${units.length} execution unit(s) from ${updates.length} update(s)`);
+    for (const unit of units) {
+      if (unit.kind === 'multi-ecosystem') {
+        logger.info(`Planned multi-ecosystem execution unit '${unit.groupname}' with ${unit.updates.length} update(s)`);
+      }
+    }
 
     function makeRandomJobId(): string {
       const array = new Uint32Array(1);
