@@ -53,6 +53,9 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
     const { groupname } = unit;
     const pending = this.createRequests(groupname);
     if (!pending?.length) return undefined;
+    logger.info(
+      `Finalizing multi-ecosystem execution unit '${groupname}' from ${pending.length} queued create request(s)`,
+    );
 
     const {
       url,
@@ -101,6 +104,9 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
 
     const dependencyGroupName = first.request['dependency-group']?.name || groupname;
     if (dryRun) {
+      logger.warn(
+        `Skipping consolidated pull request creation of '${dependencyGroupName}' as 'dryRun' is set to 'true'`,
+      );
       return {
         success: true,
         message: `Skipping pull request creation of '${dependencyGroupName}' as 'dryRun' is set to 'true'`,
@@ -116,6 +122,9 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
         .map((pr) => pr.pullRequestId),
     ).size;
     if (openPullRequestsLimit > 0 && existingPullRequestsCount >= openPullRequestsLimit) {
+      logger.warn(
+        `Skipping consolidated pull request creation of '${dependencyGroupName}' as the open pull requests limit (${openPullRequestsLimit}) has been reached`,
+      );
       return {
         success: true,
         message: `Skipping pull request creation of '${dependencyGroupName}' as the open pull requests limit (${openPullRequestsLimit}) has been reached`,
@@ -133,6 +142,7 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
 
     const existingBranch = existingBranchNames?.find((branch) => sourceBranch === branch) || [];
     if (existingBranch.length) {
+      logger.error(`Unable to create consolidated pull request as source branch '${sourceBranch}' already exists`);
       return {
         success: false,
         message: `Source branch '${sourceBranch}' already exists`,
@@ -151,6 +161,7 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
       dependencies: allDependencies,
       maxDescriptionLength: PR_DESCRIPTION_MAX_LENGTH,
     });
+    logger.info(`Creating consolidated pull request for multi-ecosystem group '${dependencyGroupName}'`);
 
     const newPullRequestId = await authorClient.createPullRequest({
       project,
@@ -187,6 +198,7 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
     });
 
     if (!newPullRequestId) {
+      logger.error(`Failed to create consolidated pull request for multi-ecosystem group '${dependencyGroupName}'`);
       return { success: false, message: 'Failed to create multi-ecosystem pull request', affectedPrs: [] };
     }
 
@@ -233,6 +245,7 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
     if (request.type === 'create_pull_request' && job['multi-ecosystem-update'] && unit?.kind === 'multi-ecosystem') {
       // Multi-ecosystem PR creation is deferred until all member jobs in the execution unit have finished.
       this.queueCreateRequest(id, request.data);
+      logger.info(`Queued create request for multi-ecosystem execution unit '${unit.groupname}' from job '${id}'`);
       return true;
     }
 

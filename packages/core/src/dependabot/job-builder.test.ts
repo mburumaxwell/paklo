@@ -11,8 +11,8 @@ import {
   DependabotJobBuilder,
   type DependabotSourceInfo,
   mapAllowedUpdatesFromDependabotConfigToJobConfig,
+  mapDependencyGroupsToJobConfig,
   mapExperiments,
-  mapGroupsFromDependabotConfigToJobConfig,
   mapIgnoreConditionsFromDependabotConfigToJobConfig,
   mapSourceFromDependabotConfigToJobConfig,
 } from './job-builder';
@@ -232,14 +232,14 @@ describe('mapIgnoreConditionsFromDependabotConfigToJobConfig', () => {
   });
 });
 
-describe('mapGroupsFromDependabotConfigToJobConfig', () => {
+describe('mapDependencyGroupsToJobConfig', () => {
   it('should return an empty array if dependencyGroups is undefined', () => {
-    const result = mapGroupsFromDependabotConfigToJobConfig(undefined);
+    const result = mapDependencyGroupsToJobConfig({} as DependabotUpdate);
     expect(result).toEqual([]);
   });
 
   it('should return an empty array if dependencyGroups is an empty object', () => {
-    const result = mapGroupsFromDependabotConfigToJobConfig({});
+    const result = mapDependencyGroupsToJobConfig({ groups: {} } as DependabotUpdate);
     expect(result).toEqual([]);
   });
 
@@ -251,7 +251,7 @@ describe('mapGroupsFromDependabotConfigToJobConfig', () => {
       },
     };
 
-    const result = mapGroupsFromDependabotConfigToJobConfig(dependencyGroups);
+    const result = mapDependencyGroupsToJobConfig({ groups: dependencyGroups } as DependabotUpdate);
     expect(result).toHaveLength(1);
   });
 
@@ -263,7 +263,7 @@ describe('mapGroupsFromDependabotConfigToJobConfig', () => {
       },
     };
 
-    const result = mapGroupsFromDependabotConfigToJobConfig(dependencyGroups);
+    const result = mapDependencyGroupsToJobConfig({ groups: dependencyGroups } as DependabotUpdate);
     expect(result).toHaveLength(1);
   });
 
@@ -279,7 +279,7 @@ describe('mapGroupsFromDependabotConfigToJobConfig', () => {
       },
     };
 
-    const result = mapGroupsFromDependabotConfigToJobConfig(dependencyGroups);
+    const result = mapDependencyGroupsToJobConfig({ groups: dependencyGroups } as DependabotUpdate);
 
     expect(result).toEqual([
       {
@@ -307,7 +307,7 @@ describe('mapGroupsFromDependabotConfigToJobConfig', () => {
       },
     };
 
-    const result = mapGroupsFromDependabotConfigToJobConfig(dependencyGroups);
+    const result = mapDependencyGroupsToJobConfig({ groups: dependencyGroups } as DependabotUpdate);
 
     expect(result.map((g) => g.name)).toEqual(['production-dependencies', 'dev-deps']);
   });
@@ -317,9 +317,20 @@ describe('mapGroupsFromDependabotConfigToJobConfig', () => {
       group: {},
     };
 
-    const result = mapGroupsFromDependabotConfigToJobConfig(dependencyGroups);
+    const result = mapDependencyGroupsToJobConfig({ groups: dependencyGroups } as DependabotUpdate);
 
     expect(result).toEqual([{ name: 'group', rules: { patterns: ['*'] } }]);
+  });
+
+  it('should create a synthetic group for multi-ecosystem jobs', () => {
+    const result = mapDependencyGroupsToJobConfig({
+      'multi-ecosystem-group': 'infrastructure',
+      'patterns': ['nginx', 'node'],
+    } as DependabotUpdate);
+
+    expect(result).toEqual([
+      { name: 'infrastructure', rules: { patterns: ['nginx', 'node'] } },
+    ]);
   });
 });
 

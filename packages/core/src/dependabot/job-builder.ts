@@ -3,7 +3,6 @@ import type { SecurityVulnerability } from '@/github';
 import {
   type DependabotAllowCondition,
   type DependabotConfig,
-  type DependabotGroup,
   type DependabotIgnoreCondition,
   type DependabotRegistry,
   type DependabotUpdate,
@@ -184,7 +183,7 @@ export class DependabotJobBuilder {
         'package-manager': this.packageManager,
         'updating-a-pull-request': updatingPullRequest || false,
         'dependency-group-to-refresh': updateDependencyGroupName,
-        'dependency-groups': mapGroupsFromDependabotConfigToJobConfig(this.update.groups),
+        'dependency-groups': mapDependencyGroupsToJobConfig(this.update),
         'dependencies': updateDependencyNames,
         'allowed-updates': mapAllowedUpdatesFromDependabotConfigToJobConfig(this.update.allow, securityOnlyUpdate),
         'ignore-conditions': mapIgnoreConditionsFromDependabotConfigToJobConfig(this.update.ignore),
@@ -296,9 +295,18 @@ export function mapVersionStrategyToRequirementsUpdateStrategy(strategy?: Versio
   }
 }
 
-export function mapGroupsFromDependabotConfigToJobConfig(
-  dependencyGroups?: Record<string, DependabotGroup | null>,
-): DependabotGroupJob[] {
+export function mapDependencyGroupsToJobConfig(update: DependabotUpdate): DependabotGroupJob[] {
+  const multiEcosystemGroupName = update['multi-ecosystem-group'];
+  if (multiEcosystemGroupName) {
+    return [
+      {
+        name: multiEcosystemGroupName,
+        rules: { patterns: update.patterns?.length ? update.patterns : ['*'] },
+      },
+    ];
+  }
+
+  const dependencyGroups = update.groups;
   if (!dependencyGroups || !Object.keys(dependencyGroups).length) return [];
   return Object.keys(dependencyGroups)
     .filter((name) => dependencyGroups[name])
