@@ -2,6 +2,7 @@ import type { Octokit } from 'octokit';
 import * as semver from 'semver';
 import { z } from 'zod';
 
+import type { DependabotPackageManager } from '@/dependabot';
 import { logger } from '@/logger';
 
 import { createGitHubClient } from './client';
@@ -159,7 +160,7 @@ const GitHubSecurityVulnerabilitiesResponseSchema = z.object({
 type GitHubSecurityVulnerabilitiesResponse = z.infer<typeof GitHubSecurityVulnerabilitiesResponseSchema>;
 
 export function getGhsaPackageEcosystemFromDependabotPackageManager(
-  dependabotPackageManager: string,
+  dependabotPackageManager: DependabotPackageManager,
 ): PackageEcosystem {
   switch (dependabotPackageManager) {
     case 'composer':
@@ -172,9 +173,15 @@ export function getGhsaPackageEcosystemFromDependabotPackageManager(
       return 'GO';
     case 'maven':
       return 'MAVEN';
+    case 'gradle':
+      return 'MAVEN';
     case 'npm_and_yarn':
       return 'NPM';
+    case 'bun':
+      return 'NPM';
     case 'nuget':
+      return 'NUGET';
+    case 'dotnet_sdk':
       return 'NUGET';
     case 'pip':
       return 'PIP';
@@ -182,6 +189,8 @@ export function getGhsaPackageEcosystemFromDependabotPackageManager(
       return 'PIP';
     case 'pub':
       return 'PUB';
+    case 'hex':
+      return 'ERLANG';
     case 'bundler':
       return 'RUBYGEMS';
     case 'cargo':
