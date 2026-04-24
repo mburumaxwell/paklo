@@ -76,6 +76,7 @@ describe('AzureLocalJobsRunner', () => {
     clear: ReturnType<typeof vi.fn>;
     requests: ReturnType<typeof vi.fn>;
     allAffectedPrs: ReturnType<typeof vi.fn>;
+    finalizeUnit: ReturnType<typeof vi.fn>;
   };
 
   beforeEach(() => {
@@ -141,6 +142,7 @@ describe('AzureLocalJobsRunner', () => {
       clear: vi.fn(),
       requests: vi.fn().mockReturnValue([]),
       allAffectedPrs: vi.fn().mockReturnValue([]),
+      finalizeUnit: vi.fn().mockResolvedValue(undefined),
     };
 
     jobsRunner = new TestableAzureLocalJobsRunner(options);
@@ -507,6 +509,116 @@ describe('AzureLocalJobsRunner', () => {
         affectedPrs: [],
       });
       expect(runJob).toHaveBeenCalledTimes(2);
+    });
+
+    it('should keep multi-ecosystem member updates in config order', async () => {
+      vi.mocked(runJob).mockResolvedValue({ success: true, message: 'Job completed successfully' });
+
+      const docker = {
+        'package-ecosystem': 'docker',
+        'directory': '/',
+        'open-pull-requests-limit': 5,
+        'multi-ecosystem-group': 'infrastructure',
+        'patterns': ['*'],
+      } as DependabotUpdate;
+      const terraform = {
+        'package-ecosystem': 'terraform',
+        'directory': '/',
+        'open-pull-requests-limit': 5,
+        'multi-ecosystem-group': 'infrastructure',
+        'patterns': ['*'],
+      } as DependabotUpdate;
+      options.config = {
+        ...options.config,
+        'multi-ecosystem-groups': {
+          infrastructure: {
+            schedule: { interval: 'weekly', day: 'monday', timezone: 'Etc/UTC' },
+          },
+        },
+        'updates': [docker, terraform],
+      } as DependabotConfig;
+
+      jobsRunner = new TestableAzureLocalJobsRunner(options);
+      await jobsRunner.testPerformUpdates(
+        mockServer,
+        options.config.updates,
+        'update',
+        [],
+        'http://localhost:3000/api',
+        'http://localhost:3000/api',
+      );
+
+      expect(mockServer.add.mock.calls[0]![0].update).toBe(docker);
+      expect(mockServer.add.mock.calls[1]![0].update).toBe(terraform);
+      expect(mockServer.add.mock.calls[0]![0].unit).toEqual({
+        kind: 'multi-ecosystem',
+        groupname: 'infrastructure',
+        group: options.config['multi-ecosystem-groups']!.infrastructure,
+        updates: [docker, terraform],
+      });
+      expect(mockServer.add.mock.calls[1]![0].unit).toEqual({
+        kind: 'multi-ecosystem',
+        groupname: 'infrastructure',
+        group: options.config['multi-ecosystem-groups']!.infrastructure,
+        updates: [docker, terraform],
+      });
+      expect(mockServer.finalizeUnit).toHaveBeenCalledWith({
+        kind: 'multi-ecosystem',
+        groupname: 'infrastructure',
+        group: options.config['multi-ecosystem-groups']!.infrastructure,
+        updates: [docker, terraform],
+      });
+      expect(runJob).toHaveBeenCalledTimes(2);
+    });
+
+    it('should add a finalization result for multi-ecosystem execution units', async () => {
+      vi.mocked(runJob).mockResolvedValue({ success: true, message: 'Job completed successfully' });
+      mockServer.finalizeUnit.mockResolvedValue({
+        success: true,
+        affectedPrs: [11],
+      });
+
+      options.config = {
+        ...options.config,
+        'multi-ecosystem-groups': {
+          infrastructure: {
+            schedule: { interval: 'weekly', day: 'monday', timezone: 'Etc/UTC' },
+          },
+        },
+        'updates': [
+          {
+            'package-ecosystem': 'docker',
+            'directory': '/',
+            'open-pull-requests-limit': 5,
+            'multi-ecosystem-group': 'infrastructure',
+            'patterns': ['*'],
+          } as DependabotUpdate,
+          {
+            'package-ecosystem': 'terraform',
+            'directory': '/',
+            'open-pull-requests-limit': 5,
+            'multi-ecosystem-group': 'infrastructure',
+            'patterns': ['*'],
+          } as DependabotUpdate,
+        ],
+      } as DependabotConfig;
+
+      jobsRunner = new TestableAzureLocalJobsRunner(options);
+      const result = await jobsRunner.testPerformUpdates(
+        mockServer,
+        options.config.updates,
+        'update',
+        [],
+        'http://localhost:3000/api',
+        'http://localhost:3000/api',
+      );
+
+      expect(result).toContainEqual({
+        id: 'multi-ecosystem:infrastructure',
+        success: true,
+        message: undefined,
+        affectedPrs: [11],
+      });
     });
 
     it('should return failure when no dependencies found for security updates', async () => {

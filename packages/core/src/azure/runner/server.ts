@@ -5,12 +5,15 @@ import {
   PR_DESCRIPTION_MAX_LENGTH,
   buildPullRequestProperties,
   getPullRequestChangedFiles,
+  getPullRequestDependencyGroupName,
   getPullRequestForDependencyNames,
   parsePullRequestProperties,
 } from '@/azure/client';
 import {
   type DependabotConfig,
   type DependabotRequest,
+  type ExecutionUnit,
+  getBranchNameForMultiEcosystemGroup,
   getBranchNameForUpdate,
   getEffectiveUpdateSettings,
   getPersistedPr,
@@ -18,7 +21,7 @@ import {
   getPullRequestDescription,
   shouldSupersede,
 } from '@/dependabot';
-import { LocalDependabotServer, type LocalDependabotServerOptions } from '@/local';
+import { type FinalizeCreateRequestsResult, LocalDependabotServer, type LocalDependabotServerOptions } from '@/local';
 import { logger } from '@/logger';
 
 import { type AzureDevOpsRepositoryUrl } from '../url-parts';
@@ -42,6 +45,160 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
   constructor(options: AzureLocalDependabotServerOptions) {
     super(options);
     this.options = options;
+  }
+
+  override async finalizeCreateRequests(unit: ExecutionUnit): Promise<FinalizeCreateRequestsResult | undefined> {
+    if (unit.kind !== 'multi-ecosystem') return undefined;
+
+    const { groupname } = unit;
+    const pending = this.createRequests(groupname);
+    if (!pending?.length) return undefined;
+
+    const {
+      url,
+      authorClient,
+      approverClient,
+      existingBranchNames,
+      existingPullRequests,
+      autoApprove,
+      mergeStrategy,
+      setAutoComplete,
+      autoCompleteIgnoreConfigIds,
+      author,
+      dryRun,
+      config,
+    } = this.options;
+    const { project, repository } = url;
+
+    const first = pending[0]!;
+    const allDependencies = pending.flatMap((entry) => entry.request.dependencies);
+    const allPersistedDependencies = pending.flatMap((entry) => getPersistedPr(entry.request).dependencies);
+    const changedFilesByPath = new Map<string, ReturnType<typeof getPullRequestChangedFiles>[number]>();
+    for (const entry of pending) {
+      for (const file of getPullRequestChangedFiles(entry.request)) {
+        changedFilesByPath.set(file.path, file);
+      }
+    }
+
+    const mergedSettings = pending.reduce(
+      (acc, entry) => {
+        const effective = getEffectiveUpdateSettings(config, entry.update);
+        acc.assignees = Array.from(new Set([...acc.assignees, ...(effective.assignees ?? [])]));
+        acc.labels = Array.from(new Set([...acc.labels, ...(effective.labels ?? [])]));
+        acc.milestone ??= effective.milestone;
+        acc['target-branch'] ??= effective['target-branch'];
+        acc['pull-request-branch-name'] ??= effective['pull-request-branch-name'];
+        return acc;
+      },
+      {
+        'assignees': [] as string[],
+        'labels': [] as string[],
+        'milestone': undefined as string | undefined,
+        'target-branch': undefined as string | undefined,
+        'pull-request-branch-name': undefined as { separator?: string } | undefined,
+      },
+    );
+
+    const dependencyGroupName = first.request['dependency-group']?.name || groupname;
+    if (dryRun) {
+      return {
+        success: true,
+        message: `Skipping pull request creation of '${dependencyGroupName}' as 'dryRun' is set to 'true'`,
+        affectedPrs: [],
+      };
+    }
+
+    const openPullRequestsLimit = Math.min(...pending.map((entry) => entry.update['open-pull-requests-limit']!));
+    const packageManagers = [...new Set(pending.map((entry) => entry.packageManager))];
+    const existingPullRequestsCount = new Set(
+      existingPullRequests
+        .filter((pr) => getPullRequestDependencyGroupName(pr) === dependencyGroupName)
+        .map((pr) => pr.pullRequestId),
+    ).size;
+    if (openPullRequestsLimit > 0 && existingPullRequestsCount >= openPullRequestsLimit) {
+      return {
+        success: true,
+        message: `Skipping pull request creation of '${dependencyGroupName}' as the open pull requests limit (${openPullRequestsLimit}) has been reached`,
+        affectedPrs: [],
+      };
+    }
+
+    const targetBranch =
+      mergedSettings['target-branch'] || (await authorClient.getDefaultBranch({ project, repository }));
+    const sourceBranch = getBranchNameForMultiEcosystemGroup({
+      groupname: dependencyGroupName,
+      dependencies: allPersistedDependencies,
+      separator: mergedSettings['pull-request-branch-name']?.separator ?? '-',
+    });
+
+    const existingBranch = existingBranchNames?.find((branch) => sourceBranch === branch) || [];
+    if (existingBranch.length) {
+      return {
+        success: false,
+        message: `Source branch '${sourceBranch}' already exists`,
+        affectedPrs: [],
+      };
+    }
+
+    const combinedTitle = `chore(deps): Bump the "${dependencyGroupName}" group with ${pending.length} updates across multiple ecosystems`;
+    const combinedBody = pending
+      .map((entry) => entry.request['pr-body']?.trim())
+      .filter((body) => body && body.length > 0)
+      .join('\n\n');
+    const description = getPullRequestDescription({
+      packageManager: first.packageManager,
+      body: combinedBody,
+      dependencies: allDependencies,
+      maxDescriptionLength: PR_DESCRIPTION_MAX_LENGTH,
+    });
+
+    const newPullRequestId = await authorClient.createPullRequest({
+      project,
+      repository,
+      source: {
+        commit: first.request['base-commit-sha'],
+        branch: sourceBranch,
+      },
+      target: {
+        branch: targetBranch!,
+      },
+      author,
+      title: combinedTitle,
+      description,
+      commitMessage: first.request['commit-message'],
+      autoComplete: setAutoComplete
+        ? {
+            ignorePolicyConfigIds: autoCompleteIgnoreConfigIds,
+            mergeStrategy: mergeStrategy ?? 'squash',
+          }
+        : undefined,
+      assignees: mergedSettings.assignees,
+      labels: mergedSettings.labels.map((label) => label?.trim()),
+      workItems: mergedSettings.milestone ? [mergedSettings.milestone] : [],
+      changes: Array.from(changedFilesByPath.values()),
+      properties: buildPullRequestProperties(
+        packageManagers,
+        {
+          'dependency-group-name': dependencyGroupName,
+          'dependencies': allPersistedDependencies,
+        },
+        groupname,
+      ),
+    });
+
+    if (!newPullRequestId) {
+      return { success: false, message: 'Failed to create multi-ecosystem pull request', affectedPrs: [] };
+    }
+
+    if (autoApprove && approverClient) {
+      await approverClient.approvePullRequest({
+        project,
+        repository,
+        pullRequestId: newPullRequestId,
+      });
+    }
+
+    return { success: true, affectedPrs: [newPullRequestId] };
   }
 
   protected override async handle(id: string, request: DependabotRequest): Promise<boolean> {
@@ -72,8 +229,14 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
       logger.error(`No job found for ID '${id}', cannot process request of type '${type}'`);
       return false;
     }
-    const { 'package-manager': packageManager } = job;
+    const unit = this.unit(id);
+    if (request.type === 'create_pull_request' && job['multi-ecosystem-update'] && unit?.kind === 'multi-ecosystem') {
+      // Multi-ecosystem PR creation is deferred until all member jobs in the execution unit have finished.
+      this.queueCreateRequest(id, request.data);
+      return true;
+    }
 
+    const { 'package-manager': packageManager } = job;
     const update = this.update(id)!; // exists because job exists
     const effective = getEffectiveUpdateSettings(config, update);
     const { project, repository } = url;

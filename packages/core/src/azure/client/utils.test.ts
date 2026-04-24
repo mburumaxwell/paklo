@@ -2,10 +2,16 @@ import { describe, expect, it } from 'vitest';
 
 import { type DependabotCreatePullRequest, DependabotPersistedPrSchema, getPersistedPr } from '@/dependabot';
 
-import { PR_PROPERTY_DEPENDABOT_DEPENDENCIES, PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER } from './constants';
+import {
+  PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
+  PR_PROPERTY_DEPENDABOT_MULTI_ECOSYSTEM_GROUP_NAME,
+  PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER,
+  PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGERS,
+} from './constants';
 import type { AzdoPrExtractedWithProperties } from './types';
 import {
   buildPullRequestProperties,
+  getPullRequestDependencyGroupName,
   getPullRequestForDependencyNames,
   parsePullRequestProperties,
   parsePullRequestProps,
@@ -117,6 +123,45 @@ describe('parsePullRequestProperties', () => {
     expect(result[1]!.dependencies[0]!['dependency-name']).toBe('express');
   });
 
+  it('matches a pull request persisted under multiple package managers', () => {
+    const prs: AzdoPrExtractedWithProperties[] = [
+      {
+        pullRequestId: 1,
+        properties: [
+          { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: 'docker' },
+          { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGERS, value: JSON.stringify(['docker', 'terraform']) },
+          {
+            name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
+            value: JSON.stringify({
+              'dependency-group-name': 'infrastructure',
+              'dependencies': [{ 'dependency-name': 'nginx' }, { 'dependency-name': 'hashicorp/aws' }],
+            }),
+          },
+        ],
+      },
+    ];
+
+    expect(parsePullRequestProperties(prs, 'docker')).toHaveLength(1);
+    expect(parsePullRequestProperties(prs, 'terraform')).toHaveLength(1);
+  });
+
+  it('falls back to the legacy single package-manager property when needed', () => {
+    const prs: AzdoPrExtractedWithProperties[] = [
+      {
+        pullRequestId: 1,
+        properties: [
+          { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: 'docker' },
+          {
+            name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
+            value: JSON.stringify({ dependencies: [{ 'dependency-name': 'nginx' }] }),
+          },
+        ],
+      },
+    ];
+
+    expect(parsePullRequestProperties(prs, 'docker')).toHaveLength(1);
+  });
+
   it('returns empty array when no matching package manager found', () => {
     const prs: AzdoPrExtractedWithProperties[] = [
       {
@@ -134,6 +179,45 @@ describe('parsePullRequestProperties', () => {
     const result = parsePullRequestProperties(prs, 'nuget');
 
     expect(result).toHaveLength(0);
+  });
+});
+
+describe('getPullRequestDependencyGroupName', () => {
+  it('returns the persisted dependency group name when present', () => {
+    const pr: AzdoPrExtractedWithProperties = {
+      pullRequestId: 1,
+      properties: [
+        { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: 'docker' },
+        {
+          name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
+          value: JSON.stringify({
+            'dependency-group-name': 'infrastructure',
+            'dependencies': [{ 'dependency-name': 'nginx' }],
+          }),
+        },
+      ],
+    };
+
+    expect(getPullRequestDependencyGroupName(pr)).toBe('infrastructure');
+  });
+
+  it('prefers the explicit multi-ecosystem group name when present', () => {
+    const pr: AzdoPrExtractedWithProperties = {
+      pullRequestId: 1,
+      properties: [
+        { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: 'docker' },
+        { name: PR_PROPERTY_DEPENDABOT_MULTI_ECOSYSTEM_GROUP_NAME, value: 'infrastructure' },
+        {
+          name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
+          value: JSON.stringify({
+            'dependency-group-name': 'some-other-group',
+            'dependencies': [{ 'dependency-name': 'nginx' }],
+          }),
+        },
+      ],
+    };
+
+    expect(getPullRequestDependencyGroupName(pr)).toBe('infrastructure');
   });
 });
 
@@ -383,5 +467,35 @@ describe('getPersistedPr and buildPullRequestProperties', () => {
       throw new Error('Expected dependency-group-name to be defined');
     }
     expect(parsed['dependency-group-name']!).toBe('production');
+  });
+
+  it('writes one package-manager property for each persisted ecosystem', () => {
+    const properties = buildPullRequestProperties(
+      ['docker', 'terraform'],
+      {
+        'dependency-group-name': 'infrastructure',
+        'dependencies': [],
+      },
+      'infrastructure',
+    );
+
+    expect(properties.find((property) => property.name === PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGERS)?.value).toBe(
+      JSON.stringify(['docker', 'terraform']),
+    );
+    expect(
+      properties.find((property) => property.name === PR_PROPERTY_DEPENDABOT_MULTI_ECOSYSTEM_GROUP_NAME)?.value,
+    ).toBe('infrastructure');
+    expect(properties.find((property) => property.name === PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER)).toBeUndefined();
+  });
+
+  it('writes Dependabot.PackageManagers even when only one package manager is present', () => {
+    const properties = buildPullRequestProperties('docker', {
+      dependencies: [],
+    });
+
+    expect(properties.find((property) => property.name === PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGERS)?.value).toBe(
+      JSON.stringify(['docker']),
+    );
+    expect(properties.find((property) => property.name === PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER)).toBeUndefined();
   });
 });

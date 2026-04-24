@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getBranchNameForUpdate, sanitizeRef } from './branch-name';
+import { getBranchNameForMultiEcosystemGroup, getBranchNameForUpdate, sanitizeRef } from './branch-name';
 
 describe('getBranchNameForUpdate', () => {
   it('generates correct branch name for a single dependency update', () => {
@@ -157,6 +157,19 @@ describe('getBranchNameForUpdate', () => {
     });
 
     expect(result).toBe('dependabot/npm/main/mobile-app/lodash-4.17.21');
+  });
+
+  it('generates shared branch name for a multi-ecosystem group', () => {
+    const result = getBranchNameForMultiEcosystemGroup({
+      groupname: 'infrastructure',
+      dependencies: [
+        { 'dependency-name': 'nginx', 'dependency-version': '1.29.8' },
+        { 'dependency-name': 'hashicorp/aws', 'dependency-version': '6.4.0' },
+        { 'dependency-name': 'terraform-aws-modules/vpc/aws', 'dependency-version': '6.6.1' },
+      ],
+    });
+
+    expect(result).toMatch(/^dependabot-infrastructure-[a-f0-9]{10}$/);
   });
 });
 

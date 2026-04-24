@@ -10,6 +10,8 @@ export const ANONYMOUS_USER_ID = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
  */
 export const PR_PROPERTY_MICROSOFT_GIT_SOURCE_REF_NAME = 'Microsoft.Git.PullRequest.SourceRefName';
 export const PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER = 'Dependabot.PackageManager';
+export const PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGERS = 'Dependabot.PackageManagers';
 export const PR_PROPERTY_DEPENDABOT_DEPENDENCIES = 'Dependabot.Dependencies';
+export const PR_PROPERTY_DEPENDABOT_MULTI_ECOSYSTEM_GROUP_NAME = 'Dependabot.MultiEcosystemGroupName';
 
 export const PR_DESCRIPTION_MAX_LENGTH = 4_000;
