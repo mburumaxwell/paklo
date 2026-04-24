@@ -178,7 +178,7 @@ export function getGhsaPackageEcosystemFromDependabotPackageManager(
       return 'NUGET';
     case 'pip':
       return 'PIP';
-    case: 'uv':
+    case 'uv':
       return 'PIP';
     case 'pub':
       return 'PUB';
