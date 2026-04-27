@@ -6,6 +6,7 @@ import type { AzureDevOpsOrganizationUrl } from '../url-parts';
 import { AzureDevOpsClient } from './client';
 import type {
   AzdoFileChange,
+  AzdoGitCommitRef,
   AzdoGitUserDate,
   AzdoIdentityRefWithVote,
   AzdoPrExtractedWithProperties,
@@ -51,6 +52,14 @@ type AzdoPullRequestCommentCreateOptions = AzdoPullRequestOptions & {
   content: string;
   userId?: string;
 };
+
+export function commitsAreAuthoredBy(
+  commits: Pick<AzdoGitCommitRef, 'author'>[] | undefined,
+  author: Pick<AzdoGitUserDate, 'email'>,
+): boolean {
+  if (!commits?.length) return true;
+  return commits.every((commit) => commit.author?.email === author.email);
+}
 
 export class AzureDevOpsClientWrapper {
   public readonly inner: AzureDevOpsClient;
@@ -332,7 +341,7 @@ export class AzureDevOpsClientWrapper {
         options.repository,
         options.pullRequestId,
       );
-      if (commits?.some((c) => c.author?.email !== options.author.email)) {
+      if (!commitsAreAuthoredBy(commits, options.author)) {
         logger.info(` - Skipping update as pull request has been modified by another user.`);
         return true;
       }
