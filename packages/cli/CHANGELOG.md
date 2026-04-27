@@ -1,5 +1,12 @@
 # paklo
 
+## 0.20.2
+
+### Patch Changes
+
+- Updated dependencies [[`42f3c3c`](https://github.com/mburumaxwell/paklo/commit/42f3c3ccc82a6d104abce31f775611634e6727c1), [`466b120`](https://github.com/mburumaxwell/paklo/commit/466b1201c4bd1c25ec8c961e15c30bebf86480a9), [`f718382`](https://github.com/mburumaxwell/paklo/commit/f7183823db740ffbb7c83112efc7ba04b9b44ad2), [`f1b3972`](https://github.com/mburumaxwell/paklo/commit/f1b397202c40f134a97259e1f78f79857432103f), [`489d13c`](https://github.com/mburumaxwell/paklo/commit/489d13c0bb0eb7ef2f4e038774f4e08a450921e4), [`48dc1ed`](https://github.com/mburumaxwell/paklo/commit/48dc1edb174906ecc7d92a453d764b021f233baf), [`b014671`](https://github.com/mburumaxwell/paklo/commit/b01467156fcafb5011b07aac9072c4bb820c1c7c), [`7805a85`](https://github.com/mburumaxwell/paklo/commit/7805a85544d3273020fab702fa3784e199daa03f)]:
+  - @paklo/core@0.20.0
+
 ## 0.20.1
 
 ### Patch Changes
