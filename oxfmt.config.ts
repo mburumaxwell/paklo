@@ -13,6 +13,7 @@ export default defineConfig({
     // exclude git submodules
     'dependabot-action',
     'dependabot-cli',
+    'dependabot-proxy',
 
     // agent skills (imported via npx skills and diff checked)
     '.agents/skills',
