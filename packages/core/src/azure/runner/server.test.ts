@@ -735,7 +735,13 @@ describe('AzureLocalDependabotServer', () => {
       });
 
       expect(result).toEqual(true);
-      expect(authorClient.updatePullRequest).toHaveBeenCalled();
+      expect(authorClient.updatePullRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          pullRequestId: 11,
+          commit: '1234abcd',
+          commitMessage: 'Test commit message',
+        }),
+      );
       expect(approverClient!.approvePullRequest).toHaveBeenCalled();
     });
 

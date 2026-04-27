@@ -39,6 +39,7 @@ type AzdoPullRequestUpdateOptions = AzdoPullRequestOptions & {
   commit: string;
   author: AzdoGitUserDate;
   changes: AzdoFileChange[];
+  commitMessage?: string | null;
 };
 
 type AzdoPullRequestAbandonOptions = AzdoPullRequestOptions & {
@@ -371,6 +372,13 @@ export class AzureDevOpsClientWrapper {
         }
       }
 
+      const commitMessage =
+        options.commitMessage && options.commitMessage.length > 0
+          ? options.commitMessage
+          : pullRequest.mergeStatus === 'conflicts'
+            ? 'Resolve merge conflicts'
+            : `Rebase '${sourceBranchName}' onto '${targetBranchName}'`;
+
       // Push all file changes to the source branch
       logger.info(` - Pushing ${options.changes.length} file change(s) to branch '${pullRequest.sourceRefName}'...`);
       const push = await this.inner.git.createPush(options.project, options.repository, {
@@ -382,10 +390,7 @@ export class AzureDevOpsClientWrapper {
         ],
         commits: [
           {
-            comment:
-              pullRequest.mergeStatus === 'conflicts'
-                ? 'Resolve merge conflicts'
-                : `Rebase '${sourceBranchName}' onto '${targetBranchName}'`,
+            comment: commitMessage,
             author: options.author,
             changes: options.changes
               .filter((change) => change.changeType !== 'none')

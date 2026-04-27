@@ -97,4 +97,113 @@ describe('AzureDevOpsClientWrapper', () => {
       expect(pullRequestId).toBe(1);
     });
   });
+
+  describe('updatePullRequest', () => {
+    it('uses the provided commit message when pushing refreshed changes', async () => {
+      mockKyInstance.get
+        .mockReturnValueOnce({
+          json: vi.fn().mockResolvedValue({
+            pullRequestId: 1,
+            status: 'active',
+            isDraft: false,
+            sourceRefName: 'refs/heads/dependabot/npm_and_yarn/pkg-2.0.0',
+            targetRefName: 'refs/heads/main',
+            title: 'Old title',
+            lastMergeCommit: { commitId: 'merge-commit-id' },
+            lastMergeSourceCommit: { commitId: 'old-source-commit-id' },
+            mergeStatus: 'succeeded',
+          }),
+        })
+        .mockReturnValueOnce({
+          json: vi.fn().mockResolvedValue({
+            value: [{ author: { name: 'Author Name', email: 'author@example.com' } }],
+          }),
+        })
+        .mockReturnValueOnce({
+          json: vi.fn().mockResolvedValue({ aheadCount: 0, behindCount: 1 }),
+        });
+      mockKyInstance.post
+        .mockReturnValueOnce({
+          json: vi.fn().mockResolvedValue({ value: [{ success: true }] }),
+        })
+        .mockReturnValueOnce({
+          json: vi.fn().mockResolvedValue({ commits: [{ commitId: 'new-commit-id' }] }),
+        });
+
+      const updated = await client.updatePullRequest({
+        project: 'project',
+        repository: 'repository',
+        pullRequestId: 1,
+        commit: 'base-commit-id',
+        author: { name: 'Author Name', email: 'author@example.com' },
+        commitMessage: 'build: bump openai from 1.63.0 to 1.84.0',
+        changes: [
+          {
+            path: 'package.json',
+            content: '{"dependencies":{"openai":"1.84.0"}}',
+            encoding: 'utf-8',
+            changeType: 'edit',
+          },
+        ],
+      });
+
+      expect(updated).toBe(true);
+
+      const pushCall = mockKyInstance.post.mock.calls.find((call: any[]) => call[0]?.includes('/pushes'));
+      expect(pushCall?.[1]?.json?.commits?.[0]?.comment).toBe('build: bump openai from 1.63.0 to 1.84.0');
+    });
+
+    it('falls back to the rebase message when the regenerated commit message is missing', async () => {
+      mockKyInstance.get
+        .mockReturnValueOnce({
+          json: vi.fn().mockResolvedValue({
+            pullRequestId: 1,
+            status: 'active',
+            isDraft: false,
+            sourceRefName: 'refs/heads/dependabot/npm_and_yarn/pkg-2.0.0',
+            targetRefName: 'refs/heads/main',
+            title: 'Old title',
+            lastMergeCommit: { commitId: 'merge-commit-id' },
+            lastMergeSourceCommit: { commitId: 'old-source-commit-id' },
+            mergeStatus: 'succeeded',
+          }),
+        })
+        .mockReturnValueOnce({
+          json: vi.fn().mockResolvedValue({
+            value: [{ author: { name: 'Author Name', email: 'author@example.com' } }],
+          }),
+        })
+        .mockReturnValueOnce({
+          json: vi.fn().mockResolvedValue({ aheadCount: 0, behindCount: 1 }),
+        });
+      mockKyInstance.post
+        .mockReturnValueOnce({
+          json: vi.fn().mockResolvedValue({ value: [{ success: true }] }),
+        })
+        .mockReturnValueOnce({
+          json: vi.fn().mockResolvedValue({ commits: [{ commitId: 'new-commit-id' }] }),
+        });
+
+      const updated = await client.updatePullRequest({
+        project: 'project',
+        repository: 'repository',
+        pullRequestId: 1,
+        commit: 'base-commit-id',
+        author: { name: 'Author Name', email: 'author@example.com' },
+        changes: [
+          {
+            path: 'package.json',
+            content: '{"dependencies":{"openai":"1.84.0"}}',
+            encoding: 'utf-8',
+            changeType: 'edit',
+          },
+        ],
+      });
+
+      expect(updated).toBe(true);
+
+      const pushCall = mockKyInstance.post.mock.calls.findLast((call: any[]) => call[0]?.includes('/pushes'));
+      expect(pushCall?.[1]?.json?.commits?.[0]?.comment).toBe("Rebase 'dependabot/npm_and_yarn/pkg-2.0.0' onto 'main'");
+    });
+  });
 });

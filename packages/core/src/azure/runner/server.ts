@@ -413,6 +413,7 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
           pullRequestId: pullRequestToUpdate.pullRequestId,
           commit: data['base-commit-sha'] || job.source.commit!,
           author,
+          commitMessage: data['commit-message'],
           changes: getPullRequestChangedFiles(data),
         });
 
