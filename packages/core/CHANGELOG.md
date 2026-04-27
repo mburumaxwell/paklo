@@ -1,5 +1,43 @@
 # @paklo/core
 
+## 0.20.0
+
+### Minor Changes
+
+- [`f718382`](https://github.com/mburumaxwell/paklo/commit/f7183823db740ffbb7c83112efc7ba04b9b44ad2) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Revert checking if a PR has been edited from considering all commits to just at least one.
+  This reverts commit 425f1c85f1bd7c1317bf2c4a81fa25be009dfad6.
+
+- [#2710](https://github.com/mburumaxwell/paklo/pull/2710) [`7805a85`](https://github.com/mburumaxwell/paklo/commit/7805a85544d3273020fab702fa3784e199daa03f) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Add multi-ecosystem execution planning and PR orchestration
+
+  Build on the initial multi-ecosystem config and job support by introducing
+  execution-unit planning and orchestration for grouped updates.
+
+  This change teaches the runner to plan linked updates together, defer
+  multi-ecosystem PR creation until all member jobs have finished, and then
+  finalize a single consolidated PR with a shared branch, combined body, and
+  merged settings.
+
+  It also adds PR metadata for the new flow, including explicit
+  `Dependabot.PackageManagers` and `Dependabot.MultiEcosystemGroupName` properties,
+  while keeping read compatibility for older PRs that only stored
+  `Dependabot.PackageManager`.
+
+### Patch Changes
+
+- [`42f3c3c`](https://github.com/mburumaxwell/paklo/commit/42f3c3ccc82a6d104abce31f775611634e6727c1) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Use regenerated Dependabot commit messages for pull request refreshes when
+  they are provided.
+  Ref: https://github.com/dependabot/dependabot-core/pull/14808
+
+- [#2709](https://github.com/mburumaxwell/paklo/pull/2709) [`466b120`](https://github.com/mburumaxwell/paklo/commit/466b1201c4bd1c25ec8c961e15c30bebf86480a9) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 32 updates
+
+- [`f1b3972`](https://github.com/mburumaxwell/paklo/commit/f1b397202c40f134a97259e1f78f79857432103f) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Fix setting of groups for multi-ecosystem updates
+
+- [#2711](https://github.com/mburumaxwell/paklo/pull/2711) [`489d13c`](https://github.com/mburumaxwell/paklo/commit/489d13c0bb0eb7ef2f4e038774f4e08a450921e4) Thanks [@sander102907](https://github.com/sander102907)! - Support security advisories from github when using uv as package ecosystem
+
+- [`48dc1ed`](https://github.com/mburumaxwell/paklo/commit/48dc1edb174906ecc7d92a453d764b021f233baf) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Map `gradle` to `MAVEN`, `bun` to `NPM`, `dotnet_sdk` to `NUGET`, and `hex` to `ERLANG` when checking for security vulnerabilities
+
+- [`b014671`](https://github.com/mburumaxwell/paklo/commit/b01467156fcafb5011b07aac9072c4bb820c1c7c) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Update default experiments as of 22 April 2026
+
 ## 0.19.0
 
 ### Minor Changes
