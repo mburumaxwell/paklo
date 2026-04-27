@@ -4,3 +4,6 @@
 [submodule "dependabot-cli"]
 	path = dependabot-cli
 	url = https://github.com/dependabot/cli.git
+[submodule "dependabot-proxy"]
+	path = dependabot-proxy
+	url = https://github.com/dependabot/proxy
