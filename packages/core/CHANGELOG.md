@@ -1,5 +1,11 @@
 # @paklo/core
 
+## 0.20.1
+
+### Patch Changes
+
+- [`c2bddc4`](https://github.com/mburumaxwell/paklo/commit/c2bddc431713c8f163b730cae3ce87afb1167a34) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Improve custom-port git authentication by adding a bare-host credential fallback when a credential host includes a non-default port.
+
 ## 0.20.0
 
 ### Minor Changes
