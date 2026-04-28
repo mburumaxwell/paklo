@@ -1,5 +1,20 @@
 # paklo
 
+## 0.21.0
+
+### Minor Changes
+
+- [`31c91e5`](https://github.com/mburumaxwell/paklo/commit/31c91e514acdc501d138da1e6084c5cf9d97b102) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Add CLI command to generate job configs
+
+- [`0a65aec`](https://github.com/mburumaxwell/paklo/commit/0a65aecfc3e5131a0f07b952732cce668eb69eae) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Group CLI commands under dependabot group
+
+- [`c8dcf7b`](https://github.com/mburumaxwell/paklo/commit/c8dcf7ba9cd76c7f849f207fc80be4f41ffc7bee) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Added command to run from cloud scheduled jobs
+
+### Patch Changes
+
+- Updated dependencies [[`c2bddc4`](https://github.com/mburumaxwell/paklo/commit/c2bddc431713c8f163b730cae3ce87afb1167a34)]:
+  - @paklo/core@0.20.1
+
 ## 0.20.2
 
 ### Patch Changes
