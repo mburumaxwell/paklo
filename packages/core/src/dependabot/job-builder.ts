@@ -424,7 +424,7 @@ export function mapCredentials({
   githubToken?: string;
   registries?: Record<string, DependabotRegistry>;
 }): DependabotCredential[] {
-  const credentials = [];
+  const credentials: DependabotCredential[] = [];
 
   // Required to authenticate with the git repository when cloning the source code
   if (systemAccessToken) {
@@ -449,6 +449,29 @@ export function mapCredentials({
     // Required to authenticate with private package feeds when finding the latest version of dependencies.
     // The registries have already been worked on (see parseRegistries) so there is no need to do anything else.
     credentials.push(...Object.values(registries));
+  }
+
+  // The Dependabot proxy matches request hosts using URL.Hostname(), which strips ports:
+  // https://github.com/dependabot/proxy/blob/main/internal/helpers/helpers.go
+  // But credentials keep a literal "host" value when provided:
+  // https://github.com/dependabot/proxy/blob/main/internal/config/config.go
+  // For non-default ports, add a copy with the bare hostname so either form can match:
+  // https://github.com/dependabot/proxy/blob/main/internal/handlers/git_server.go
+  // Refs:
+  // - https://github.com/mburumaxwell/paklo/issues/2652
+  // - https://github.com/mburumaxwell/paklo/pull/2653
+  for (const credential of credentials) {
+    const { type, host } = credential;
+    if (type !== 'git_source' || !host) continue;
+
+    try {
+      const parsed = new URL(`https://${host}`);
+      if (!parsed.port || parsed.port === '443' || parsed.port === '80') continue;
+
+      credentials.push({ ...credential, host: parsed.hostname });
+    } catch {
+      // Ignore invalid host values and keep the original credential only.
+    }
   }
 
   return credentials;

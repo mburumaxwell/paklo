@@ -11,6 +11,7 @@ import {
   DependabotJobBuilder,
   type DependabotSourceInfo,
   mapAllowedUpdatesFromDependabotConfigToJobConfig,
+  mapCredentials,
   mapDependencyGroupsToJobConfig,
   mapExperiments,
   mapIgnoreConditionsFromDependabotConfigToJobConfig,
@@ -198,6 +199,38 @@ describe('mapAllowedUpdatesFromDependabotConfigToJobConfig', () => {
   it('should allow direct dependency security updates if rules are undefined and securityOnlyUpdate is true', () => {
     const result = mapAllowedUpdatesFromDependabotConfigToJobConfig(undefined, true);
     expect(result).toEqual([{ 'dependency-type': 'direct', 'update-type': 'security' }]);
+  });
+});
+
+describe('mapCredentials', () => {
+  it('should not add a duplicate host for no port', () => {
+    const result = mapCredentials({ sourceHostname: 'my-org.com', systemAccessToken: 'token' });
+
+    expect(result).toEqual([
+      {
+        type: 'git_source',
+        host: 'my-org.com',
+        username: 'x-access-token',
+        password: 'token',
+      },
+    ]);
+  });
+
+  it('should not add a duplicate host for a default port', () => {
+    const result = mapCredentials({ sourceHostname: 'my-org.com:443', systemAccessToken: 'token' });
+
+    expect(result).toEqual([
+      { type: 'git_source', host: 'my-org.com:443', username: 'x-access-token', password: 'token' },
+    ]);
+  });
+
+  it('should include both host forms for a non-default port', () => {
+    const result = mapCredentials({ sourceHostname: 'my-org.com:8443', systemAccessToken: 'token' });
+
+    expect(result).toEqual([
+      { type: 'git_source', host: 'my-org.com:8443', username: 'x-access-token', password: 'token' },
+      { type: 'git_source', host: 'my-org.com', username: 'x-access-token', password: 'token' },
+    ]);
   });
 });
 
