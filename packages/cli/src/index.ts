@@ -6,7 +6,7 @@ import pino from 'pino';
 import pretty from 'pino-pretty';
 
 import packageJson from '../package.json';
-import { cleanup, fetchImages, run, validate } from './commands';
+import { cleanup, dependabot, fetchImages, run, validate } from './commands';
 import { withSecretMasking } from './masker';
 
 const prettyStream = pretty({ ignore: 'pid,hostname' });
@@ -28,6 +28,7 @@ root.addOption(
 root.addCommand(fetchImages);
 root.addCommand(validate);
 root.addCommand(run);
+root.addCommand(dependabot);
 root.addCommand(cleanup);
 
 root.hook('preAction', (thisCommand) => {
