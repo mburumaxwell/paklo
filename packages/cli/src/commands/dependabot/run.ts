@@ -69,8 +69,8 @@ async function handler({ options, error }: HandlerOptions<Options>) {
     return;
   }
 
-  // Convert experiments from comma separated key value pairs to a record
-  // If no experiments are defined, use the default experiments
+  // Convert experiments from comma separated key value pairs to a record.
+  // If no experiments are defined, use the default experiments.
   let experiments = parseExperiments(rawExperiments);
   if (!experiments) {
     experiments = DEFAULT_EXPERIMENTS;
