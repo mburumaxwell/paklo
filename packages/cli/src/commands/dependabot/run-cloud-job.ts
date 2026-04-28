@@ -64,7 +64,7 @@ async function handler({ options, error }: HandlerOptions<Options>) {
 }
 
 export const command = new Command('run-cloud-job')
-  .description('Run a Paklo dependabot update job.')
+  .description('Run a job from the Paklo cloud.')
   .requiredOption('--job-id <id>', 'Job identifier.')
   .requiredOption('--token <token>', 'Job token.')
   .requiredOption('--credentials-token <token>', 'Credentials token.')

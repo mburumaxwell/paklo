@@ -20,8 +20,9 @@ import { logger } from '@paklo/core/logger';
 import { Command, Option } from 'commander';
 import { z } from 'zod';
 
-import { secretMasker } from '../masker';
-import { type HandlerOptions, handlerOptions } from './base';
+import { secretMasker } from '@/utils/masker';
+
+import { type HandlerOptions, handlerOptions } from '../base';
 
 const schema = z.object({
   provider: z.enum(['azure']),
@@ -159,7 +160,7 @@ async function handler({ options, error }: HandlerOptions<Options>) {
 }
 
 export const command = new Command('run')
-  .description('Run dependabot updates for a given repository.')
+  .description('Run updates for a given repository.')
   .addOption(
     new Option('--provider <PROVIDER>', "Repository provider. Currently only ('azure') Azure DevOps is supported.")
       .choices(['azure'])

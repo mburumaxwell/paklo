@@ -2,7 +2,7 @@ import { cleanup } from '@paklo/core/runner';
 import { Command } from 'commander';
 import { z } from 'zod';
 
-import { type HandlerOptions, handlerOptions } from './base';
+import { type HandlerOptions, handlerOptions } from '../base';
 
 const TimeUnitsSchema = z.enum(['ms', 's', 'm', 'h', 'd', 'w', 'y']);
 const TimeStringSchema = z.templateLiteral([z.number(), TimeUnitsSchema]);
@@ -18,7 +18,7 @@ async function handler({ options, error: _error }: HandlerOptions<Options>) {
 }
 
 export const command = new Command('cleanup')
-  .description('Clean up old Docker images and containers.')
+  .description('Clean up old docker images, containers and networks.')
   .option('--cutoff <duration>', 'Cutoff time for cleanup (e.g., 24h, 7d)', '24h')
   .action(
     async (...args) =>

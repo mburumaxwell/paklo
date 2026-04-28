@@ -5,7 +5,7 @@ import { logger } from '@paklo/core/logger';
 import { Command, Option } from 'commander';
 import { z } from 'zod';
 
-import { type HandlerOptions, handlerOptions } from './base';
+import { type HandlerOptions, handlerOptions } from '../base';
 
 const schema = z.object({
   provider: z.enum(['azure']),

@@ -3,7 +3,7 @@ import { ImageService, PROXY_IMAGE_NAME, updaterImageName } from '@paklo/core/ru
 import { Argument, Command } from 'commander';
 import { z } from 'zod';
 
-import { type HandlerOptions, handlerOptions } from './base';
+import { type HandlerOptions, handlerOptions } from '../base';
 
 const schema = z.object({
   packageManager: DependabotPackageManagerSchema,
@@ -17,7 +17,7 @@ async function handler({ options }: HandlerOptions<Options>) {
 }
 
 export const command = new Command('fetch-images')
-  .description('Fetch Docker images.')
+  .description('Fetch docker images.')
   .addArgument(new Argument('<packageManager>', 'The package manager to fetch the updater image for.'))
   .action(
     async (...args) =>

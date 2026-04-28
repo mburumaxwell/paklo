@@ -6,8 +6,8 @@ import pino from 'pino';
 import pretty from 'pino-pretty';
 
 import packageJson from '../package.json';
-import { cleanup, dependabot, fetchImages, run, validate } from './commands';
-import { withSecretMasking } from './masker';
+import { dependabot } from './commands';
+import { withSecretMasking } from './utils/masker';
 
 const prettyStream = pretty({ ignore: 'pid,hostname' });
 const output = process.env.NODE_ENV === 'production' ? undefined : prettyStream;
@@ -17,7 +17,7 @@ logger.replace(withSecretMasking({ log: ({ level, message }) => pinoLogger[level
 
 const root = new Command();
 
-root.name('paklo').description('CLI tool for running E2E dependabot updates locally.');
+root.name('paklo').description('CLI tool for Paklo (https://paklo.app).');
 root.usage();
 root.version(packageJson.version, '--version');
 root.addOption(
@@ -25,11 +25,7 @@ root.addOption(
     .choices(['fatal', 'error', 'warn', 'info', 'debug', 'trace'])
     .default('info'),
 );
-root.addCommand(fetchImages);
-root.addCommand(validate);
-root.addCommand(run);
 root.addCommand(dependabot);
-root.addCommand(cleanup);
 
 root.hook('preAction', (thisCommand) => {
   const options = thisCommand.opts();
