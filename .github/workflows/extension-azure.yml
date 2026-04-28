@@ -2,6 +2,11 @@ name: Extension - Azure
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build and publish (e.g. extension-azure-devops@1.2.3). Overrides the git ref for checkout and release logic.'
+        required: false
+        type: string
   push:
     branches: [main]
     tags: ['extension-azure-devops@*']
@@ -38,6 +43,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           submodules: true
+          ref: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || '' }}
 
       - name: Setup turborepo caching
         uses: rharkor/caching-for-turbo@v2.3.14
@@ -64,7 +70,7 @@ jobs:
         working-directory: '${{ github.workspace }}/extensions/azure'
 
       - name: Update Dev Version
-        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        if: ${{ !inputs.tag && !startsWith(github.ref, 'refs/tags/') }}
         run: pnpm packages:version --dev
         working-directory: '${{ github.workspace }}/extensions/azure'
 
@@ -74,7 +80,7 @@ jobs:
           --manifest-globs vss-extension.json
           --output-path ${{ github.workspace }}/out
           --json5
-          ${{ (!startsWith(github.ref, 'refs/tags/') && '--overrides-file overrides.dev.json') || '' }}
+          ${{ (!inputs.tag && !startsWith(github.ref, 'refs/tags/') && '--overrides-file overrides.dev.json') || '' }}
         working-directory: extensions/azure
 
       - name: Upload Artifact (extensions-azure)
@@ -84,13 +90,13 @@ jobs:
           name: extensions-azure
 
       - name: Provenance Attestation
-        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        if: ${{ inputs.tag || startsWith(github.ref, 'refs/tags/') }}
         uses: actions/attest@v4
         with:
           subject-path: ${{ github.workspace }}/out/*.vsix
 
       - name: Upload Release Artifact
-        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        if: ${{ inputs.tag || startsWith(github.ref, 'refs/tags/') }}
         uses: ncipollo/release-action@v1
         with:
           artifacts: '${{ github.workspace }}/out/*.vsix'
@@ -99,14 +105,14 @@ jobs:
           omitBodyDuringUpdate: true
           omitDraftDuringUpdate: true
           omitNameDuringUpdate: true
-          tag: ${{ github.ref_name }}
+          tag: ${{ inputs.tag || github.ref_name }}
 
       - name: Publish to marketplace
-        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
+        if: ${{ inputs.tag || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
         run: >
           pnpm tfx extension publish
           --vsix ${{ github.workspace }}/out/*.vsix
           --auth-type pat
           --token ${{ secrets.AZURE_DEVOPS_EXTENSION_TOKEN }}
-          ${{ (github.ref == 'refs/heads/main' && '--share-with tingle rhyskoedijk') || '' }}
+          ${{ (!inputs.tag && github.ref == 'refs/heads/main' && '--share-with tingle') || '' }}
         working-directory: extensions/azure
