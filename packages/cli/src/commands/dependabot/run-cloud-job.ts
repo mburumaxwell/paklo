@@ -4,6 +4,8 @@ import { runJob } from '@paklo/core/runner';
 import { Command, Option } from 'commander';
 import { z } from 'zod';
 
+import { secretMasker } from '@/utils/masker';
+
 import { type HandlerOptions, handlerOptions } from '../base';
 
 const schema = z.object({
@@ -44,7 +46,7 @@ async function handler({ options, error }: HandlerOptions<Options>) {
     jobToken: token,
     credentialsToken,
     updaterImage,
-    secretMasker(_secret: string) {},
+    secretMasker,
     debug,
     usage: {
       'trigger': 'service',
