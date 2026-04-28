@@ -50,7 +50,7 @@ jobs:
         id: generate_token
         uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ secrets.GH_APP_ID_RELEASER }}
+          client-id: ${{ secrets.GH_CLIENT_ID_RELEASER }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY_RELEASER }}
 
       - uses: actions/checkout@v6
