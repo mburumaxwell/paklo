@@ -81,6 +81,7 @@ jobs:
 
       - name: Create release PR or Publish
         if: ${{ github.event_name != 'pull_request' }}
+        id: changesets
         uses: changesets/action@v1
         with:
           title: 'Version packages'
@@ -93,3 +94,15 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           # use OIDC for npm authentication instead of NPM_TOKEN
           NPM_TOKEN: '' # See https://github.com/changesets/changesets/issues/1152#issuecomment-3190884868
+
+      - name: Dispatch Azure extension publish
+        if: ${{ github.event_name != 'pull_request' && steps.changesets.outputs.published }}
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          VERSION=$(echo '${{ steps.changesets.outputs.publishedPackages }}' \
+            | jq -r '.[] | select(.name == "extension-azure-devops") | .version')
+          if [ -n "$VERSION" ]; then
+            gh workflow run extension-azure.yml --ref main \
+              --field tag="extension-azure-devops@${VERSION}"
+          fi
