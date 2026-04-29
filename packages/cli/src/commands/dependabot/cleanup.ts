@@ -4,7 +4,8 @@ import { z } from 'zod';
 
 import { type HandlerOptions, handlerOptions } from '../base';
 
-const TimeUnitsSchema = z.enum(['ms', 's', 'm', 'h', 'd', 'w', 'y']);
+// Docker's 'until' filter accepts Go duration strings: ns, us, ms, s, m, h
+const TimeUnitsSchema = z.enum(['ns', 'us', 'ms', 's', 'm', 'h']);
 const TimeStringSchema = z.templateLiteral([z.number(), TimeUnitsSchema]);
 
 const schema = z.object({
@@ -19,7 +20,11 @@ async function handler({ options, error: _error }: HandlerOptions<Options>) {
 
 export const command = new Command('cleanup')
   .description('Clean up old docker images, containers and networks.')
-  .option('--cutoff <duration>', 'Cutoff time for cleanup (e.g., 24h, 7d)', '24h')
+  .option(
+    '--cutoff <duration>',
+    'Cutoff time for cleanup. Accepts Go duration units: ns, us, ms, s, m, h (e.g., 24h, 30m)',
+    '24h',
+  )
   .action(
     async (...args) =>
       await handler(
