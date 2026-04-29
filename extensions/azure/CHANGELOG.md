@@ -1,5 +1,14 @@
 # extension-azure-devops
 
+## 2.67.4
+
+### Patch Changes
+
+- [`665cea9`](https://github.com/mburumaxwell/paklo/commit/665cea9791090aeeba9a1685367825c6856d645b) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Replace `version` with `tool` in usage telemetry. The `tool` field identifies the calling package and version (e.g. `extension-azure-devops@2.61.0`, `@paklo/cli@0.21.0`) and is now a required field in `RunJobOptions['usage']` and `AzureLocalJobsRunnerOptions`.
+
+- Updated dependencies [[`665cea9`](https://github.com/mburumaxwell/paklo/commit/665cea9791090aeeba9a1685367825c6856d645b), [`d05665b`](https://github.com/mburumaxwell/paklo/commit/d05665b98e3e4a98e80b2b1868ec68ff62726fb1)]:
+  - @paklo/core@0.21.0
+
 ## 2.67.3
 
 ### Patch Changes

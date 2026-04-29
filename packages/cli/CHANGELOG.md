@@ -1,5 +1,16 @@
 # paklo
 
+## 0.21.1
+
+### Patch Changes
+
+- [`665cea9`](https://github.com/mburumaxwell/paklo/commit/665cea9791090aeeba9a1685367825c6856d645b) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Replace `version` with `tool` in usage telemetry. The `tool` field identifies the calling package and version (e.g. `extension-azure-devops@2.61.0`, `@paklo/cli@0.21.0`) and is now a required field in `RunJobOptions['usage']` and `AzureLocalJobsRunnerOptions`.
+
+- [#2720](https://github.com/mburumaxwell/paklo/pull/2720) [`d05665b`](https://github.com/mburumaxwell/paklo/commit/d05665b98e3e4a98e80b2b1868ec68ff62726fb1) Thanks [@mburumaxwell](https://github.com/mburumaxwell)! - Restrict `--cutoff` to Go duration units supported by Docker (`ns`, `us`, `ms`, `s`, `m`, `h`).
+  Previously the schema allowed `d`, `w`, and `y` which Docker's `until` filter does not accept, causing a 500 error at runtime.
+- Updated dependencies [[`665cea9`](https://github.com/mburumaxwell/paklo/commit/665cea9791090aeeba9a1685367825c6856d645b), [`d05665b`](https://github.com/mburumaxwell/paklo/commit/d05665b98e3e4a98e80b2b1868ec68ff62726fb1)]:
+  - @paklo/core@0.21.0
+
 ## 0.21.0
 
 ### Minor Changes
