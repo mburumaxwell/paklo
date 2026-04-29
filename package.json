@@ -26,6 +26,7 @@
     "clean": "turbo run clean && rimraf .turbo"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "0.6.0",
     "@changesets/cli": "2.31.0",
     "oxfmt": "0.46.0",
     "oxlint": "1.61.0",
