@@ -10,7 +10,7 @@ import { PROXY_IMAGE_NAME, digestName, hasDigest, repositoryName, updaterImages 
 // which were left behind by old versions or any jobs
 // which may have crashed before deleting their own containers or networks
 //
-// cutoff - a Go duration string to pass to the Docker API's 'until' argument, default '24h'
+// cutoff - a Go duration string (ns, us, ms, s, m, h) to pass to the Docker API's 'until' argument, default '24h'
 export async function cleanup(cutoff = '24h'): Promise<void> {
   if (process.env.DEPENDABOT_DISABLE_CLEANUP === '1') {
     return;
