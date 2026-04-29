@@ -1,12 +1,12 @@
 import { DependabotPackageManagerSchema, DependabotSourceProviderSchema } from '@paklo/core/dependabot';
 import { logger } from '@paklo/core/logger';
 import { runJob } from '@paklo/core/runner';
-import packageJson from '../../../package.json';
 import { Command, Option } from 'commander';
 import { z } from 'zod';
 
 import { secretMasker } from '@/utils/masker';
 
+import packageJson from '../../../package.json';
 import { type HandlerOptions, handlerOptions } from '../base';
 
 const schema = z.object({
@@ -50,7 +50,7 @@ async function handler({ options, error }: HandlerOptions<Options>) {
     secretMasker,
     debug,
     usage: {
-      tool: `${packageJson.name}@${packageJson.version}`,
+      'tool': `${packageJson.name}@${packageJson.version}`,
       'trigger': 'service',
       provider,
       owner,
