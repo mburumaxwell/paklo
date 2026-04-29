@@ -96,6 +96,7 @@ describe('AzureLocalJobsRunner', () => {
     ];
 
     options = {
+      tool: 'extension-azure-devops@2.67.3',
       url: extractRepositoryUrl({
         organizationUrl: 'https://dev.azure.com/test-org/',
         project: 'test-project',

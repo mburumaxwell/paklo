@@ -7,6 +7,7 @@ import { extractRepositoryUrl } from '@paklo/core/azure';
 import { AZDO_PULL_REQUEST_MERGE_STRATEGIES, AzdoPullRequestMergeStrategySchema } from '@paklo/core/azure/client';
 import { getDependabotConfig } from '@paklo/core/azure/config';
 import { AzureLocalJobsRunner, type AzureLocalJobsRunnerOptions } from '@paklo/core/azure/runner';
+import packageJson from '../../../package.json';
 import {
   DEFAULT_EXPERIMENTS,
   DEPENDABOT_COMMANDS,
@@ -134,6 +135,7 @@ async function handler({ options, error }: HandlerOptions<Options>) {
 
   try {
     const runnerOptions: AzureLocalJobsRunnerOptions = {
+      tool: `${packageJson.name}@${packageJson.version}`,
       config,
       secretMasker,
 

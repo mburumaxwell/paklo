@@ -17,7 +17,7 @@ import { DependabotPackageManagerSchema, DependabotSourceProviderSchema } from '
  *   "provider": "azure",
  *   "owner": "https://dev.azure.com/paklo/",
  *   "package-manager": "terraform",
- *   "version": "0.9.0",
+ *   "tool": "@paklo/cli@0.21.0",
  *   "id": 2850677077,
  *   "started": "2025-10-03T14:44:00.191Z",
  *   "duration": 31812,
@@ -37,7 +37,7 @@ export const UsageTelemetryRequestDataSchema = z.object({
     'machine-hash': z.string().max(250), // e.g. "d3bbb66be2ad9dfab10af69b450f7e7e814ef7bbf1277a6d0df9e1db44ba4f5c" for "Maxwells-MacBook-Pro.local"
     'docker-container': z.boolean().optional(), // whether running inside a Docker container
   }),
-  'version': z.string().max(50),
+  'tool': z.string().max(100), // e.g. "extension-azure-devops@2.61.0", "@paklo/cli@0.21.0"
   'trigger': z.enum(['user', 'service']),
   'provider': DependabotSourceProviderSchema,
   'owner': z.url(),
@@ -66,7 +66,7 @@ export const UsageTelemetryRequestDataSchema = z.object({
  *   "provider": "azure",
  *   "owner": "https://dev.azure.com/paklo/",
  *   "package-manager": "terraform",
- *   "version": "0.9.0",
+ *   "tool": "@paklo/cli@0.21.0",
  *   "id": 2850677077,
  *   "started": "2025-10-03T14:44:00.191Z",
  *   "duration": 31812,

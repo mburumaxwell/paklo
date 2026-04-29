@@ -35,6 +35,7 @@ export type AzureLocalJobsRunnerOptions = LocalJobsRunnerOptions &
     AzureLocalDependabotServerOptions,
     'authorClient' | 'approverClient' | 'existingBranchNames' | 'existingPullRequests'
   > & {
+    tool: string;
     port?: number;
     securityAdvisoriesFile?: string;
     gitToken: string;
@@ -203,7 +204,7 @@ export class AzureLocalJobsRunner extends LocalJobsRunner {
     dependabotApiDockerUrl?: string,
   ): Promise<RunJobsResult> {
     const {
-      options: { url, gitToken, githubToken, experiments, config, dryRun, securityAdvisoriesFile, secretMasker },
+      options: { url, gitToken, githubToken, experiments, config, dryRun, securityAdvisoriesFile, secretMasker, tool },
     } = this;
 
     const results: RunJobsResult = [];
@@ -223,6 +224,7 @@ export class AzureLocalJobsRunner extends LocalJobsRunner {
 
     function makeUsageData(job: DependabotJobConfig): RunJobOptions['usage'] {
       return {
+        tool,
         'trigger': 'user',
         'provider': job.source.provider,
         'owner': url.value.toString(),

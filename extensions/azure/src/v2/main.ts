@@ -1,5 +1,6 @@
 import { getDependabotConfig } from '@paklo/core/azure/config';
 import { AzureLocalJobsRunner, type AzureLocalJobsRunnerOptions } from '@paklo/core/azure/runner';
+import packageJson from '../../package.json';
 import {
   DEPENDABOT_DEFAULT_AUTHOR_EMAIL,
   DEPENDABOT_DEFAULT_AUTHOR_NAME,
@@ -85,6 +86,7 @@ async function run() {
     // Setup the jobs runner options
     const runnerOptions: AzureLocalJobsRunnerOptions = {
       ...remainingInputs,
+      tool: `${packageJson.name}@${packageJson.version}`,
       command: 'update',
       config,
       port: inputs.dependabotApiPort,

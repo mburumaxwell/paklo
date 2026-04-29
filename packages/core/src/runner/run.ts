@@ -31,7 +31,7 @@ export type RunJobOptions = {
   debug: boolean;
   usage: Pick<
     UsageTelemetryRequestData,
-    'trigger' | 'provider' | 'owner' | 'project' | 'package-manager' | 'multi-ecosystem-update'
+    'tool' | 'trigger' | 'provider' | 'owner' | 'project' | 'package-manager' | 'multi-ecosystem-update'
   >;
 };
 export type RunJobResult = { success: true; message?: string } | { success: false; message: string };
@@ -136,7 +136,6 @@ export async function runJobInner(options: RunJobOptions): Promise<RunJobResult>
         'machine-hash': crypto.createHash('sha256').update(os.hostname()).digest('hex'),
         'docker-container': inDocker,
       },
-      version: packageJson.version,
       id: jobId,
       started,
       duration,
