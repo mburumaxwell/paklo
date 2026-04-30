@@ -61,6 +61,7 @@ jobs:
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY_RELEASER }}
           permission-contents: write
           permission-pull-requests: write
+          permission-actions: write
           # # owner and repositories default to the current repo if not provided
           # owner: ${{ github.repository_owner }}
           # repositories: ${{ github.repository.name }}
