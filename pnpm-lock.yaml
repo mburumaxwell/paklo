@@ -101,28 +101,28 @@ importers:
         specifier: 5.0.0
         version: 5.0.0
       hono:
-        specifier: 4.12.15
+        specifier: ^4.12.15
         version: 4.12.15
       js-yaml:
-        specifier: 4.1.1
+        specifier: ^4.1.1
         version: 4.1.1
       ky:
-        specifier: 2.0.2
+        specifier: ^2.0.2
         version: 2.0.2
       node-forge:
-        specifier: 1.4.0
+        specifier: ^1.4.0
         version: 1.4.0
       octokit:
-        specifier: 5.0.5
+        specifier: ^5.0.5
         version: 5.0.5
       semver:
-        specifier: 7.7.4
+        specifier: ^7.7.4
         version: 7.7.4
       tar-stream:
-        specifier: 3.1.8
+        specifier: ^3.1.8
         version: 3.1.8
       zod:
-        specifier: 4.3.6
+        specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
       '@types/dockerode':
