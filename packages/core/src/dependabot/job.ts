@@ -153,7 +153,7 @@ export const DependabotPackageManagerSchema = z.enum([
   'devcontainers',
   'dotnet_sdk', // ecosystem(s): 'dotnet-sdk'
   'bun',
-  'docker_compose', //  // ecosystem(s): 'docker-compose',
+  'docker_compose', // ecosystem(s): 'docker-compose',
   'uv',
   'vcpkg',
   'helm',
