@@ -59,7 +59,7 @@ const GHSA_SECURITY_VULNERABILITIES_QUERY = `
   }
 `;
 
-export const PackageEcosystemSchema = z.enum([
+export const GhsaPackageEcosystemSchema = z.enum([
   // https://docs.github.com/en/enterprise-cloud@latest/graphql/reference/enums#securityadvisoryecosystem
   'COMPOSER',
   'ERLANG',
@@ -74,7 +74,7 @@ export const PackageEcosystemSchema = z.enum([
   'RUST',
   'SWIFT',
 ]);
-export type PackageEcosystem = z.infer<typeof PackageEcosystemSchema>;
+export type GhsaPackageEcosystem = z.infer<typeof GhsaPackageEcosystemSchema>;
 
 export const PackageSchema = z.object({
   name: z.string(),
@@ -159,10 +159,8 @@ const GitHubSecurityVulnerabilitiesResponseSchema = z.object({
 });
 type GitHubSecurityVulnerabilitiesResponse = z.infer<typeof GitHubSecurityVulnerabilitiesResponseSchema>;
 
-export function getGhsaPackageEcosystemFromDependabotPackageManager(
-  dependabotPackageManager: DependabotPackageManager,
-): PackageEcosystem {
-  switch (dependabotPackageManager) {
+export function getGhsaPackageEcosystem(value: DependabotPackageManager): GhsaPackageEcosystem {
+  switch (value) {
     case 'composer':
       return 'COMPOSER';
     case 'elm':
@@ -198,7 +196,7 @@ export function getGhsaPackageEcosystemFromDependabotPackageManager(
     case 'swift':
       return 'SWIFT';
     default:
-      throw new Error(`Unknown dependabot package manager: ${dependabotPackageManager}`);
+      throw new Error(`Unknown dependabot package manager: ${value}`);
   }
 }
 
@@ -221,7 +219,7 @@ export class GitHubSecurityAdvisoryClient {
    * @param packages
    */
   public async getSecurityVulnerabilitiesAsync(
-    packageEcosystem: PackageEcosystem,
+    packageEcosystem: GhsaPackageEcosystem,
     packages: Package[],
   ): Promise<SecurityVulnerability[]> {
     // GitHub API doesn't support querying multiple package at once, so we need to make a request for each package individually.

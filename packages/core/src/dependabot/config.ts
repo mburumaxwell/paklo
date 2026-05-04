@@ -154,7 +154,7 @@ const DependabotPullRequestBranchNameSchema = z.object({
 });
 export type DependabotPullRequestBranchName = z.infer<typeof DependabotPullRequestBranchNameSchema>;
 
-export const PackageEcosystemSchema = z.enum([
+export const DependabotPackageEcosystemSchema = z.enum([
   // order matches
   // https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference#package-ecosystem-
 
@@ -195,14 +195,14 @@ export const PackageEcosystemSchema = z.enum([
   'vcpkg',
   'yarn', // alias mapped to 'npm'
 ]);
-export type PackageEcosystem = z.infer<typeof PackageEcosystemSchema>;
+export type DependabotPackageEcosystem = z.infer<typeof DependabotPackageEcosystemSchema>;
 
 export const VersioningStrategySchema = z.enum(['auto', 'increase', 'increase-if-necessary', 'lockfile-only', 'widen']);
 export type VersioningStrategy = z.infer<typeof VersioningStrategySchema>;
 
 export const DependabotUpdateSchema = z
   .object({
-    'package-ecosystem': PackageEcosystemSchema,
+    'package-ecosystem': DependabotPackageEcosystemSchema,
     'directory': z.string().optional(),
     'directories': z.string().array().optional(),
     'exclude-paths': z.string().array().optional(),
@@ -273,7 +273,7 @@ export const DependabotMultiEcosystemGroupSchema = z.object({
 export type DependabotMultiEcosystemGroup = z.infer<typeof DependabotMultiEcosystemGroupSchema>;
 
 /* Ecosystems that are currently in beta */
-export const BETA_ECOSYSTEMS: PackageEcosystem[] = [];
+export const BETA_ECOSYSTEMS: DependabotPackageEcosystem[] = [];
 
 /**
  * Represents the dependabot.yaml configuration file options.

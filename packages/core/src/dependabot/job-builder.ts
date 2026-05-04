@@ -4,9 +4,9 @@ import {
   type DependabotAllowCondition,
   type DependabotConfig,
   type DependabotIgnoreCondition,
+  type DependabotPackageEcosystem,
   type DependabotRegistry,
   type DependabotUpdate,
-  type PackageEcosystem,
   type VersioningStrategy,
   getEffectiveUpdateSettings,
 } from './config';
@@ -220,7 +220,7 @@ export class DependabotJobBuilder {
   }
 }
 
-export function mapPackageEcosystemToPackageManager(ecosystem: PackageEcosystem): DependabotPackageManager {
+export function mapPackageEcosystemToPackageManager(ecosystem: DependabotPackageEcosystem): DependabotPackageManager {
   // Map the dependabot config "package ecosystem" to the equivalent dependabot-core/cli "package manager".
   // Config values: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference#package-ecosystem-
   // Core/CLI values: https://github.com/dependabot/dependabot-core/blob/main/common/lib/dependabot/config/file.rb#L60-L81

@@ -1,6 +1,6 @@
 import * as crypto from 'node:crypto';
 
-import type { PackageEcosystem } from './config';
+import type { DependabotPackageEcosystem } from './config';
 import type { DependabotExistingPrDependency } from './job';
 import { isDependencyRemoved } from './utils';
 
@@ -26,7 +26,7 @@ export function getBranchNameForUpdate({
   dependencies,
   separator = '/',
 }: {
-  packageEcosystem: PackageEcosystem;
+  packageEcosystem: DependabotPackageEcosystem;
   targetBranchName?: string;
   directory?: string;
   directories?: string[];

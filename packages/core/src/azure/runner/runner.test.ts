@@ -20,7 +20,7 @@ import { AzureLocalJobsRunner, type AzureLocalJobsRunnerOptions } from './runner
 vi.mock('@/github', () => ({
   GitHubSecurityAdvisoryClient: vi.fn(),
   filterVulnerabilities: vi.fn((vulns) => vulns || []),
-  getGhsaPackageEcosystemFromDependabotPackageManager: vi.fn(() => 'npm'),
+  getGhsaPackageEcosystem: vi.fn(() => 'npm'),
 }));
 vi.mock('@/azure/client', async () => {
   const actual = await vi.importActual('@/azure/client');

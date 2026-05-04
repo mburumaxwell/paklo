@@ -23,7 +23,7 @@ import {
   type SecurityVulnerability,
   SecurityVulnerabilitySchema,
   filterVulnerabilities,
-  getGhsaPackageEcosystemFromDependabotPackageManager,
+  getGhsaPackageEcosystem,
 } from '@/github';
 import { logger } from '@/logger';
 import { LocalJobsRunner, type LocalJobsRunnerOptions, type RunJobOptions, type RunJobsResult, runJob } from '@/runner';
@@ -324,7 +324,7 @@ export class AzureLocalJobsRunner extends LocalJobsRunner {
             if (githubToken) {
               const ghsaClient = new GitHubSecurityAdvisoryClient(githubToken);
               const githubVulnerabilities = await ghsaClient.getSecurityVulnerabilitiesAsync(
-                getGhsaPackageEcosystemFromDependabotPackageManager(packageManager),
+                getGhsaPackageEcosystem(packageManager),
                 packagesToCheckForVulnerabilities || [],
               );
               securityVulnerabilities.push(...githubVulnerabilities);
