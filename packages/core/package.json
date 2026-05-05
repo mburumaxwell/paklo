@@ -75,14 +75,14 @@
     "@hono/node-server": "2.0.1",
     "@hono/zod-validator": "0.7.6",
     "dockerode": "5.0.0",
-    "hono": "^4.12.16",
+    "hono": "^4.12.17",
     "js-yaml": "^4.1.1",
     "ky": "^2.0.2",
     "node-forge": "^1.4.0",
     "octokit": "^5.0.5",
     "semver": "^7.7.4",
     "tar-stream": "^3.2.0",
-    "zod": "^4.4.2"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/dockerode": "4.0.1",
