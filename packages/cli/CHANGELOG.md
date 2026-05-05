@@ -1,5 +1,16 @@
 # paklo
 
+## 0.22.0
+
+### Minor Changes
+
+- Use version ranges for dependencies instead of exact pins. ([`ab5ca8c`](https://github.com/mburumaxwell/paklo/commit/ab5ca8cb173426db90c660746add6dc6bfd082ee))
+
+### Patch Changes
+
+- Updated dependencies [[`3eb962e`](https://github.com/mburumaxwell/paklo/commit/3eb962e0f6625972019599d19f2eaa949eee70b6), [`e6fc088`](https://github.com/mburumaxwell/paklo/commit/e6fc088dd1a6e09ab6795cbc7453ced901e1868c), [`1aaa529`](https://github.com/mburumaxwell/paklo/commit/1aaa529244f3e62ad1059f1d7ea778b00f361bbb)]:
+  - @paklo/core@0.22.0
+
 ## 0.21.1
 
 ### Patch Changes
