@@ -27,8 +27,8 @@ importers:
         specifier: 4.21.0
         version: 4.21.0
       turbo:
-        specifier: 2.9.8
-        version: 2.9.8
+        specifier: 2.9.9
+        version: 2.9.9
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -79,8 +79,8 @@ importers:
         specifier: 13.1.3
         version: 13.1.3
       zod:
-        specifier: 4.4.2
-        version: 4.4.2
+        specifier: 4.4.3
+        version: 4.4.3
     devDependencies:
       '@types/node':
         specifier: 25.6.0
@@ -93,16 +93,16 @@ importers:
     dependencies:
       '@hono/node-server':
         specifier: 2.0.1
-        version: 2.0.1(hono@4.12.16)
+        version: 2.0.1(hono@4.12.17)
       '@hono/zod-validator':
         specifier: 0.7.6
-        version: 0.7.6(hono@4.12.16)(zod@4.4.2)
+        version: 0.7.6(hono@4.12.17)(zod@4.4.3)
       dockerode:
         specifier: 5.0.0
         version: 5.0.0
       hono:
-        specifier: ^4.12.16
-        version: 4.12.16
+        specifier: ^4.12.17
+        version: 4.12.17
       js-yaml:
         specifier: ^4.1.1
         version: 4.1.1
@@ -122,8 +122,8 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0
       zod:
-        specifier: ^4.4.2
-        version: 4.4.2
+        specifier: ^4.4.3
+        version: 4.4.3
     devDependencies:
       '@types/dockerode':
         specifier: 4.0.1
@@ -989,33 +989,33 @@ packages:
     resolution: {integrity: sha512-08eKiDAjj4zLug1taXSIJ0kGL5cawjVCyJkBb6EWSg5fEPX6L+Wtr0CH2If4j5KYylz85iaZiFlUItvgJvll5g==}
     engines: {node: ^14.13.1 || ^16.0.0 || >=18}
 
-  '@turbo/darwin-64@2.9.8':
-    resolution: {integrity: sha512-zU1P95ygDpsQ+2QHh7CVTqvYwi9UBlhKWzoIyUnP3vUoge7H9SQEzrd8dj+XcTrslAp9Db3vIBcXtMVoTEYDnA==}
+  '@turbo/darwin-64@2.9.9':
+    resolution: {integrity: sha512-hTEiNu2ABZZOO1qbjnKASI8eF3BdOOzU6iKv5w5uGOK65DDMc10cS40N1kqM99YT0uSAGUwNu6GdFctRPeEeVA==}
     cpu: [x64]
     os: [darwin]
 
-  '@turbo/darwin-arm64@2.9.8':
-    resolution: {integrity: sha512-nKRFI5ZhCGUi4eXNlrojzWcT/CehMj0raot1WE4lw5qf66ZxZHbRbBqcwNEy+ZLY7RkJJRY+TaU89fuj3BcgGg==}
+  '@turbo/darwin-arm64@2.9.9':
+    resolution: {integrity: sha512-MinO40EEcP5mJiTVpfjtEulsEBhVeryfq21QhYtJZ8hQJLHGgy459rcmDVAY8/JERe4dkVU4KW+zoLF22o01EA==}
     cpu: [arm64]
     os: [darwin]
 
-  '@turbo/linux-64@2.9.8':
-    resolution: {integrity: sha512-Wf/kQpVDCaWM3P5d6lKvJnqjYn/ofUBGbT4h4vRFrdC4N6B/nsun03S2kQNJJMXpXg39woeS4CI367RMU3/OAg==}
+  '@turbo/linux-64@2.9.9':
+    resolution: {integrity: sha512-7JNLw88Isk+gMlbsC8pulLDkrqe2B827ZsKFEHilb17AC6Xn/62pzH7afjY7fEU6Ayp4XP/vGhlRWOzqBvBvIQ==}
     cpu: [x64]
     os: [linux]
 
-  '@turbo/linux-arm64@2.9.8':
-    resolution: {integrity: sha512-v6S3HuKVoa9CEx16IxKj1i/+crxXx22A9O80zW1350zyUlcX0T/zLOxVf1k+ruK/7ssXnDJVg8uSYOxlYRedlA==}
+  '@turbo/linux-arm64@2.9.9':
+    resolution: {integrity: sha512-0pnXDwPw1rHii98JZPRg7SvsjIzy7jrhkwGU9Jy5fVYoMdYd3P2vbtLfII+OJ0Mm4Ar5yykdHDTz3RWiRI1o9g==}
     cpu: [arm64]
     os: [linux]
 
-  '@turbo/windows-64@2.9.8':
-    resolution: {integrity: sha512-JaefWOJNBazDylAn3f+lLB34XMNu8nEBbgPRP/Ewysg81cBubGfcyyyzpQOGVuMwfaqdNAE/kitG7w3AbJn9/g==}
+  '@turbo/windows-64@2.9.9':
+    resolution: {integrity: sha512-vjDQycz4gQVvIq4n2rPtiiIESwJlAc406qtkiZlqyL+fHZEd9SxYNlBIFYtc5cuMuwrk+sIKrhN7XvwjmvS9YQ==}
     cpu: [x64]
     os: [win32]
 
-  '@turbo/windows-arm64@2.9.8':
-    resolution: {integrity: sha512-Or6ljjB4TiiwCdVKDYWew0SokQ9kep5zruL8P3nbum9WdkH5XA41rQID4Ulc215Z+R3DrB+qXSHPsJjU3/n2ng==}
+  '@turbo/windows-arm64@2.9.9':
+    resolution: {integrity: sha512-V6NiH43oCctepbOdQFp7UjqLyK8p6Tt824QA+G4TE+B1BBHu80A0W8OCL+H7uBJ3XZjAj/hvPDw3k3l65DoDGw==}
     cpu: [arm64]
     os: [win32]
 
@@ -1757,8 +1757,8 @@ packages:
   help-me@5.0.0:
     resolution: {integrity: sha512-7xgomUX6ADmcYzFik0HzAxh/73YlKR9bmFzf51CZwR+b6YtzU2m0u49hQCqV6SvlqIqsaxovfwdvbnsw3b/zpg==}
 
-  hono@4.12.16:
-    resolution: {integrity: sha512-jN0ZewiNAWSe5khM3EyCmBb250+b40wWbwNILNfEvq84VREWwOIkuUsFONk/3i3nqkz7Oe1PcpM2mwQEK2L9Kg==}
+  hono@4.12.17:
+    resolution: {integrity: sha512-FbJJNb/XgX7YW0hX/V8w5oYLztKEsRLykCMZWt1WdLtsfjzMvmoqWBA4H4t5norinq8/rh20oiZYr+WSl4UzAQ==}
     engines: {node: '>=16.9.0'}
 
   hookable@6.1.1:
@@ -2830,8 +2830,8 @@ packages:
     resolution: {integrity: sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==}
     engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
 
-  turbo@2.9.8:
-    resolution: {integrity: sha512-REEB2rVTVDTf4hav1gJ5dIsGylWZrNonvjXFtk1dCi8gND3PhZtnYkyry1bra/Fo+iP6ctTEZbg6vWfdfHq/1A==}
+  turbo@2.9.9:
+    resolution: {integrity: sha512-3xfzXE/yTjhh0S5dIWlE+3E+J9A09REpLI1ZqVh2+HrNZoVzZn0pkvjiRgVK/Ev3PF9XnaTwCntTx+CADWXcyA==}
     hasBin: true
 
   tweetnacl@0.14.5:
@@ -3079,8 +3079,8 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
-  zod@4.4.2:
-    resolution: {integrity: sha512-IynmDyxsEsb9RKzO3J9+4SxXnl2FTFSzNBaKKaMV6tsSk0rw9gYw9gs+JFCq/qk2LCZ78KDwyj+Z289TijSkUw==}
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
 snapshots:
 
@@ -3375,14 +3375,14 @@ snapshots:
       protobufjs: 7.5.5
       yargs: 17.7.2
 
-  '@hono/node-server@2.0.1(hono@4.12.16)':
+  '@hono/node-server@2.0.1(hono@4.12.17)':
     dependencies:
-      hono: 4.12.16
+      hono: 4.12.17
 
-  '@hono/zod-validator@0.7.6(hono@4.12.16)(zod@4.4.2)':
+  '@hono/zod-validator@0.7.6(hono@4.12.17)(zod@4.4.3)':
     dependencies:
-      hono: 4.12.16
-      zod: 4.4.2
+      hono: 4.12.17
+      zod: 4.4.3
 
   '@inquirer/external-editor@1.0.3(@types/node@25.6.0)':
     dependencies:
@@ -3809,22 +3809,22 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@turbo/darwin-64@2.9.8':
+  '@turbo/darwin-64@2.9.9':
     optional: true
 
-  '@turbo/darwin-arm64@2.9.8':
+  '@turbo/darwin-arm64@2.9.9':
     optional: true
 
-  '@turbo/linux-64@2.9.8':
+  '@turbo/linux-64@2.9.9':
     optional: true
 
-  '@turbo/linux-arm64@2.9.8':
+  '@turbo/linux-arm64@2.9.9':
     optional: true
 
-  '@turbo/windows-64@2.9.8':
+  '@turbo/windows-64@2.9.9':
     optional: true
 
-  '@turbo/windows-arm64@2.9.8':
+  '@turbo/windows-arm64@2.9.9':
     optional: true
 
   '@tybys/wasm-util@0.10.1':
@@ -4679,7 +4679,7 @@ snapshots:
 
   help-me@5.0.0: {}
 
-  hono@4.12.16: {}
+  hono@4.12.17: {}
 
   hookable@6.1.1: {}
 
@@ -5809,14 +5809,14 @@ snapshots:
 
   tunnel@0.0.6: {}
 
-  turbo@2.9.8:
+  turbo@2.9.9:
     optionalDependencies:
-      '@turbo/darwin-64': 2.9.8
-      '@turbo/darwin-arm64': 2.9.8
-      '@turbo/linux-64': 2.9.8
-      '@turbo/linux-arm64': 2.9.8
-      '@turbo/windows-64': 2.9.8
-      '@turbo/windows-arm64': 2.9.8
+      '@turbo/darwin-64': 2.9.9
+      '@turbo/darwin-arm64': 2.9.9
+      '@turbo/linux-64': 2.9.9
+      '@turbo/linux-arm64': 2.9.9
+      '@turbo/windows-64': 2.9.9
+      '@turbo/windows-arm64': 2.9.9
 
   tweetnacl@0.14.5: {}
 
@@ -6065,4 +6065,4 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.7.0
 
-  zod@4.4.2: {}
+  zod@4.4.3: {}
