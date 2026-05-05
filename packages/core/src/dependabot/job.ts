@@ -143,6 +143,7 @@ export const DependabotPackageManagerSchema = z.enum([
   'go_modules', // ecosystem(s): 'gomod'
   'gradle',
   'maven',
+  'sbt',
   'hex', // ecosystem(s): 'mix'
   'nuget',
   'npm_and_yarn', // ecosystem(s): 'npm', 'pnpm', 'yarn'

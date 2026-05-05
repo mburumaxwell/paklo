@@ -30,5 +30,6 @@
   "bazel": "ghcr.io/dependabot/dependabot-updater-bazel:v2.0.20260430234544@sha256:b4b5ebb69898fbcc65205230e67929212c22435d3e5ba0d6f2c12ca75f349d08",
   "opentofu": "ghcr.io/dependabot/dependabot-updater-opentofu:v2.0.20260430234544@sha256:1b89d82e86621c037c2bf5d6129e5914376090029fadef8d624d7f87b7f2e013",
   "pre_commit": "ghcr.io/dependabot/dependabot-updater-pre-commit:v2.0.20260430234544@sha256:63bdbe8ed51f41099edfb9ad7a700ebba4b6b65dce3bb508365dea152212fbb3",
-  "nix": "ghcr.io/dependabot/dependabot-updater-nix:v2.0.20260430234544@sha256:4ccb7e5dc06a25ca80c88e32745b5a0187a3098577ba68624ad9645e3f72fb32"
+  "nix": "ghcr.io/dependabot/dependabot-updater-nix:v2.0.20260430234544@sha256:4ccb7e5dc06a25ca80c88e32745b5a0187a3098577ba68624ad9645e3f72fb32",
+  "sbt": "ghcr.io/dependabot/dependabot-updater-sbt:v2.0.20260430234544@sha256:0"
 }

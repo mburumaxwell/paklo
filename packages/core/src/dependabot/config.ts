@@ -177,6 +177,7 @@ export const DependabotPackageEcosystemSchema = z.enum([
   'gradle',
   'julia',
   'maven',
+  'sbt',
   'nix',
   'npm',
   'nuget',
@@ -273,7 +274,7 @@ export const DependabotMultiEcosystemGroupSchema = z.object({
 export type DependabotMultiEcosystemGroup = z.infer<typeof DependabotMultiEcosystemGroupSchema>;
 
 /* Ecosystems that are currently in beta */
-export const BETA_ECOSYSTEMS: DependabotPackageEcosystem[] = [];
+export const BETA_ECOSYSTEMS: DependabotPackageEcosystem[] = ['sbt'];
 
 /**
  * Represents the dependabot.yaml configuration file options.

@@ -55,6 +55,7 @@ const manifest = {
   opentofu: getImageName('Dockerfile.opentofu'),
   pre_commit: getImageName('Dockerfile.pre-commit'),
   nix: getImageName('Dockerfile.nix'),
+  sbt: getImageName('Dockerfile.sbt'),
 };
 
 fs.writeFile(
