@@ -1,5 +1,12 @@
 # extension-azure-devops
 
+## 2.67.5
+
+### Patch Changes
+
+- Updated dependencies [[`3eb962e`](https://github.com/mburumaxwell/paklo/commit/3eb962e0f6625972019599d19f2eaa949eee70b6), [`e6fc088`](https://github.com/mburumaxwell/paklo/commit/e6fc088dd1a6e09ab6795cbc7453ced901e1868c), [`1aaa529`](https://github.com/mburumaxwell/paklo/commit/1aaa529244f3e62ad1059f1d7ea778b00f361bbb)]:
+  - @paklo/core@0.22.0
+
 ## 2.67.4
 
 ### Patch Changes

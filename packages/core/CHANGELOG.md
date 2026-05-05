@@ -1,5 +1,17 @@
 # @paklo/core
 
+## 0.22.0
+
+### Minor Changes
+
+- Use version ranges for dependencies instead of exact pins, allowing package managers to deduplicate with consumer-installed versions. ([`3eb962e`](https://github.com/mburumaxwell/paklo/commit/3eb962e0f6625972019599d19f2eaa949eee70b6))
+
+### Patch Changes
+
+- Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 32 updates ([#2727](https://github.com/mburumaxwell/paklo/pull/2727))
+
+- Rename `PackageManager*` types and constants to disambiguate them ([`1aaa529`](https://github.com/mburumaxwell/paklo/commit/1aaa529244f3e62ad1059f1d7ea778b00f361bbb))
+
 ## 0.21.0
 
 ### Minor Changes
