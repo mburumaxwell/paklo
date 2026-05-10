@@ -332,7 +332,7 @@ export class AzureDevOpsClientWrapper {
         options.repository,
         options.pullRequestId,
       );
-      if (commits?.some((c) => c.author?.email !== options.author.email)) {
+      if (commits?.[0]?.author?.email !== options.author.email) {
         logger.info(` - Skipping update as pull request has been modified by another user.`);
         return true;
       }
