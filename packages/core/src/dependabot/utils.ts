@@ -69,6 +69,7 @@ export function getPersistedPr(data: DependabotCreatePullRequest): DependabotPer
     'dependencies': data.dependencies.map((dep) => ({
       'dependency-name': dep.name,
       'dependency-version': dep.version,
+      'previous-version': dep['previous-version'],
       'directory': dep.directory,
     })),
   };

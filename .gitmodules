@@ -7,3 +7,6 @@
 [submodule "dependabot-cli"]
 	path = dependabot-cli
 	url = https://github.com/dependabot/cli.git
+[submodule "dependabot-fetch-metadata"]
+	path = dependabot-fetch-metadata
+	url = https://github.com/dependabot/fetch-metadata.git

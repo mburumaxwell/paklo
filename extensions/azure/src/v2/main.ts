@@ -5,12 +5,11 @@ import {
   DEPENDABOT_DEFAULT_AUTHOR_NAME,
   type GitAuthor,
 } from '@paklo/core/dependabot';
-import { logger } from '@paklo/core/logger';
 import type { SecretMasker } from '@paklo/core/runner';
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import packageJson from '../../package.json';
-import { setSecrets } from '../formatting';
+import { setSecrets, setupLogging } from '../common';
 import { getTaskInputs } from './inputs';
 
 async function run() {
@@ -26,39 +25,7 @@ async function run() {
     }
 
     // Route core logs through Azure DevOps task output.
-    logger.replace({
-      log: ({ level, message }) => {
-        switch (level) {
-          case 'fatal':
-          case 'error':
-            tl.error(message);
-            break;
-          case 'warn':
-            tl.warning(message);
-            break;
-          case 'debug':
-          case 'trace':
-            tl.debug(message);
-            break;
-          case 'info':
-          default:
-            console.log(message);
-            break;
-        }
-      },
-
-      /**
-       * Formats the logs into groups and sections to allow for easier navigation and readability.
-       * https://learn.microsoft.com/en-us/azure/devops/pipelines/scripts/logging-commands?view=azure-devops&tabs=bash#formatting-commands
-       */
-
-      startGroup: (name) => console.log(`##[group]${name}`),
-      endGroup: () => console.log(`##[endgroup]`),
-      section: (name) => console.log(`##[section]${name}`),
-    });
-
-    // update logger level based on debug input
-    logger.level = inputs.debug ? 'debug' : 'info';
+    setupLogging(inputs);
 
     const { url, authorEmail, authorName, ...remainingInputs } = inputs;
 

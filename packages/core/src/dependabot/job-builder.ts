@@ -259,6 +259,31 @@ export function mapPackageEcosystemToPackageManager(ecosystem: DependabotPackage
   }
 }
 
+export function mapPackageManagerToPackageEcosystem(manager: DependabotPackageManager): DependabotPackageEcosystem {
+  switch (manager) {
+    case 'docker_compose':
+      return 'docker-compose';
+    case 'dotnet_sdk':
+      return 'dotnet-sdk';
+    case 'github_actions':
+      return 'github-actions';
+    case 'go_modules':
+      return 'gomod';
+    case 'hex':
+      return 'mix';
+    case 'npm_and_yarn':
+      return 'npm';
+    case 'pre_commit':
+      return 'pre-commit';
+    case 'rust_toolchain':
+      return 'rust-toolchain';
+    case 'submodules':
+      return 'gitsubmodule';
+    default:
+      return manager;
+  }
+}
+
 export function mapSourceFromDependabotConfigToJobConfig(
   source: DependabotSourceInfo,
   config: DependabotConfig,

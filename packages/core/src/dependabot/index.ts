@@ -9,3 +9,4 @@ export * from './job-builder';
 export * from './placeholder';
 export * from './update';
 export * from './utils';
+export * from './metadata';

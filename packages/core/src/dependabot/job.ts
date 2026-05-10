@@ -37,6 +37,7 @@ export type DependabotSource = z.infer<typeof DependabotSourceSchema>;
 export const DependabotExistingPrDependencySchema = z.object({
   'dependency-name': z.string(),
   'dependency-version': z.string().nullish(),
+  'previous-version': z.string().nullish(),
   'directory': z.string().nullish(),
   'removed': z.boolean().nullish(),
   'dependency-removed': z.boolean().nullish(),

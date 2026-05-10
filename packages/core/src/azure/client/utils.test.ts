@@ -11,6 +11,7 @@ import {
 import type { AzdoPrExtractedWithProperties } from './types';
 import {
   buildPullRequestProperties,
+  getDependabotPullRequestMetadata,
   getPullRequestDependencyGroupName,
   getPullRequestForDependencyNames,
   parsePullRequestProperties,
@@ -179,6 +180,140 @@ describe('parsePullRequestProperties', () => {
     const result = parsePullRequestProperties(prs, 'nuget');
 
     expect(result).toHaveLength(0);
+  });
+});
+
+describe('getDependabotPullRequestMetadata', () => {
+  it('builds fetch-metadata-shaped values from persisted pull request properties', () => {
+    const metadata = getDependabotPullRequestMetadata({
+      pullRequestId: 123,
+      targetRefName: 'refs/heads/main',
+      description: 'Bumps lodash.\n\nMaintainer changes',
+      properties: [
+        { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGERS, value: JSON.stringify(['npm_and_yarn']) },
+        {
+          name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
+          value: JSON.stringify({
+            'dependency-group-name': 'frontend',
+            'dependencies': [
+              {
+                'dependency-name': 'lodash',
+                'previous-version': '3.10.1',
+                'dependency-version': '4.17.21',
+                'directory': '/web',
+              },
+              {
+                'dependency-name': 'express',
+                'previous-version': '4.17.1',
+                'dependency-version': '4.18.2',
+                'directory': '/api',
+              },
+            ],
+          }),
+        },
+      ],
+    });
+
+    expect(metadata).toMatchObject({
+      'dependency-names': 'lodash, express',
+      'dependency-type': '',
+      'update-type': 'version-update:semver-major',
+      'directory': '/web',
+      'package-ecosystem': 'npm',
+      'target-branch': 'main',
+      'previous-version': '3.10.1',
+      'new-version': '4.17.21',
+      'compatibility-score': 0,
+      'maintainer-changes': true,
+      'dependency-group': 'frontend',
+      'alert-state': '',
+      'ghsa-id': '',
+      'cvss': 0,
+    });
+    expect(metadata['updated-dependencies-json']).toEqual([
+      {
+        'dependency-name': 'lodash',
+        'dependency-type': '',
+        'update-type': 'version-update:semver-major',
+        'directory': '/web',
+        'package-ecosystem': 'npm',
+        'target-branch': 'main',
+        'previous-version': '3.10.1',
+        'new-version': '4.17.21',
+        'compatibility-score': 0,
+        'maintainer-changes': true,
+        'dependency-group': 'frontend',
+        'alert-state': '',
+        'ghsa-id': '',
+        'cvss': 0,
+      },
+      {
+        'dependency-name': 'express',
+        'dependency-type': '',
+        'update-type': 'version-update:semver-minor',
+        'directory': '/api',
+        'package-ecosystem': 'npm',
+        'target-branch': 'main',
+        'previous-version': '4.17.1',
+        'new-version': '4.18.2',
+        'compatibility-score': 0,
+        'maintainer-changes': true,
+        'dependency-group': 'frontend',
+        'alert-state': '',
+        'ghsa-id': '',
+        'cvss': 0,
+      },
+    ]);
+  });
+
+  it('maps stored package managers back to Dependabot config ecosystem names', () => {
+    const metadata = getDependabotPullRequestMetadata({
+      pullRequestId: 123,
+      properties: [
+        { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGERS, value: JSON.stringify(['go_modules']) },
+        {
+          name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
+          value: JSON.stringify({
+            dependencies: [{ 'dependency-name': 'golang.org/x/text', 'dependency-version': '0.31.0' }],
+          }),
+        },
+      ],
+    });
+
+    expect(metadata['package-ecosystem']).toBe('gomod');
+  });
+
+  it('returns null update type when versions are missing or not semver-like', () => {
+    const metadata = getDependabotPullRequestMetadata({
+      pullRequestId: 123,
+      properties: [
+        { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGERS, value: JSON.stringify(['docker']) },
+        {
+          name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
+          value: JSON.stringify({
+            dependencies: [
+              {
+                'dependency-name': 'ubuntu',
+                'previous-version': 'jammy',
+                'dependency-version': 'noble',
+              },
+            ],
+          }),
+        },
+      ],
+    });
+
+    expect(metadata['update-type']).toBeNull();
+    expect(metadata['updated-dependencies-json'][0]!['update-type']).toBeNull();
+  });
+
+  it('throws a clear error when pull request metadata is missing', () => {
+    expect(() =>
+      getDependabotPullRequestMetadata({
+        pullRequestId: 123,
+        properties: [],
+      }),
+    ).toThrow("No Dependabot metadata was found on pull request '123'.");
   });
 });
 
@@ -434,7 +569,7 @@ describe('getPersistedPr and buildPullRequestProperties', () => {
   it('round-trip: persisted format excludes pr-number, runtime format includes it', () => {
     const createData: DependabotCreatePullRequest = {
       'dependencies': [
-        { name: 'lodash', version: '4.17.21', directory: '/' },
+        { 'name': 'lodash', 'previous-version': '4.17.20', 'version': '4.17.21', 'directory': '/' },
         { name: 'express', version: '4.18.0', directory: '/' },
       ],
       'dependency-group': { name: 'production' },
@@ -450,6 +585,7 @@ describe('getPersistedPr and buildPullRequestProperties', () => {
     expect(persisted).not.toHaveProperty('pr-number');
     expect(persisted['dependency-group-name']).toBe('production');
     expect(persisted.dependencies).toHaveLength(2);
+    expect(persisted.dependencies[0]!['previous-version']).toBe('4.17.20');
 
     // Serialize to properties
     const properties = buildPullRequestProperties('npm_and_yarn', persisted);

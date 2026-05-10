@@ -7,6 +7,7 @@ async function updateTaskJsonFiles({ cwd, dev, version, buildNumber }) {
   const fileNames = [
     // 'tasks/dependabotV1/task.json',
     'tasks/dependabotV2/task.json',
+    'tasks/DependabotFetchMetadataV1/task.json',
   ].map((fileName) => join(cwd, fileName));
 
   for (const fileName of fileNames) {

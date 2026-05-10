@@ -19,6 +19,7 @@ export default defineConfig({
     // exclude git submodules
     'dependabot-action',
     'dependabot-cli',
+    'dependabot-fetch-metadata',
     'dependabot-proxy',
   ],
 });

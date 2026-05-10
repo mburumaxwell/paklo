@@ -74,6 +74,59 @@ Dependabot uses Docker containers, which may take time to install if not already
 | dependabotUpdaterImage        | **_Optional_**. The [Dependabot CLI container image](https://github.com/dependabot/dependabot-core/pkgs/container/dependabot-updater-bundler) to use for updates. The image must contain a '{ecosystem}' placeholder, which will be substituted with the package ecosystem for each update operation. This is intended to be used in scenarios where 'latest' has issues and you want to pin a known working version, or use a custom package. Defaults to `ghcr.io/dependabot/dependabot-updater-{ecosystem}:latest`                                                                                                                                                                                                                                                                                                                                |
 | experiments                   | **_Optional_**. Comma separated list of Dependabot experiments; available options depend on the ecosystem. Example: `tidy=true,vendor=true,goprivate=*`. If specified, this overrides the [default experiments](https://github.com/mburumaxwell/paklo/blob/main/packages/core/src/dependabot/experiments.ts). See: [Configuring experiments](https://github.com/mburumaxwell/paklo/#configuring-experiments)                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
+## Fetch Metadata Task
+
+The extension also includes `DependabotFetchMetadata@1`, a task for reading metadata from a pull request created by the main Dependabot task. It is intended to run inside a pull request validation pipeline.
+
+```yaml
+trigger: none
+
+pr:
+  branches:
+    include:
+      - '*'
+
+steps:
+  - task: DependabotFetchMetadata@1
+    name: metadata
+
+  - script: |
+      echo "Dependencies: $(metadata.dependencyNames)"
+      echo "Package ecosystem: $(metadata.packageEcosystem)"
+      echo "Update type: $(metadata.updateType)"
+```
+
+The task requires `System.PullRequest.PullRequestId`, so it fails when it is not running in the context of a pull request. Authentication uses the current `SystemVssConnection` by default, or the optional `azureDevOpsServiceConnection` / `azureDevOpsAccessToken` inputs.
+
+### Fetch Metadata Parameters
+
+| Input                        | Description                                                                                                                                                                               |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| azureDevOpsServiceConnection | **_Optional_**. A Service Connection to use for accessing Azure DevOps. Supply a value here to use a different identity from the current build service identity.                          |
+| azureDevOpsAccessToken       | **_Optional_**. The Personal Access Token for accessing Azure DevOps. Use this in place of `azureDevOpsServiceConnection` such as when it is not possible to create a service connection. |
+
+### Fetch Metadata Outputs
+
+| Output                  | Description                                                         |
+| ----------------------- | ------------------------------------------------------------------- |
+| dependencyNames         | A comma-separated list of all package names updated.                |
+| dependencyType          | The dependency type, when known.                                    |
+| updateType              | The highest semver change being made by this PR, when known.        |
+| updatedDependenciesJson | A JSON string containing information about each updated dependency. |
+| directory               | The directory for the first updated dependency.                     |
+| packageEcosystem        | The package ecosystem for this updated dependency.                  |
+| targetBranch            | The pull request target branch.                                     |
+| previousVersion         | The previous version for the first updated dependency, when known.  |
+| newVersion              | The new version for the first updated dependency.                   |
+| compatibilityScore      | The compatibility score, when known.                                |
+| maintainerChanges       | Whether the pull request body contains `Maintainer changes`.        |
+| dependencyGroup         | The dependency group that the PR is associated with.                |
+| alertState              | The alert state, when known.                                        |
+| ghsaId                  | The GHSA ID, when known.                                            |
+| cvss                    | The CVSS value, when known.                                         |
+
+Some values are currently best-effort or unavailable from the persisted Azure metadata, including `dependencyType`, `compatibilityScore`, and security advisory fields such as `alertState`, `ghsaId`, and `cvss`. For older pull requests created before previous versions were persisted, `previousVersion` may be empty and `updateType` may be `null`.
+
 ## Advanced
 
 For advanced configuration and detailed documentation, see the [Azure DevOps Extension Documentation](https://www.paklo.app/docs/extensions/azure).

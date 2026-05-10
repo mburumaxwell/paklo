@@ -74,14 +74,18 @@ export const DependabotAllowConditionSchema = z.object({
 });
 export type DependabotAllowCondition = z.infer<typeof DependabotAllowConditionSchema>;
 
+export const DependabotUpdateTypeSchema = z.enum([
+  'version-update:semver-major',
+  'version-update:semver-minor',
+  'version-update:semver-patch',
+]);
+export type DependabotUpdateType = z.infer<typeof DependabotUpdateTypeSchema>;
+
 export const DependabotIgnoreConditionSchema = z
   .object({
     'dependency-name': z.string().optional(),
     'versions': z.string().array().or(z.string()).optional(),
-    'update-types': z
-      .enum(['version-update:semver-major', 'version-update:semver-minor', 'version-update:semver-patch'])
-      .array()
-      .optional(),
+    'update-types': DependabotUpdateTypeSchema.array().optional(),
   })
   .and(z.record(z.string(), z.any()));
 export type DependabotIgnoreCondition = z.infer<typeof DependabotIgnoreConditionSchema>;

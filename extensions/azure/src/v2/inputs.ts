@@ -3,7 +3,7 @@ import { type AzdoPullRequestMergeStrategy } from '@paklo/core/azure/client';
 import { DEFAULT_EXPERIMENTS, type DependabotExperiments, parseExperiments } from '@paklo/core/dependabot';
 import * as tl from 'azure-pipelines-task-lib/task';
 
-import { setSecrets } from '../formatting';
+import { getAzureDevOpsAccessToken, setSecrets } from '../common';
 
 export type TaskInputs = {
   url: AzureDevOpsRepositoryUrl;
@@ -181,27 +181,6 @@ export function getTaskInputs(): TaskInputs {
   }
 
   return inputs;
-}
-
-/**
- * Get the access token for Azure DevOps Repos.
- * If the user has not provided one, we use the one from the SystemVssConnection.
- */
-function getAzureDevOpsAccessToken() {
-  const systemAccessToken = tl.getInput('azureDevOpsAccessToken');
-  if (systemAccessToken) {
-    tl.debug('azureDevOpsAccessToken provided, using for authenticating');
-    return systemAccessToken;
-  }
-
-  const serviceConnectionName = tl.getInput('azureDevOpsServiceConnection');
-  if (serviceConnectionName) {
-    tl.debug('TFS connection supplied. A token shall be extracted from it.');
-    return tl.getEndpointAuthorizationParameter(serviceConnectionName, 'apitoken', false)!;
-  }
-
-  tl.debug("No custom token provided. The SystemVssConnection's AccessToken shall be used.");
-  return tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false)!;
 }
 
 /** Extract the Github access token from `gitHubAccessToken` or `gitHubConnection` inputs. */

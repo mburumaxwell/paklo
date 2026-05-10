@@ -15,6 +15,8 @@ import {
   mapDependencyGroupsToJobConfig,
   mapExperiments,
   mapIgnoreConditionsFromDependabotConfigToJobConfig,
+  mapPackageEcosystemToPackageManager,
+  mapPackageManagerToPackageEcosystem,
   mapSourceFromDependabotConfigToJobConfig,
 } from './job-builder';
 
@@ -199,6 +201,37 @@ describe('mapAllowedUpdatesFromDependabotConfigToJobConfig', () => {
   it('should allow direct dependency security updates if rules are undefined and securityOnlyUpdate is true', () => {
     const result = mapAllowedUpdatesFromDependabotConfigToJobConfig(undefined, true);
     expect(result).toEqual([{ 'dependency-type': 'direct', 'update-type': 'security' }]);
+  });
+});
+
+describe('mapPackageEcosystemToPackageManager', () => {
+  it('maps config ecosystems to core package managers', () => {
+    expect(mapPackageEcosystemToPackageManager('npm')).toBe('npm_and_yarn');
+    expect(mapPackageEcosystemToPackageManager('gomod')).toBe('go_modules');
+    expect(mapPackageEcosystemToPackageManager('gitsubmodule')).toBe('submodules');
+    expect(mapPackageEcosystemToPackageManager('github-actions')).toBe('github_actions');
+    expect(mapPackageEcosystemToPackageManager('docker-compose')).toBe('docker_compose');
+  });
+
+  it('maps supported aliases to canonical core package managers', () => {
+    expect(mapPackageEcosystemToPackageManager('pnpm')).toBe('npm_and_yarn');
+    expect(mapPackageEcosystemToPackageManager('yarn')).toBe('npm_and_yarn');
+    expect(mapPackageEcosystemToPackageManager('poetry')).toBe('pip');
+  });
+});
+
+describe('mapPackageManagerToPackageEcosystem', () => {
+  it('maps core package managers back to canonical config ecosystems', () => {
+    expect(mapPackageManagerToPackageEcosystem('npm_and_yarn')).toBe('npm');
+    expect(mapPackageManagerToPackageEcosystem('go_modules')).toBe('gomod');
+    expect(mapPackageManagerToPackageEcosystem('submodules')).toBe('gitsubmodule');
+    expect(mapPackageManagerToPackageEcosystem('github_actions')).toBe('github-actions');
+    expect(mapPackageManagerToPackageEcosystem('docker_compose')).toBe('docker-compose');
+  });
+
+  it('returns unchanged package managers that already match config ecosystem names', () => {
+    expect(mapPackageManagerToPackageEcosystem('docker')).toBe('docker');
+    expect(mapPackageManagerToPackageEcosystem('nuget')).toBe('nuget');
   });
 });
 
