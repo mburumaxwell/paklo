@@ -57,12 +57,12 @@ importers:
       '@types/semver':
         specifier: 7.7.1
         version: 7.7.1
-      '@vercel/ncc':
-        specifier: 0.38.4
-        version: 0.38.4
       tfx-cli:
         specifier: 0.23.1
         version: 0.23.1
+      tsdown:
+        specifier: 0.21.10
+        version: 0.21.10(typescript@6.0.3)
 
   packages/cli:
     dependencies:
@@ -1066,10 +1066,6 @@ packages:
 
   '@types/tar-stream@3.1.4':
     resolution: {integrity: sha512-921gW0+g29mCJX0fRvqeHzBlE/XclDaAG0Ousy1LCghsOhvaKacDeRGEVzQP9IPfKn8Vysy7FEXAIxycpc/CMg==}
-
-  '@vercel/ncc@0.38.4':
-    resolution: {integrity: sha512-8LwjnlP39s08C08J5NstzriPvW1SP8Zfpp1BvC2sI35kPeZnHfxVkCwu4/+Wodgnd60UtT1n8K8zw+Mp7J9JmQ==}
-    hasBin: true
 
   '@vitest/expect@4.1.5':
     resolution: {integrity: sha512-PWBaRY5JoKuRnHlUHfpV/KohFylaDZTupcXN1H9vYryNLOnitSw60Mw9IAE2r67NbwwzBw/Cc/8q9BK3kIX8Kw==}
@@ -3881,8 +3877,6 @@ snapshots:
   '@types/tar-stream@3.1.4':
     dependencies:
       '@types/node': 25.6.0
-
-  '@vercel/ncc@0.38.4': {}
 
   '@vitest/expect@4.1.5':
     dependencies:

@@ -5,14 +5,12 @@
   "license": "AGPL-3.0-later",
   "author": "mburumaxwell",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "tsc --watch",
+    "dev": "tsdown --watch",
     "typecheck": "tsc",
-    "build:dependabot:V1": "ncc build src/v1/main.ts --out tasks/dependabot/dependabotV1/dist/main --target es2022 --source-map --external none",
-    "build:dependabot:V2": "ncc build src/v2/main.ts --out tasks/dependabot/dependabotV2/dist/main --target es2022 --source-map --external none",
-    "build:dependabot:cleanup": "ncc build src/v2/cleanup.ts --out tasks/dependabot/dependabotV2/dist/cleanup --target es2022 --source-map --external none",
-    "build:metadata": "ncc build src/metadata/main.ts --out tasks/metadata/DependabotFetchMetadataV1/dist/main --target es2022 --source-map --external none",
-    "build": "pnpm run build:dependabot:V1 && pnpm run build:dependabot:V2 && pnpm run build:dependabot:cleanup && pnpm run build:metadata",
+    "prebuild": "tsc",
+    "build": "tsdown",
     "start": "pnpm start:dependabot:V2",
     "start:dependabot:V1": "node tasks/dependabot/dependabotV1/dist/index.js",
     "start:dependabot:V2": "node tasks/dependabot/dependabotV2/dist/index.js",
@@ -44,7 +42,7 @@
   "devDependencies": {
     "@types/node": "25.6.0",
     "@types/semver": "7.7.1",
-    "@vercel/ncc": "0.38.4",
-    "tfx-cli": "0.23.1"
+    "tfx-cli": "0.23.1",
+    "tsdown": "0.21.10"
   }
 }
