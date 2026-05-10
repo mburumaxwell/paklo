@@ -100,10 +100,10 @@
   ],
   "execution": {
     "Node20_1": {
-      "target": "dist/main/index.mjs"
+      "target": "dist/main/index.cjs"
     },
     "Node24": {
-      "target": "dist/main/index.mjs"
+      "target": "dist/main/index.cjs"
     }
   }
 }

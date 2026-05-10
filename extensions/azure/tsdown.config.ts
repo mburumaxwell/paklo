@@ -1,9 +1,7 @@
 import { type UserConfig, defineConfig } from 'tsdown';
 
 const base: UserConfig = {
-  // Azure DevOps agent runs `node "script"` directly; Node.js loads .mjs as ESM natively
-  // https://github.com/Microsoft/azure-pipelines-agent/blob/master/src/Agent.Worker/Handlers/NodeHandler.cs
-  format: 'esm',
+  format: 'cjs',
   platform: 'node',
   target: 'es2022',
   clean: true,
