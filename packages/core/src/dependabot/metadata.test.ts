@@ -34,11 +34,23 @@ describe('extractPullRequestMetadata', () => {
         scoreCalls.push(`${dependencyName}:${packageEcosystem}:${previousVersion}:${newVersion}`);
         return dependencyName === 'lodash' ? 89 : 76;
       },
+      `Bump frontend dependencies
+
+---
+updated-dependencies:
+- dependency-name: lodash
+  dependency-type: direct:production
+  dependency-version: 4.17.21
+- dependency-name: express
+  dependency-type: direct:development
+  dependency-version: 4.18.2
+...
+`,
     );
 
     expect(metadata).toMatchObject({
       'dependency-names': 'lodash, express',
-      'dependency-type': '',
+      'dependency-type': 'direct:production',
       'update-type': 'version-update:semver-major',
       'directory': '/web',
       'package-ecosystem': 'npm',
@@ -55,7 +67,7 @@ describe('extractPullRequestMetadata', () => {
     expect(metadata['updated-dependencies-json']).toEqual([
       {
         'dependency-name': 'lodash',
-        'dependency-type': '',
+        'dependency-type': 'direct:production',
         'update-type': 'version-update:semver-major',
         'directory': '/web',
         'package-ecosystem': 'npm',
@@ -71,7 +83,7 @@ describe('extractPullRequestMetadata', () => {
       },
       {
         'dependency-name': 'express',
-        'dependency-type': '',
+        'dependency-type': 'direct:development',
         'update-type': 'version-update:semver-minor',
         'directory': '/api',
         'package-ecosystem': 'npm',
@@ -124,5 +136,21 @@ describe('extractPullRequestMetadata', () => {
 
     expect(metadata['update-type']).toBeNull();
     expect(metadata['updated-dependencies-json'][0]!['update-type']).toBeNull();
+  });
+
+  it('returns unknown dependency type when commit metadata is missing', async () => {
+    const metadata = await extractPullRequestMetadata(
+      null,
+      {
+        'pr-number': 123,
+        'dependencies': [{ 'dependency-name': 'lodash', 'dependency-version': '4.17.21' }],
+      },
+      ['npm_and_yarn'],
+      '',
+      async () => 0,
+    );
+
+    expect(metadata['dependency-type']).toBe('unknown');
+    expect(metadata['updated-dependencies-json'][0]!['dependency-type']).toBe('unknown');
   });
 });

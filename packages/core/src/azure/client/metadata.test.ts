@@ -10,6 +10,18 @@ describe('getPullRequestMetadata', () => {
         pullRequestId: 123,
         targetRefName: 'refs/heads/main',
         description: 'Bumps lodash.\n\nMaintainer changes',
+        commitMessage: `Bump frontend dependencies
+
+---
+updated-dependencies:
+- dependency-name: lodash
+  dependency-type: direct:production
+  dependency-version: 4.17.21
+- dependency-name: express
+  dependency-type: indirect
+  dependency-version: 4.18.2
+...
+`,
         properties: [
           { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGERS, value: JSON.stringify(['npm_and_yarn']) },
           {
@@ -38,6 +50,7 @@ describe('getPullRequestMetadata', () => {
     );
 
     expect(metadata['dependency-names']).toBe('lodash, express');
+    expect(metadata['dependency-type']).toBe('direct:production');
     expect(metadata['package-ecosystem']).toBe('npm');
     expect(metadata['target-branch']).toBe('main');
     expect(metadata['dependency-group']).toBe('frontend');

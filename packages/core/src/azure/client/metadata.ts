@@ -12,6 +12,7 @@ import { getPullRequestPackageManagers, parsePullRequestProps } from './utils';
 export type DependabotPullRequestMetadataInput = AzdoPrExtractedWithProperties & {
   description?: string | null;
   targetRefName?: string | null;
+  commitMessage?: string | null;
 };
 
 export async function getPullRequestMetadata(
@@ -27,5 +28,12 @@ export async function getPullRequestMetadata(
   const parsed = parsePullRequestProps(input);
   const targetBranch = normalizeBranchName(input.targetRefName ?? undefined) ?? '';
 
-  return await extractPullRequestMetadata(input.description, parsed, packageManagers, targetBranch, scoreLookup);
+  return await extractPullRequestMetadata(
+    input.description,
+    parsed,
+    packageManagers,
+    targetBranch,
+    scoreLookup,
+    input.commitMessage,
+  );
 }

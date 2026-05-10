@@ -49,11 +49,16 @@ async function run() {
       throw new Error(`Properties for pull request '${pullRequestId}' were not found.`);
     }
 
+    const commits = await client.inner.pullRequests.getCommits(url.project, url.repository, pullRequestId);
+    const firstCommit = commits?.[0]?.commitId
+      ? await client.inner.git.getCommit(url.project, url.repository, commits[0].commitId)
+      : undefined;
     const metadata = await getPullRequestMetadata({
       pullRequestId,
       properties,
       description: pullRequest.description,
       targetRefName: pullRequest.targetRefName,
+      commitMessage: firstCommit?.comment ?? commits?.[0]?.comment,
     });
 
     for (const [name, value] of Object.entries(metadata)) {

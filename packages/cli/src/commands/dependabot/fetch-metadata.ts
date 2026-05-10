@@ -40,11 +40,16 @@ async function handler({ options, error }: HandlerOptions<Options>) {
       return;
     }
 
+    const commits = await client.inner.pullRequests.getCommits(url.project, url.repository, pullRequestId);
+    const firstCommit = commits?.[0]?.commitId
+      ? await client.inner.git.getCommit(url.project, url.repository, commits[0].commitId)
+      : undefined;
     const metadata = await getPullRequestMetadata({
       pullRequestId,
       properties,
       description: pullRequest.description,
       targetRefName: pullRequest.targetRefName,
+      commitMessage: firstCommit?.comment ?? commits?.[0]?.comment,
     });
 
     stdout.write(`${JSON.stringify(metadata, null, 2)}\n`);

@@ -135,6 +135,8 @@ export const AzdoGitChangeSchema = z.object({
 export type AzdoGitChange = z.infer<typeof AzdoGitChangeSchema>;
 export const AzdoGitCommitRefSchema = z.object({
   commitId: z.string(),
+  comment: z.string().optional(),
+  commentTruncated: z.boolean().optional(),
   author: AzdoGitUserDateSchema.optional(),
   committer: AzdoGitUserDateSchema.optional(),
   changes: AzdoGitChangeSchema.array().optional(),

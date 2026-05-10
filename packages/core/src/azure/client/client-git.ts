@@ -3,6 +3,7 @@ import { isHTTPError } from 'ky';
 import { BaseAzureDevOpsClient } from './client-base';
 import type {
   AzdoGitCommitDiffs,
+  AzdoGitCommitRef,
   AzdoGitPush,
   AzdoGitPushCreate,
   AzdoGitRefUpdate,
@@ -12,6 +13,20 @@ import type {
 } from './types';
 
 export class GitClient extends BaseAzureDevOpsClient {
+  public async getCommit(
+    projectIdOrName: string,
+    repositoryIdOrName: string,
+    commitId: string,
+  ): Promise<AzdoGitCommitRef | undefined> {
+    return await this.client
+      .get<AzdoGitCommitRef>(
+        this.makeUrl(
+          `${encodeURIComponent(projectIdOrName)}/_apis/git/repositories/${encodeURIComponent(repositoryIdOrName)}/commits/${encodeURIComponent(commitId)}`,
+        ),
+      )
+      .json();
+  }
+
   public async getItem(
     projectIdOrName: string,
     repositoryIdOrName: string,

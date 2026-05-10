@@ -1,3 +1,4 @@
+import * as yaml from 'js-yaml';
 import ky from 'ky';
 import * as semver from 'semver';
 
@@ -53,18 +54,21 @@ export async function extractPullRequestMetadata(
   packageManagers: DependabotPackageManager[],
   targetBranch: string,
   scoreLookup: CompatibilityScoreLookup = getCompatibilityScore,
+  commitMessage?: string | null,
 ): Promise<DependabotPullRequestMetadata> {
   const packageEcosystem = mapPackageManagerToPackageEcosystem(packageManagers[0]!);
   const dependencyGroup = 'dependency-group-name' in parsed ? (parsed['dependency-group-name'] ?? '') : '';
   const maintainerChanges = /Maintainer changes/m.test(description ?? '');
+  const dependencyTypesByName = getDependencyTypesByName(commitMessage);
 
   const updatedDependencies = await Promise.all(
     parsed.dependencies.map(async (dependency): Promise<DependabotPullRequestUpdatedDependency> => {
+      const dependencyType = dependencyTypesByName.get(dependency['dependency-name'])?.shift() ?? 'unknown';
       const previousVersion = dependency['previous-version'] ?? '';
       const newVersion = dependency['dependency-version'] ?? '';
       return {
         'dependency-name': dependency['dependency-name'],
-        'dependency-type': '',
+        'dependency-type': dependencyType,
         'update-type': getUpdateType(previousVersion, newVersion),
         'directory': dependency.directory ?? '',
         'package-ecosystem': packageEcosystem,
@@ -92,7 +96,7 @@ export async function extractPullRequestMetadata(
 
   return {
     'dependency-names': updatedDependencies.map((dependency) => dependency['dependency-name']).join(', '),
-    'dependency-type': '', // TODO: populate
+    'dependency-type': getHighestDependencyType(updatedDependencies),
     'update-type': getHighestUpdateType(updatedDependencies),
     'updated-dependencies-json': updatedDependencies,
     'directory': firstDependency['directory'] ?? '',
@@ -107,6 +111,47 @@ export async function extractPullRequestMetadata(
     'ghsa-id': '', // TODO: populate
     'cvss': 0, // TODO: populate
   };
+}
+
+function getDependencyTypesByName(commitMessage: string | null | undefined): Map<string, string[]> {
+  const fragment = commitMessage?.match(/^---\r?\n(?<metadata>[\s\S]*?)\r?\n^\.\.\.\s*(?:\r?\n|$)/m)?.groups?.metadata;
+  if (!fragment) return new Map();
+
+  let metadata: unknown;
+  try {
+    metadata = yaml.load(fragment);
+  } catch {
+    return new Map();
+  }
+  if (!isRecord(metadata) || !Array.isArray(metadata['updated-dependencies'])) return new Map();
+
+  const dependencyTypes = new Map<string, string[]>();
+  for (const dependency of metadata['updated-dependencies']) {
+    if (!isRecord(dependency)) continue;
+
+    const name = dependency['dependency-name'];
+    const type = dependency['dependency-type'];
+    if (typeof name !== 'string' || typeof type !== 'string' || !type) continue;
+
+    const types = dependencyTypes.get(name) ?? [];
+    types.push(type);
+    dependencyTypes.set(name, types);
+  }
+
+  return dependencyTypes;
+}
+
+function getHighestDependencyType(deps: DependabotPullRequestUpdatedDependency[]): string {
+  return (
+    deps.find((dep) => dep['dependency-type'] === 'direct:production')?.['dependency-type'] ??
+    deps.find((dep) => dep['dependency-type'] === 'direct:development')?.['dependency-type'] ??
+    deps.find((dep) => dep['dependency-type'] === 'indirect')?.['dependency-type'] ??
+    'unknown'
+  );
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 function getUpdateType(
