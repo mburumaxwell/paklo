@@ -20,8 +20,8 @@
   "minimumAgentVersion": "3.232.1",
   "version": {
     "Major": 1,
-    "Minor": 67,
-    "Patch": 5
+    "Minor": 68,
+    "Patch": 0
   },
   "instanceNameFormat": "Dependabot fetch metadata",
   "inputs": [
