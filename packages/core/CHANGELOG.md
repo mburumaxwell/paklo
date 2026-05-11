@@ -1,5 +1,31 @@
 # @paklo/core
 
+## 0.23.0
+
+### Minor Changes
+
+- Add footer to commit which contains metadata. ([`04857fc`](https://github.com/mburumaxwell/paklo/commit/04857fc08d8214a699ea10890cba0140718d3cca))
+  While this was useful for parsing `dependency-type` that we use for metadata, it appears to not have been populated in the commits we made because the logic on GitHub hosted is private and adding it here, it may be useful for other sources.
+
+- Fetch & extract metadata from pull requests ([#2730](https://github.com/mburumaxwell/paklo/pull/2730))
+  This logic is partly borrowed from https://github.com/dependabot/fetch-metadata. The intention is to allow automation in a pipeline for a PR such as adding a changeset when a update PR needs one (example is in this repository's workflows), setting auto approve, setting auto complete, extra labelling, etc.
+  The logic for storing metadata already exists. This exposes fetch & extract using a new CLI command and a new Azure Pipelines Task
+
+- Parse first commit to get dependency-type for fetch metadata ([`9306679`](https://github.com/mburumaxwell/paklo/commit/930667957f539c8eb017fe2bfc2214f6ed3ecb60))
+
+- Fetch compatiblity score and use it when extracting metadata ([`12839b6`](https://github.com/mburumaxwell/paklo/commit/12839b6380578aeea17f1d1fa55209b7cc749618))
+
+- Save vulnerability info (id and cvss) in commit metadata. ([`3c81e5c`](https://github.com/mburumaxwell/paklo/commit/3c81e5c7709f7d9a1a0f7da390ff47ad526d67f6))
+  This is useful for visibility but more importantly for it to be parsed appropriately when fetching metadata
+
+### Patch Changes
+
+- Check first commit author instead of any commit when deciding whether to skip a pull request update ([`cf96673`](https://github.com/mburumaxwell/paklo/commit/cf966732cc09973aca7d537de0ab774e70052f52))
+
+- Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 31 updates ([#2735](https://github.com/mburumaxwell/paklo/pull/2735))
+
+- Add `deno` to package ecosystems/managers, only allowed when `enable-beta-ecosystems` is set to `true` ([`923b23a`](https://github.com/mburumaxwell/paklo/commit/923b23a02748acaaa8e3c9c05d770b5911977d20))
+
 ## 0.22.0
 
 ### Minor Changes

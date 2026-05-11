@@ -1,5 +1,21 @@
 # extension-azure-devops
 
+## 2.68.0
+
+### Minor Changes
+
+- Change bundling from `@vercel/ncc` to `tsdown`. ([`c5fdaef`](https://github.com/mburumaxwell/paklo/commit/c5fdaefc74a3612117120b7fbf2e871e4fcbccf7))
+  It makes it easier to deal with by removing the multiple scripts in package.json and it is consistent with the rest of the repository.
+
+- Fetch & extract metadata from pull requests ([#2730](https://github.com/mburumaxwell/paklo/pull/2730))
+  This logic is partly borrowed from https://github.com/dependabot/fetch-metadata. The intention is to allow automation in a pipeline for a PR such as adding a changeset when a update PR needs one (example is in this repository's workflows), setting auto approve, setting auto complete, extra labelling, etc.
+  The logic for storing metadata already exists. This exposes fetch & extract using a new CLI command and a new Azure Pipelines Task
+
+### Patch Changes
+
+- Updated dependencies [[`cf96673`](https://github.com/mburumaxwell/paklo/commit/cf966732cc09973aca7d537de0ab774e70052f52), [`f6dc5a3`](https://github.com/mburumaxwell/paklo/commit/f6dc5a3dbb9f7ecd34946301ffa4b86189e404c2), [`04857fc`](https://github.com/mburumaxwell/paklo/commit/04857fc08d8214a699ea10890cba0140718d3cca), [`16d7ee8`](https://github.com/mburumaxwell/paklo/commit/16d7ee83cccb42e0d6bb61e7e60930fa7367f587), [`923b23a`](https://github.com/mburumaxwell/paklo/commit/923b23a02748acaaa8e3c9c05d770b5911977d20), [`9306679`](https://github.com/mburumaxwell/paklo/commit/930667957f539c8eb017fe2bfc2214f6ed3ecb60), [`12839b6`](https://github.com/mburumaxwell/paklo/commit/12839b6380578aeea17f1d1fa55209b7cc749618), [`3c81e5c`](https://github.com/mburumaxwell/paklo/commit/3c81e5c7709f7d9a1a0f7da390ff47ad526d67f6)]:
+  - @paklo/core@0.23.0
+
 ## 2.67.5
 
 ### Patch Changes
