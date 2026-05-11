@@ -55,7 +55,6 @@ jobs:
 
       - uses: actions/checkout@v6
         with:
-          submodules: true
           # fixes detached head state on Dependabot PRs
           ref: ${{ github.event.pull_request.head.ref }}
           # Check out using the generated token so any pushed changes will trigger check runs

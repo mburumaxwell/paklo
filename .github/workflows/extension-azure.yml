@@ -42,7 +42,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          submodules: true
           ref: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || '' }}
 
       - name: Setup turborepo caching
