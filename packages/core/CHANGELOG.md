@@ -13,7 +13,7 @@
 
 - Parse first commit to get dependency-type for fetch metadata ([`9306679`](https://github.com/mburumaxwell/paklo/commit/930667957f539c8eb017fe2bfc2214f6ed3ecb60))
 
-- Fetch compatiblity score and use it when extracting metadata ([`12839b6`](https://github.com/mburumaxwell/paklo/commit/12839b6380578aeea17f1d1fa55209b7cc749618))
+- Fetch compatibility score and use it when extracting metadata ([`12839b6`](https://github.com/mburumaxwell/paklo/commit/12839b6380578aeea17f1d1fa55209b7cc749618))
 
 - Save vulnerability info (id and cvss) in commit metadata. ([`3c81e5c`](https://github.com/mburumaxwell/paklo/commit/3c81e5c7709f7d9a1a0f7da390ff47ad526d67f6))
   This is useful for visibility but more importantly for it to be parsed appropriately when fetching metadata
