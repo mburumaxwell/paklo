@@ -106,6 +106,16 @@ jobs:
           omitNameDuringUpdate: true
           tag: ${{ inputs.tag || github.ref_name }}
 
+      # Validate extension from non-bot PRs so as to catch issues before publish
+      - name: Validate Extension
+        if: ${{ github.event_name == 'pull_request' && !contains(github.actor, '[bot]') }}
+        run: >
+          pnpm tfx extension isvalid
+          --vsix ${{ github.workspace }}/out/*.vsix
+          --auth-type pat
+          --token ${{ secrets.AZURE_DEVOPS_EXTENSION_TOKEN }}
+        working-directory: extensions/azure
+
       - name: Publish to marketplace
         if: ${{ inputs.tag || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
         run: >
