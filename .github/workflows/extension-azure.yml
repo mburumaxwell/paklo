@@ -45,7 +45,7 @@ jobs:
           ref: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || '' }}
 
       - name: Setup turborepo caching
-        uses: rharkor/caching-for-turbo@v2.3.14
+        uses: rharkor/caching-for-turbo@v2.4.2
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
