@@ -31,5 +31,6 @@
   "opentofu": "ghcr.io/dependabot/dependabot-updater-opentofu:v2.0.20260508223139@sha256:d841dfe4828d923084c5409ab22143fb5d54919a5eddd9d42ed649bd2e8ca92b",
   "pre_commit": "ghcr.io/dependabot/dependabot-updater-pre-commit:v2.0.20260508223139@sha256:bb8e7d06dbe8191effee88b18b4be1b088875b1994087f80c6b142703b17409e",
   "nix": "ghcr.io/dependabot/dependabot-updater-nix:v2.0.20260508223139@sha256:53b3590472d65a830e571617af3b72cb1fc3bb3ffc50a364448eb48e638513d1",
-  "deno": "ghcr.io/dependabot/dependabot-updater-deno:v2.0.20260508223139@sha256:2ee35de09121b42a332b1b24427123729d919151a4d26aac83282301fc3a01f2"
+  "deno": "ghcr.io/dependabot/dependabot-updater-deno:v2.0.20260508223139@sha256:2ee35de09121b42a332b1b24427123729d919151a4d26aac83282301fc3a01f2",
+  "sbt": "ghcr.io/dependabot/dependabot-updater-sbt:v2.0.20260519092734@sha256:2a43f66af66dd686ef58aa8be6ad258c9d885584bf61b6abc835a7ecdc3acc2d"
 }

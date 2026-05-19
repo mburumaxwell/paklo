@@ -161,6 +161,7 @@ export const DependabotPackageManagerSchema = z.enum([
   'pre_commit',
   'pub',
   'rust_toolchain', // ecosystem(s): 'rust-toolchain'
+  'sbt',
   'submodules', // ecosystem(s): 'gitsubmodule'
   'swift',
   'terraform',
