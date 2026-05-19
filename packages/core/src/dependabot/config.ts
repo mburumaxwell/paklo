@@ -194,6 +194,7 @@ export const DependabotPackageEcosystemSchema = z.enum([
   'poetry', // alias mapped to 'pip'
   'pub',
   'rust-toolchain',
+  'sbt',
   'swift',
   'terraform',
   'uv',
@@ -278,7 +279,7 @@ export const DependabotMultiEcosystemGroupSchema = z.object({
 export type DependabotMultiEcosystemGroup = z.infer<typeof DependabotMultiEcosystemGroupSchema>;
 
 /* Ecosystems that are currently in beta */
-export const BETA_ECOSYSTEMS: DependabotPackageEcosystem[] = ['deno'];
+export const BETA_ECOSYSTEMS: DependabotPackageEcosystem[] = ['deno', 'sbt'];
 
 /**
  * Represents the dependabot.yaml configuration file options.
