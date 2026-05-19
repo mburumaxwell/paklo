@@ -1,5 +1,15 @@
 # @paklo/core
 
+## 0.23.1
+
+### Patch Changes
+
+- Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 32 updates ([#2747](https://github.com/mburumaxwell/paklo/pull/2747))
+
+- Use metadata from commit message footer but fallback to persisted props ([`886387f`](https://github.com/mburumaxwell/paklo/commit/886387f80b2e3c0f285c174c4d219645070309c3))
+
+- Add `sbt` to package ecosystems/managers, only allowed when `enable-beta-ecosystems` is set to `true` ([#2748](https://github.com/mburumaxwell/paklo/pull/2748))
+
 ## 0.23.0
 
 ### Minor Changes
