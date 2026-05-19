@@ -1,3 +1,9 @@
+minimumReleaseAge: 1440 # 1 day in minutes
 packages:
   - 'extensions/*'
   - 'packages/*'
+allowBuilds:
+  cpu-features: false
+  esbuild: false
+  protobufjs: false
+  ssh2: false
