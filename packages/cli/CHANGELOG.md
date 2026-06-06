@@ -1,5 +1,12 @@
 # paklo
 
+## 0.23.1
+
+### Patch Changes
+
+- Updated dependencies [[`50f07a9`](https://github.com/mburumaxwell/paklo/commit/50f07a9a7fc63187677e45197f54a151cac0e147), [`b6b83c6`](https://github.com/mburumaxwell/paklo/commit/b6b83c6c903ce8a50f7652d848a55b3dc3040a1e), [`77297c7`](https://github.com/mburumaxwell/paklo/commit/77297c735f8ff4005c79b2efe277414ee3e0e44b), [`67bf64a`](https://github.com/mburumaxwell/paklo/commit/67bf64a227811335465df0dd4dd329b784064cb1), [`2e3d849`](https://github.com/mburumaxwell/paklo/commit/2e3d849ed7971c5e55b4e4b5ef4a17f9d5cc291b), [`5dd5cb1`](https://github.com/mburumaxwell/paklo/commit/5dd5cb1b223f3a072b8a6f5cde61f67cb1f008cb), [`b36c9b3`](https://github.com/mburumaxwell/paklo/commit/b36c9b31c80f39bafb4340317f1ab6ce9f2b72ea), [`886387f`](https://github.com/mburumaxwell/paklo/commit/886387f80b2e3c0f285c174c4d219645070309c3), [`2085c52`](https://github.com/mburumaxwell/paklo/commit/2085c529f8384cbae4556a474db02f263c371898), [`2c6cd41`](https://github.com/mburumaxwell/paklo/commit/2c6cd416a1ebb6f19e627b986f61916206d7cf08)]:
+  - @paklo/core@0.24.0
+
 ## 0.23.0
 
 ### Minor Changes

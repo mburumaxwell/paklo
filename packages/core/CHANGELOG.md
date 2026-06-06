@@ -1,5 +1,50 @@
 # @paklo/core
 
+## 0.24.0
+
+### Minor Changes
+
+- Add `update-types: string[]` field to the `DependabotAllowConditionSchema`, enabling `update-types` support in the `allow` block of `dependabot.yml`. ([`50f07a9`](https://github.com/mburumaxwell/paklo/commit/50f07a9a7fc63187677e45197f54a151cac0e147))
+
+  This matches the existing pattern in the `DependabotIgnoreConditionSchema` (ignore) schema which already has `update-types: string[]`.
+
+  Related:
+
+  - <https://github.com/dependabot/cli/pull/605>
+  - <https://github.com/dependabot/dependabot-core/pull/12925>
+
+- `sbt` ecosystem no longer in beta ([`b36c9b3`](https://github.com/mburumaxwell/paklo/commit/b36c9b31c80f39bafb4340317f1ab6ce9f2b72ea))
+
+  Changelog: <https://github.blog/changelog/2026-05-26-dependabot-version-updates-now-support-the-sbt-ecosystem/>
+
+- `deno` ecosystem no longer in beta ([`2c6cd41`](https://github.com/mburumaxwell/paklo/commit/2c6cd416a1ebb6f19e627b986f61916206d7cf08))
+
+  Ref: <https://github.com/dependabot/dependabot-core/pull/15173>
+
+### Patch Changes
+
+- Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 32 updates ([#2747](https://github.com/mburumaxwell/paklo/pull/2747))
+
+- Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 34 updates ([#2758](https://github.com/mburumaxwell/paklo/pull/2758))
+
+- Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 33 updates ([#2763](https://github.com/mburumaxwell/paklo/pull/2763))
+
+- Updated docker container manifest for Bump the dependabot-core-images group across 1 directory with 34 updates ([#2769](https://github.com/mburumaxwell/paklo/pull/2769))
+
+- Set `NODE_OPTIONS` to increase V8 heap for large monorepos ([`5dd5cb1`](https://github.com/mburumaxwell/paklo/commit/5dd5cb1b223f3a072b8a6f5cde61f67cb1f008cb))
+  The updater container has an 8GB memory limit (`UPDATER_MAX_MEMORY`), but Node.js V8 auto-scaling caps heap at ~2GB for containers above 4GB. This leaves ~6GB of allocated container memory unused while pnpm/npm crash with "JavaScript heap out of memory" on large monorepos (100+ workspace packages) during lockfile regeneration.
+
+  Set `NODE_OPTIONS=--max-old-space-size=4096` to allow V8 to use up to 4GB (half the container limit), leaving room for Ruby and other processes.
+
+  Related:
+
+  - <https://github.com/github/dependabot-action/commit/bbdee8a6bf002827e0828bdab7ab26773518f2bd>
+  - <https://github.com/dependabot/dependabot-core/issues/14596>
+
+- Use metadata from commit message footer but fallback to persisted props ([`886387f`](https://github.com/mburumaxwell/paklo/commit/886387f80b2e3c0f285c174c4d219645070309c3))
+
+- Add `sbt` to package ecosystems/managers, only allowed when `enable-beta-ecosystems` is set to `true` ([#2748](https://github.com/mburumaxwell/paklo/pull/2748))
+
 ## 0.23.0
 
 ### Minor Changes
