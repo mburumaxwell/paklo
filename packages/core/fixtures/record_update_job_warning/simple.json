@@ -1,0 +1,8 @@
+{
+  "type": "record_update_job_warning",
+  "data": {
+    "warn-type": "warn_once",
+    "warn-title": "something to know",
+    "warn-description": "more details here"
+  }
+}

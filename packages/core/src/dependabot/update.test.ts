@@ -11,6 +11,8 @@ import {
   DependabotRecordCooldownMetaSchema,
   DependabotRecordEcosystemMetaSchema,
   DependabotRecordEcosystemVersionsSchema,
+  DependabotRecordUpdateJobWarningSchema,
+  DependabotRequestSchema,
   DependabotUpdateDependencyListSchema,
 } from './update';
 
@@ -330,6 +332,21 @@ describe('record_ecosystem_meta', () => {
     expect(data[0]?.ecosystem.package_manager?.name).toEqual('terraform');
     expect(data[0]?.ecosystem.package_manager?.version).toEqual('1.12.2');
     expect(data[0]?.ecosystem.package_manager?.raw_version).toEqual('1.12.2');
+  });
+});
+
+describe('record_update_job_warning', () => {
+  it('simple', async () => {
+    const raw = JSON.parse(await readFile('fixtures/record_update_job_warning/simple.json', 'utf-8'));
+
+    const data = DependabotRecordUpdateJobWarningSchema.parse(raw.data);
+    expect(data['warn-type']).toEqual('warn_once');
+    expect(data['warn-title']).toEqual('something to know');
+    expect(data['warn-description']).toEqual('more details here');
+
+    const request = DependabotRequestSchema.parse(raw);
+    expect(request.type).toEqual('record_update_job_warning');
+    expect(request.data).toEqual(data);
   });
 });
 
