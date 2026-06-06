@@ -371,6 +371,7 @@ export function mapAllowedUpdatesFromDependabotConfigToJobConfig(
       'dependency-name': allow['dependency-name'],
       'dependency-type': allow['dependency-type'],
       'update-type': allow['update-type'],
+      'update-types': allow['update-types'],
     };
   });
 }

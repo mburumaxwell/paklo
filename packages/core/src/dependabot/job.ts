@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { DependabotCooldownSchema } from './config';
+import { DependabotCooldownSchema, DependabotUpdateTypeSchema } from './config';
 
 // we use nullish() because it does optional() and allows the value to be set to null
 
@@ -60,6 +60,7 @@ export const DependabotAllowedSchema = z.object({
   'dependency-name': z.string().nullish(),
   'dependency-type': z.string().nullish(),
   'update-type': z.enum(['all', 'security']).optional(),
+  'update-types': DependabotUpdateTypeSchema.array().nullish(),
 });
 export type DependabotAllowed = z.infer<typeof DependabotAllowedSchema>;
 

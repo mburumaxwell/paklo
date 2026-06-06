@@ -202,6 +202,24 @@ describe('mapAllowedUpdatesFromDependabotConfigToJobConfig', () => {
     const result = mapAllowedUpdatesFromDependabotConfigToJobConfig(undefined, true);
     expect(result).toEqual([{ 'dependency-type': 'direct', 'update-type': 'security' }]);
   });
+
+  it('should preserve update-types when explicitly configured', () => {
+    const result = mapAllowedUpdatesFromDependabotConfigToJobConfig([
+      {
+        'dependency-name': 'rails',
+        'update-types': ['version-update:semver-minor', 'version-update:semver-patch'],
+      },
+    ]);
+
+    expect(result).toEqual([
+      {
+        'dependency-name': 'rails',
+        'dependency-type': undefined,
+        'update-type': undefined,
+        'update-types': ['version-update:semver-minor', 'version-update:semver-patch'],
+      },
+    ]);
+  });
 });
 
 describe('mapPackageEcosystemToPackageManager', () => {

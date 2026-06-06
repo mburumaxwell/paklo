@@ -115,6 +115,32 @@ describe('Parse configuration file', () => {
     expect(terraformEffective.assignees).toEqual(['@platform-team']);
     expect(terraformEffective.labels).toEqual(['infrastructure']);
   });
+
+  it('parses allow.update-types conditions', async () => {
+    const config = await DependabotConfigSchema.parseAsync(
+      yaml.load(`
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-name: "rails"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
+`),
+    );
+    const update = parseUpdates(config, '')[0]!;
+
+    expect(update.allow).toEqual([
+      {
+        'dependency-name': 'rails',
+        'update-types': ['version-update:semver-minor', 'version-update:semver-patch'],
+      },
+    ]);
+  });
 });
 
 describe('DependabotScheduleSchema', () => {
