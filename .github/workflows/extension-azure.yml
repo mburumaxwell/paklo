@@ -106,6 +106,16 @@ jobs:
           omitNameDuringUpdate: true
           tag: ${{ inputs.tag || github.ref_name }}
 
+      # References:
+      # - https://learn.microsoft.com/en-us/azure/devops/extend/publish/command-line?view=azure-devops&tabs=bash
+      # - https://jessehouwing.net/publish-azure-devops-extensions-using-workload-identity-oidc/
+      #
+      # One-time setup — the service principal must be added as a Contributor on the Marketplace publisher:
+      # 1. Ensure the SP has first been added to the Azure DevOps organisation (Organisation Settings → Users).
+      # 2. Run the "Get SP profile ID" step below to retrieve its Azure DevOps identity GUID (the `id` field).
+      # 3. Go to https://marketplace.visualstudio.com/manage/publishers/tingle-software → Members,
+      #    add the GUID with the Contributor role.
+      # 4. Once confirmed working, comment out the "Get SP profile ID" step.
       - name: Azure Login
         if: ${{ inputs.tag || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
         uses: azure/login@v2
@@ -114,7 +124,14 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           allow-no-subscriptions: true
 
-      # https://learn.microsoft.com/en-us/azure/devops/extend/publish/command-line?view=azure-devops&tabs=bash
+      # TODO: comment out once the SP has been added to the Marketplace publisher
+      - name: Get SP profile ID (one-time setup)
+        if: ${{ inputs.tag || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
+        run: |
+          az rest \
+            --resource 499b84ac-1321-427f-aa17-267ca6975798 \
+            -u "https://app.vssps.visualstudio.com/_apis/profile/profiles/me?api-version=6.0"
+
       - name: Get Azure DevOps access token
         if: ${{ inputs.tag || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
         id: ado-token
