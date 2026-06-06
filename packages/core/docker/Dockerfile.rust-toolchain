@@ -1,1 +1,1 @@
-FROM ghcr.io/dependabot/dependabot-updater-rust-toolchain:v2.0.20260529212505@sha256:96981eb5d6cd3f258358d2468c02da88f77681873031db4a3fb3563ecb1f2370
+FROM ghcr.io/dependabot/dependabot-updater-rust-toolchain:v2.0.20260605225501@sha256:695cf253eb5224f07a2a83f464d270320eccef15c82e7296eeb435df19bbad81
