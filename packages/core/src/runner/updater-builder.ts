@@ -46,6 +46,11 @@ export class UpdaterBuilder {
       `https_proxy=${proxyUrl}`,
       `HTTPS_PROXY=${proxyUrl}`,
       `ENABLE_CONNECTIVITY_CHECK=${process.env.DEPENDABOT_ENABLE_CONNECTIVITY_CHECK || '1'}`,
+      // Increase V8 heap size from the default ~2GB to 4GB.
+      // The container memory limit is 8GB, but Node.js auto-scaling caps V8 heap
+      // at ~2GB for containers above 4GB, which is too low for large pnpm/npm monorepos.
+      // 4GB leaves enough headroom for Ruby and other processes in the container.
+      `NODE_OPTIONS=--max-old-space-size=4096`,
 
       // for updates relying on .NET (e.g. NuGet) and running on macOS (e.g. dev laptop or local MacMini),
       // we need to disable WriteXorExecute to avoid issues with emulation of Linux containers on macOS hosts
