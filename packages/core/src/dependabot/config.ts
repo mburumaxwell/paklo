@@ -280,7 +280,7 @@ export const DependabotMultiEcosystemGroupSchema = z.object({
 export type DependabotMultiEcosystemGroup = z.infer<typeof DependabotMultiEcosystemGroupSchema>;
 
 /* Ecosystems that are currently in beta */
-export const BETA_ECOSYSTEMS: DependabotPackageEcosystem[] = ['deno'];
+export const BETA_ECOSYSTEMS: DependabotPackageEcosystem[] = [];
 
 /**
  * Represents the dependabot.yaml configuration file options.
