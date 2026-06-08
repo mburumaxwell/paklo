@@ -40,7 +40,7 @@
     "semver": "7.8.2"
   },
   "devDependencies": {
-    "@types/node": "25.9.1",
+    "@types/node": "25.9.2",
     "@types/semver": "7.7.1",
     "tfx-cli": "0.23.1",
     "tsdown": "0.22.2"
