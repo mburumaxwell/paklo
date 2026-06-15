@@ -45,8 +45,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/core
       azure-pipelines-task-lib:
-        specifier: 5.2.10
-        version: 5.2.10
+        specifier: 5.2.11
+        version: 5.2.11
       semver:
         specifier: 7.8.4
         version: 7.8.4
@@ -1300,8 +1300,8 @@ packages:
     resolution: {integrity: sha512-QhpgjH1LQ+vgDJ7oBwcmsZ3+o4ZpjLVilw0D3oJQpYpRzN+L39lk5jZDLJ464hLUgsDzWn/Ksv7zLLMKLfoBzA==}
     engines: {node: '>= 16.0.0'}
 
-  azure-pipelines-task-lib@5.2.10:
-    resolution: {integrity: sha512-6Wak5UB+Bs693LkPoE4gZTDNkNL5DDn2buQKMtvqIWh2ZCIJk+tc1nSzroGWntJa7USs8X3cYvdl0RiSsp4/5A==}
+  azure-pipelines-task-lib@5.2.11:
+    resolution: {integrity: sha512-VaVvVaPe0ysvxGE10QysbEHuxL480kVDQvKjGd2gtO1eRY4/SkQKfAZrP6lLUAAgYMGk6eifl0I3kaRPzWQZ8g==}
 
   b4a@1.8.1:
     resolution: {integrity: sha512-aiqre1Nr0B/6DgE2N5vwTc+2/oQZ4Wh1t4NznYY4E00y8LCt6NqdRv81so00oo27D8MVKTpUa/MwUUtBLXCoDw==}
@@ -1381,11 +1381,11 @@ packages:
   bottleneck@2.19.5:
     resolution: {integrity: sha512-VHiNCbI1lKdl44tGrhNfU3lup0Tj/ZBMJB5/2ZbNXRCPuRCO7ed2mgcK4r17y+KB2EfuYuRaVlwNbAeaWGSpbw==}
 
-  brace-expansion@1.1.14:
-    resolution: {integrity: sha512-MWPGfDxnyzKU7rNOW9SP/c50vi3xrmrua/+6hfPbCS2ABNWfx24vPidzvC7krjU/RTo235sV776ymlsMtGKj8g==}
+  brace-expansion@1.1.15:
+    resolution: {integrity: sha512-EwOCDEex4quD37XhqM3omwtMoJjr//isUZz1JopUNWms+4Z2ViyM/k1YIRePpoVNnQhENnxtFjLaxNHrT7xIUg==}
 
-  brace-expansion@2.1.0:
-    resolution: {integrity: sha512-TN1kCZAgdgweJhWWpgKYrQaMNHcDULHkWwQIspdtjV4Y5aurRdZpjAqn6yX3FPqTA9ngHCc4hJxMAMgGfve85w==}
+  brace-expansion@2.1.1:
+    resolution: {integrity: sha512-WR1cURNjuvBLMZBMbqM0UoE+WAfdUcEV1ccD8PVBVOI+Z3ND4+SZbN8RsfT2bMuG1qwz5RFvPukSZm5fF2D5eA==}
 
   brace-expansion@5.0.6:
     resolution: {integrity: sha512-kLpxurY4Z4r9sgMsyG0Z9uzsBlgiU/EFKhj/h91/8yHu0edo7XuixOIH3VcJ8kkxs6/jPzoI6U9Vj3WqbMQ94g==}
@@ -4214,7 +4214,7 @@ snapshots:
       tunnel: 0.0.6
       typed-rest-client: 2.1.0
 
-  azure-pipelines-task-lib@5.2.10:
+  azure-pipelines-task-lib@5.2.11:
     dependencies:
       adm-zip: 0.5.17
       minimatch: 3.1.5
@@ -4287,12 +4287,12 @@ snapshots:
 
   bottleneck@2.19.5: {}
 
-  brace-expansion@1.1.14:
+  brace-expansion@1.1.15:
     dependencies:
       balanced-match: 1.0.2
       concat-map: 0.0.1
 
-  brace-expansion@2.1.0:
+  brace-expansion@2.1.1:
     dependencies:
       balanced-match: 1.0.2
 
@@ -5182,15 +5182,15 @@ snapshots:
 
   minimatch@3.1.5:
     dependencies:
-      brace-expansion: 1.1.14
+      brace-expansion: 1.1.15
 
   minimatch@5.1.9:
     dependencies:
-      brace-expansion: 2.1.0
+      brace-expansion: 2.1.1
 
   minimatch@9.0.9:
     dependencies:
-      brace-expansion: 2.1.0
+      brace-expansion: 2.1.1
 
   minimist@1.2.8: {}
 
