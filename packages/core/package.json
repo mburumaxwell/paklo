@@ -76,7 +76,7 @@
     "@hono/zod-validator": "0.8.0",
     "dockerode": "5.0.0",
     "hono": "^4.12.26",
-    "js-yaml": "^4.2.0",
+    "js-yaml": "^5.0.0",
     "ky": "^2.0.2",
     "node-forge": "^1.4.0",
     "octokit": "^5.0.5",
