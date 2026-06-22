@@ -45,7 +45,7 @@ jobs:
           client-id: ${{ secrets.GH_CLIENT_ID_RELEASER }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY_RELEASER }}
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           # fixes detached head state on Dependabot PRs
           ref: ${{ github.event.pull_request.head.ref }}
