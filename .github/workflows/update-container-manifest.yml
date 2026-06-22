@@ -4,13 +4,7 @@
 name: Update container manifest
 
 on:
-  # Not using `pull_request` here to get around the limitations of accessing secrets
-  # in a pull_request event triggered by a bot.
-  # Security: pull_request_target is safe here because:
-  # 1. Only runs for dependabot[bot] actor (checked in job condition)
-  # 2. Dependabot PRs are trusted (created by GitHub's infrastructure)
-  # 3. Only executes our own maintenance scripts, not arbitrary PR code
-  pull_request_target:
+  pull_request:
 
 permissions:
   pull-requests: write
