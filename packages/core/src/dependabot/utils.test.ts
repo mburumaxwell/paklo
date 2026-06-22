@@ -44,15 +44,15 @@ describe('getPullRequestCommitMessage', () => {
 
     expect(message).toContain('Bump dependencies\n\nOld details');
     expect(message).toContain('---\nupdated-dependencies:');
-    expect(message).toContain("dependency-name: 'turbo'");
-    expect(message).toContain("dependency-type: 'direct:development'");
-    expect(message).toContain("dependency-name: 'hono'");
-    expect(message).toContain("dependency-type: 'direct:production'");
-    expect(message).toContain("ghsa-id: 'GHSA-1111-2222-3333'");
+    expect(message).toContain('dependency-name: turbo');
+    expect(message).toContain('dependency-type: direct:development');
+    expect(message).toContain('dependency-name: hono');
+    expect(message).toContain('dependency-type: direct:production');
+    expect(message).toContain('ghsa-id: GHSA-1111-2222-3333');
     expect(message).toContain('cvss: 7.5');
-    expect(message).toContain("dependency-name: 'transitive-only'");
-    expect(message).toContain("dependency-type: 'indirect'");
-    expect(message).toContain("dependency-group: 'all-npm-minor-updates'");
+    expect(message).toContain('dependency-name: transitive-only');
+    expect(message).toContain('dependency-type: indirect');
+    expect(message).toContain('dependency-group: all-npm-minor-updates');
     expect(message).toContain('...\n');
   });
 

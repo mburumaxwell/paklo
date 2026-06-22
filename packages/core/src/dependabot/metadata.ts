@@ -107,7 +107,6 @@ export function getPullRequestCommitMetadataFooter(
     lineWidth: -1,
     noRefs: true,
     sortKeys: false,
-    quoteStyle: 'single',
   })}...\n`;
 }
 

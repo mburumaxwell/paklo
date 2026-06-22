@@ -447,7 +447,7 @@ describe('AzureLocalDependabotServer', () => {
         }),
       );
       expect(vi.mocked(authorClient.createPullRequest).mock.calls[0]![0].commitMessage).toContain(
-        "dependency-group: 'infrastructure'",
+        'dependency-group: infrastructure',
       );
     });
 
