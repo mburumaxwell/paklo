@@ -813,6 +813,44 @@ describe('AzureLocalDependabotServer', () => {
       expect(authorClient.abandonPullRequest).toHaveBeenCalled();
     });
 
+    it('should process "close_pull_request" for grouped PR using dependency-group-to-refresh', async () => {
+      jobBuilderOutput.job['package-manager'] = 'npm_and_yarn';
+      jobBuilderOutput.job['dependency-group-to-refresh'] = 'my-group';
+      existingPullRequests.push({
+        pullRequestId: 22,
+        properties: [
+          { name: PR_PROPERTY_DEPENDABOT_PACKAGE_MANAGER, value: 'npm_and_yarn' },
+          {
+            name: PR_PROPERTY_DEPENDABOT_DEPENDENCIES,
+            value: JSON.stringify({
+              'dependency-group-name': 'my-group',
+              'dependencies': [{ 'dependency-name': 'lodash' }, { 'dependency-name': 'express' }],
+            }),
+          },
+        ],
+      });
+
+      server = new AzureLocalDependabotServer(options);
+      server.add({
+        id: '1',
+        update,
+        job: jobBuilderOutput.job,
+        jobToken: 'test-token',
+        credentialsToken: 'test-creds-token',
+        credentials: jobBuilderOutput.credentials,
+      });
+
+      vi.mocked(authorClient.abandonPullRequest).mockResolvedValue(true);
+
+      const result = await (server as any).handle('1', {
+        type: 'close_pull_request',
+        data: { 'dependency-names': ['some-other-dep'] },
+      });
+
+      expect(result).toEqual(true);
+      expect(authorClient.abandonPullRequest).toHaveBeenCalled();
+    });
+
     it('should process "record_update_job_warning" if "dryRun" is true', async () => {
       options.dryRun = true;
 
