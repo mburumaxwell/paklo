@@ -452,6 +452,7 @@ export class AzureLocalDependabotServer extends LocalDependabotServer {
           existingPullRequests,
           packageManager,
           data['dependency-names'],
+          job['dependency-group-to-refresh'],
         );
         if (!pullRequestToClose) {
           logger.error(
