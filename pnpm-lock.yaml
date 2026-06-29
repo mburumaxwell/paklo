@@ -45,8 +45,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/core
       azure-pipelines-task-lib:
-        specifier: 5.2.11
-        version: 5.2.11
+        specifier: 5.276.0
+        version: 5.276.0
       semver:
         specifier: 7.8.5
         version: 7.8.5
@@ -1315,8 +1315,8 @@ packages:
     resolution: {integrity: sha512-QhpgjH1LQ+vgDJ7oBwcmsZ3+o4ZpjLVilw0D3oJQpYpRzN+L39lk5jZDLJ464hLUgsDzWn/Ksv7zLLMKLfoBzA==}
     engines: {node: '>= 16.0.0'}
 
-  azure-pipelines-task-lib@5.2.11:
-    resolution: {integrity: sha512-VaVvVaPe0ysvxGE10QysbEHuxL480kVDQvKjGd2gtO1eRY4/SkQKfAZrP6lLUAAgYMGk6eifl0I3kaRPzWQZ8g==}
+  azure-pipelines-task-lib@5.276.0:
+    resolution: {integrity: sha512-ohzFft3E/jS46VQ+PeC36mleq6gfI4GN7r8jzOS+o2d8yGYfSP07hS7opa+o/9j4JTDLTKviFd3V1EJl5p/jYg==}
 
   b4a@1.8.1:
     resolution: {integrity: sha512-aiqre1Nr0B/6DgE2N5vwTc+2/oQZ4Wh1t4NznYY4E00y8LCt6NqdRv81so00oo27D8MVKTpUa/MwUUtBLXCoDw==}
@@ -3060,11 +3060,6 @@ packages:
     resolution: {integrity: sha512-vzi9uRZ926x4XV73S/4qQaTwPXM2JBj6/6lI/byHH1jOpCzb0zDbfytgA9LcN/hzb2l7WQSQnxITOVx5un/wGw==}
     hasBin: true
 
-  uuid@3.4.0:
-    resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
-    hasBin: true
-
   validator@13.15.35:
     resolution: {integrity: sha512-TQ5pAGhd5whStmqWvYF4OjQROlmv9SMFVt37qoCBdqRffuuklWYQlCNnEs2ZaIBD1kZRNnikiZOS1eqgkar0iw==}
     engines: {node: '>= 0.10'}
@@ -4264,7 +4259,7 @@ snapshots:
       tunnel: 0.0.6
       typed-rest-client: 2.1.0
 
-  azure-pipelines-task-lib@5.2.11:
+  azure-pipelines-task-lib@5.276.0:
     dependencies:
       adm-zip: 0.5.17
       minimatch: 3.1.5
@@ -4272,7 +4267,6 @@ snapshots:
       q: 1.5.1
       semver: 5.7.2
       shelljs: 0.10.0
-      uuid: 3.4.0
     transitivePeerDependencies:
       - debug
       - supports-color
@@ -6171,8 +6165,6 @@ snapshots:
       safe-array-concat: 1.1.4
 
   uuid@13.0.2: {}
-
-  uuid@3.4.0: {}
 
   validator@13.15.35: {}
 
