@@ -62,7 +62,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Setup turborepo caching
-        uses: rharkor/caching-for-turbo@v2.4.2
+        uses: rharkor/caching-for-turbo@v2.5.0
 
       - name: Download deps
         run: pnpm install
