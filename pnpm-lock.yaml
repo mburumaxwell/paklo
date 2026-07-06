@@ -45,8 +45,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/core
       azure-pipelines-task-lib:
-        specifier: 5.276.0
-        version: 5.276.0
+        specifier: 5.277.0
+        version: 5.277.0
       semver:
         specifier: 7.8.5
         version: 7.8.5
@@ -1202,8 +1202,8 @@ packages:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
 
-  adm-zip@0.5.17:
-    resolution: {integrity: sha512-+Ut8d9LLqwEvHHJl1+PIHqoyDxFgVN847JTVM3Izi3xHDWPE4UtzzXysMZQs64DMcrJfBeS/uoEP4AD3HQHnQQ==}
+  adm-zip@0.5.18:
+    resolution: {integrity: sha512-ufJnssQGbxzLNS1Ho9bCtX4rQKCCvoVuDLHoJyc3F9dOGDB4BkWs2Ci0kv53lqocAEQ/Cbi+I2XCsNYGqVYqng==}
     engines: {node: '>=12.0'}
 
   agent-base@6.0.2:
@@ -1303,8 +1303,8 @@ packages:
     resolution: {integrity: sha512-QhpgjH1LQ+vgDJ7oBwcmsZ3+o4ZpjLVilw0D3oJQpYpRzN+L39lk5jZDLJ464hLUgsDzWn/Ksv7zLLMKLfoBzA==}
     engines: {node: '>= 16.0.0'}
 
-  azure-pipelines-task-lib@5.276.0:
-    resolution: {integrity: sha512-ohzFft3E/jS46VQ+PeC36mleq6gfI4GN7r8jzOS+o2d8yGYfSP07hS7opa+o/9j4JTDLTKviFd3V1EJl5p/jYg==}
+  azure-pipelines-task-lib@5.277.0:
+    resolution: {integrity: sha512-QS9mHHBgNyX/Vfcdsz8IPlTOudLnPCrundLjm4b9Kq5oRvuCsHxcdLGwNf8yLTAgX7nzf0P4c+P0+H05RLT1qw==}
 
   b4a@1.8.1:
     resolution: {integrity: sha512-aiqre1Nr0B/6DgE2N5vwTc+2/oQZ4Wh1t4NznYY4E00y8LCt6NqdRv81so00oo27D8MVKTpUa/MwUUtBLXCoDw==}
@@ -4117,7 +4117,7 @@ snapshots:
     dependencies:
       event-target-shim: 5.0.1
 
-  adm-zip@0.5.17: {}
+  adm-zip@0.5.18: {}
 
   agent-base@6.0.2:
     dependencies:
@@ -4232,9 +4232,9 @@ snapshots:
       tunnel: 0.0.6
       typed-rest-client: 2.1.0
 
-  azure-pipelines-task-lib@5.276.0:
+  azure-pipelines-task-lib@5.277.0:
     dependencies:
-      adm-zip: 0.5.17
+      adm-zip: 0.5.18
       minimatch: 3.1.5
       nodejs-file-downloader: 4.13.0
       q: 1.5.1
