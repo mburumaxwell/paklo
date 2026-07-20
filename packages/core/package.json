@@ -72,10 +72,10 @@
   },
   "homepage": "https://github.com/mburumaxwell/paklo#readme",
   "dependencies": {
-    "@hono/node-server": "2.0.8",
-    "@hono/zod-validator": "0.8.0",
+    "@hono/node-server": "2.0.10",
+    "@hono/zod-validator": "0.9.0",
     "dockerode": "5.0.1",
-    "hono": "^4.12.27",
+    "hono": "^4.12.31",
     "js-yaml": "^5.2.1",
     "ky": "^2.0.2",
     "node-forge": "^1.4.0",
@@ -92,7 +92,7 @@
     "@types/semver": "7.7.1",
     "@types/tar-stream": "3.1.4",
     "tsdown": "0.22.5",
-    "tsx": "4.23.0"
+    "tsx": "4.23.1"
   },
   "publishConfig": {
     "access": "public"
