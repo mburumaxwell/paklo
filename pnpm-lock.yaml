@@ -45,8 +45,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/core
       azure-pipelines-task-lib:
-        specifier: 5.277.0
-        version: 5.277.0
+        specifier: 5.278.0
+        version: 5.278.0
       semver:
         specifier: 7.8.5
         version: 7.8.5
@@ -1309,9 +1309,9 @@ packages:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
 
-  adm-zip@0.5.18:
-    resolution: {integrity: sha512-ufJnssQGbxzLNS1Ho9bCtX4rQKCCvoVuDLHoJyc3F9dOGDB4BkWs2Ci0kv53lqocAEQ/Cbi+I2XCsNYGqVYqng==}
-    engines: {node: '>=12.0'}
+  adm-zip@0.6.0:
+    resolution: {integrity: sha512-XleryMhbuksdKtofnWZ9Sk+4CUTbms4Mb/EU32SZwToAyZ5RgVos/ki8n+yr0LWHOGKuakbXTuuYNHLQjhddgg==}
+    engines: {node: '>=14.0'}
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -1406,8 +1406,8 @@ packages:
     resolution: {integrity: sha512-QhpgjH1LQ+vgDJ7oBwcmsZ3+o4ZpjLVilw0D3oJQpYpRzN+L39lk5jZDLJ464hLUgsDzWn/Ksv7zLLMKLfoBzA==}
     engines: {node: '>= 16.0.0'}
 
-  azure-pipelines-task-lib@5.277.0:
-    resolution: {integrity: sha512-QS9mHHBgNyX/Vfcdsz8IPlTOudLnPCrundLjm4b9Kq5oRvuCsHxcdLGwNf8yLTAgX7nzf0P4c+P0+H05RLT1qw==}
+  azure-pipelines-task-lib@5.278.0:
+    resolution: {integrity: sha512-0Je3UvwSk3LmctLwqOduUDo1W1OyHO4/avRvQ4VPz5S4J52fE1qnR18UrBV9EyJACVEtFTCNaZHb3UZmrQMoiA==}
 
   b4a@1.8.1:
     resolution: {integrity: sha512-aiqre1Nr0B/6DgE2N5vwTc+2/oQZ4Wh1t4NznYY4E00y8LCt6NqdRv81so00oo27D8MVKTpUa/MwUUtBLXCoDw==}
@@ -1484,8 +1484,8 @@ packages:
   bottleneck@2.19.5:
     resolution: {integrity: sha512-VHiNCbI1lKdl44tGrhNfU3lup0Tj/ZBMJB5/2ZbNXRCPuRCO7ed2mgcK4r17y+KB2EfuYuRaVlwNbAeaWGSpbw==}
 
-  brace-expansion@1.1.15:
-    resolution: {integrity: sha512-EwOCDEex4quD37XhqM3omwtMoJjr//isUZz1JopUNWms+4Z2ViyM/k1YIRePpoVNnQhENnxtFjLaxNHrT7xIUg==}
+  brace-expansion@1.1.16:
+    resolution: {integrity: sha512-IDw48K2/2kRkg9LdJxurvq3lV3aBgq0REY89duEqFRthjlPdXHKMj7EnQOXVckxzgisinf3nHfrcE2FufFLXMw==}
 
   brace-expansion@2.1.2:
     resolution: {integrity: sha512-w5JZcKgdhDOgOwm8H+KgbosopHMuGcl6qbulwjtz3SM7I7P3yW1eAjzMPLrIE+NQ9vjgANKHWeMHnrT0OXW1oA==}
@@ -4242,7 +4242,7 @@ snapshots:
     dependencies:
       event-target-shim: 5.0.1
 
-  adm-zip@0.5.18: {}
+  adm-zip@0.6.0: {}
 
   agent-base@6.0.2:
     dependencies:
@@ -4351,9 +4351,9 @@ snapshots:
       tunnel: 0.0.6
       typed-rest-client: 2.1.0
 
-  azure-pipelines-task-lib@5.277.0:
+  azure-pipelines-task-lib@5.278.0:
     dependencies:
-      adm-zip: 0.5.18
+      adm-zip: 0.6.0
       minimatch: 3.1.5
       nodejs-file-downloader: 4.13.0
       q: 1.5.1
@@ -4421,7 +4421,7 @@ snapshots:
 
   bottleneck@2.19.5: {}
 
-  brace-expansion@1.1.15:
+  brace-expansion@1.1.16:
     dependencies:
       balanced-match: 1.0.2
       concat-map: 0.0.1
@@ -5335,7 +5335,7 @@ snapshots:
 
   minimatch@3.1.5:
     dependencies:
-      brace-expansion: 1.1.15
+      brace-expansion: 1.1.16
 
   minimatch@5.1.9:
     dependencies:
