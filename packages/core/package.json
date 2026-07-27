@@ -75,8 +75,8 @@
     "@hono/node-server": "2.0.10",
     "@hono/zod-validator": "0.9.0",
     "dockerode": "5.0.1",
-    "hono": "^4.12.31",
-    "js-yaml": "^5.2.1",
+    "hono": "^4.12.32",
+    "js-yaml": "^5.2.2",
     "ky": "^2.0.2",
     "node-forge": "^1.4.0",
     "octokit": "^5.0.5",
@@ -91,7 +91,7 @@
     "@types/node-forge": "1.3.14",
     "@types/semver": "7.7.1",
     "@types/tar-stream": "3.1.4",
-    "tsdown": "0.22.5",
+    "tsdown": "0.22.14",
     "tsx": "4.23.1"
   },
   "publishConfig": {
