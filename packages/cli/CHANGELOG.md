@@ -1,5 +1,12 @@
 # paklo
 
+## 0.23.5
+
+### Patch Changes
+
+- Updated dependencies [[`8aa01ae`](https://github.com/mburumaxwell/paklo/commit/8aa01ae90825d00c1d4f90339cb1b3da9e5122d2)]:
+  - @paklo/core@0.24.4
+
 ## 0.23.4
 
 ### Patch Changes
