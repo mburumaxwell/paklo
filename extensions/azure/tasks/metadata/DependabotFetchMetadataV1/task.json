@@ -21,7 +21,7 @@
   "version": {
     "Major": 1,
     "Minor": 68,
-    "Patch": 5
+    "Patch": 6
   },
   "instanceNameFormat": "Dependabot fetch metadata",
   "inputs": [
