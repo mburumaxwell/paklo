@@ -21,7 +21,7 @@
   "version": {
     "Major": 1,
     "Minor": 68,
-    "Patch": 6
+    "Patch": 7
   },
   "deprecated": true,
   "deprecationMessage": "This extension is no longer maintained. Existing users may continue using this final release at their own discretion, but no new features or compatibility updates are planned.",

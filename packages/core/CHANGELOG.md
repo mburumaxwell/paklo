@@ -1,5 +1,11 @@
 # @paklo/core
 
+## 0.24.6
+
+### Patch Changes
+
+- End of active development and support. This is the final release: the extension README and Marketplace metadata now carry an end-of-life notice. Existing users may continue using this release at their own discretion, but no new features or compatibility updates are planned. ([`48ddc57`](https://github.com/mburumaxwell/paklo/commit/48ddc5725f33ac2d6b0a69855a072abfac01e349))
+
 ## 0.24.5
 
 ### Patch Changes
