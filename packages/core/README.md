@@ -1,5 +1,7 @@
 # Paklo Core
 
+> ⚠️ **This project is no longer maintained.** No new features or compatibility updates are planned.
+
 > **⚠️ Internal Package - Not for Direct Use**
 
 This package contains shared utilities used internally by Paklo components. It is not a public API and may change without notice.

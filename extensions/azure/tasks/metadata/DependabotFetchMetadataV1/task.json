@@ -23,6 +23,8 @@
     "Minor": 68,
     "Patch": 6
   },
+  "deprecated": true,
+  "deprecationMessage": "This extension is no longer maintained. Existing users may continue using this final release at their own discretion, but no new features or compatibility updates are planned.",
   "instanceNameFormat": "Dependabot fetch metadata",
   "inputs": [
     {

@@ -1,5 +1,9 @@
 # Dependabot Azure DevOps (Paklo) Extension
 
+> ⚠️ **This extension is no longer maintained.**
+>
+> Maintaining the Azure DevOps Dependabot extension has become unsustainable as an independently maintained project. After several years of development and support, I’ve decided to end active development and support rather than continue providing a service I cannot sustainably maintain. Existing users may continue using the final release at their own discretion, but no new features or compatibility updates are planned.
+
 This is the unofficial [dependabot](https://github.com/Dependabot/dependabot-core) extension for [Azure DevOps](https://azure.microsoft.com/en-gb/services/devops/). It will allow you to run Dependabot inside a build pipeline.
 
 > [!WARNING]

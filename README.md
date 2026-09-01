@@ -1,5 +1,10 @@
 # Paklo
 
+> [!IMPORTANT]
+> **This project is no longer maintained.**
+>
+> Maintaining the Azure DevOps Dependabot extension has become unsustainable as an independently maintained project. After several years of development and support, I’ve decided to end active development and support rather than continue providing a service I cannot sustainably maintain. Existing users may continue using the final release at their own discretion, but no new features or compatibility updates are planned.
+
 Automated dependency updates for Azure DevOps repositories using [Dependabot](https://dependabot.com).
 
 ## Options
