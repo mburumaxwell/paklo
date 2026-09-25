@@ -81,7 +81,7 @@ jobs:
       - name: Create release PR or Publish
         if: ${{ github.event_name != 'pull_request' }}
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           title: 'Version packages'
           version: pnpm packages:version
