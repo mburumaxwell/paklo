@@ -214,6 +214,7 @@ export class AzureDevOpsClientWrapper {
             author: options.author,
             changes: options.changes
               .filter((change) => change.changeType !== 'none')
+              .filter((change, index, self) => index === self.findLastIndex((c) => c.path === change.path))
               .map(({ changeType, ...change }) => {
                 return {
                   changeType,
@@ -394,6 +395,7 @@ export class AzureDevOpsClientWrapper {
             author: options.author,
             changes: options.changes
               .filter((change) => change.changeType !== 'none')
+              .filter((change, index, self) => index === self.findLastIndex((c) => c.path === change.path))
               .map(({ changeType, ...change }) => {
                 return {
                   changeType,
